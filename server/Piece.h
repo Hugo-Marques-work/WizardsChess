@@ -8,7 +8,7 @@ class Piece
 {
 protected:
     using Pos = std::pair<int,int>;
-    ChessMatrix* _positions;
+    ChessMatrix* _positions; //FIXME: Hugo: preferia _matrix em vez de _positions
     const bool _forward;
     const int _id;
     const bool _white;
