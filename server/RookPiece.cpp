@@ -19,7 +19,7 @@ public:
             tempX = x;
             do{
                 try{
-                    piece = _positions->get( Pos(_myPos.first+tempX, _myPos.second) ); 
+                    piece = _matrix->get( Pos(_myPos.first+tempX, _myPos.second) ); 
                     if( piece == nullptr || (piece!=nullptr && piece->isWhite() != _white))
                         valid.push_front( Pos(_myPos.first+tempX, _myPos.second) );
                     tempX+=x;
@@ -33,7 +33,7 @@ public:
             tempY = y;
             do{
                 try{
-                    piece = _positions->get( Pos(_myPos.first, _myPos.second + tempY) ); 
+                    piece = _matrix->get( Pos(_myPos.first, _myPos.second + tempY) ); 
                     if( piece == nullptr || (piece!=nullptr && piece->isWhite() != _white))
                         valid.push_front( Pos(_myPos.first, _myPos.second + tempY) );
                     tempY+=y;

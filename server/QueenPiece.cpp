@@ -21,7 +21,7 @@ public:
                 do
                 {
                     try{
-                        piece = _positions->get( Pos(_myPos.first+tempX, _myPos.second+tempY) ); 
+                        piece = _matrix->get( Pos(_myPos.first+tempX, _myPos.second+tempY) ); 
                         if( piece == nullptr || (piece!=nullptr && piece->isWhite() != _white))
                             valid.push_front( Pos(_myPos.first+tempX, _myPos.second+tempY) );
                         tempX+=x;

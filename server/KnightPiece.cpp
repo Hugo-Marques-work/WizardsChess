@@ -19,7 +19,7 @@ public:
             {
                 if(y==0) continue;
                 try{
-                    piece = _positions->get( Pos(_myPos.first+x, _myPos.second+y) ); 
+                    piece = _matrix->get( Pos(_myPos.first+x, _myPos.second+y) ); 
                     if( piece == nullptr || (piece!=nullptr && piece->isWhite() != _white))
                         valid.push_front( Pos(_myPos.first+x, _myPos.second+y) );
                 }catch(std::out_of_range &e)
