@@ -18,14 +18,14 @@ public:
         Piece* piece;
         std::list<Pos> valid = std::list<Pos>();
         try{
-            piece = _positions->get( Pos(_myPos.first, _myPos.second+yToAdd) ); 
+            piece = _matrix->get( Pos(_myPos.first, _myPos.second+yToAdd) ); 
             if( piece == nullptr)
             {
                 valid.push_front( Pos(_myPos.first, _myPos.second+yToAdd) );
                 if( _hasMoved == false)
                 {
                     //Double Foward in case of first move
-                    piece = _positions->get( Pos(_myPos.first, _myPos.second+yToAdd*2));
+                    piece = _matrix->get( Pos(_myPos.first, _myPos.second+yToAdd*2));
 
                     if(piece == nullptr)
                         valid.push_front( Pos(_myPos.first, _myPos.second+yToAdd*2) );
@@ -39,7 +39,7 @@ public:
         
         //DiagonalRight
         try{
-        piece = _positions->get( Pos(_myPos.first+1, _myPos.second+yToAdd) ); 
+        piece = _matrix->get( Pos(_myPos.first+1, _myPos.second+yToAdd) ); 
         if( piece != nullptr && piece->isWhite() != _white)
             valid.push_front(Pos(_myPos.first+1, _myPos.second+yToAdd));
         }catch(std::out_of_range &e)
@@ -48,7 +48,7 @@ public:
         }
         //DiagonalLeft
         try{
-        piece = _positions->get( Pos(_myPos.first-1, _myPos.second+yToAdd) ); 
+        piece = _matrix->get( Pos(_myPos.first-1, _myPos.second+yToAdd) ); 
         if( piece != nullptr && piece->isWhite() != _white)
             valid.push_front(Pos(_myPos.first-1, _myPos.second+yToAdd));
         }catch(std::out_of_range &e)

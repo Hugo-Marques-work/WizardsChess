@@ -8,14 +8,14 @@ class Piece
 {
 protected:
     using Pos = std::pair<int,int>;
-    ChessMatrix* _positions; //FIXME: Hugo: preferia _matrix em vez de _positions
+    ChessMatrix* _matrix; 
     const bool _forward;
     const int _id;
     const bool _white;
     Pos _myPos;
 public:
     Piece(int id, bool white, Pos pos, ChessMatrix* m, bool forward): 
-        _id(id), _white(white), _myPos(pos), _positions(m), _forward(forward) {}
+        _id(id), _white(white), _myPos(pos), _matrix(m), _forward(forward) {}
     //list or array or forward_list
     virtual std::list<Pos> getValidMoves() = 0;
 
