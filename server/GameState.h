@@ -1,6 +1,9 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
+#include "GameStateVisitor.h"
+#include <>//FIXME ficheiro para std::pair
+
 class GameState 
 {
 private:
