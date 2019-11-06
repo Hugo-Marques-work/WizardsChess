@@ -1,6 +1,6 @@
 #include "GameLastTurnMessage.h"
 
-void GameLastTurnMessage::accept (MessageVisitor* visitor) 
+void GameLastMoveMessage::accept (MessageVisitor* visitor) 
 {
-    
+    visitor->visitGameLastMove(this);
 }

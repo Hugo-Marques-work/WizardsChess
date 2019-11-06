@@ -1,7 +1,7 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-#include "MessageVisitor.h"
+class MessageVisitor;
 
 class Message 
 {
