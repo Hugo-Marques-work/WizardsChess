@@ -1,10 +1,11 @@
 #include <iostream>
-#include "PawnPiece.cpp"
-#include "RookPiece.cpp"
-#include "QueenPiece.cpp"
-#include "KingPiece.cpp"
-#include "KnightPiece.cpp"
-#include "BishopPiece.cpp"
+#include "Pieces/PawnPiece.cpp"
+#include "Pieces/RookPiece.cpp"
+#include "Pieces/QueenPiece.cpp"
+#include "Pieces/KingPiece.cpp"
+#include "Pieces/KnightPiece.cpp"
+#include "Pieces/BishopPiece.cpp"
+
 using namespace std;
 
 void ChessMatrix::oneSideBoardCreation(bool white,bool forward)
@@ -21,7 +22,7 @@ void ChessMatrix::oneSideBoardCreation(bool white,bool forward)
     for(int x = 0; x < MAX_X; x++)
     {
         _pieces.at(x).at(y) = (Piece*) new PawnPiece(id++,
-            white,pair<int,int>(x,y),this,forward);
+            white,Position(x,y),this,forward);
     }
     y = secondY;
     for(int x = 0; x < MAX_X; x++)
@@ -29,27 +30,27 @@ void ChessMatrix::oneSideBoardCreation(bool white,bool forward)
         if(x==0 || x == MAX_X - 1)
         {
             _pieces.at(x).at(y) = (Piece*) new RookPiece(id++,
-                white,pair<int,int>(x,y),this,forward);
+                white,Position(x,y),this,forward);
         }
         else if(x==1 || x == MAX_X -2)
         {
             _pieces.at(x).at(y) = (Piece*) new KnightPiece(id++,
-                white,pair<int,int>(x,y),this, forward);
+                white,Position(x,y),this, forward);
         }
         else if(x==2 || x == MAX_X -3)
         {
             _pieces.at(x).at(y) = (Piece*) new BishopPiece(id++,
-                white,pair<int,int>(x,y),this, forward);
+                white,Position(x,y),this, forward);
         }
         else if(x==3)
         {
             _pieces.at(x).at(y) = (Piece*) new KingPiece(id++,
-                white,pair<int,int>(x,y),this, forward);
+                white,Position(x,y),this, forward);
         }
         else if(x==4)
         {
             _pieces.at(x).at(y) = (Piece*) new QueenPiece(id++,
-                white,pair<int,int>(x,y),this, forward);
+                white,Position(x,y),this, forward);
         }
     }
 
@@ -69,7 +70,7 @@ ChessMatrix::ChessMatrix()
 }
 
 //Has some std::couts to help with text simulation
-void ChessMatrix::set(std::pair<int,int> pos, Piece* p)
+void ChessMatrix::set(Position pos, Piece* p)
 {
     //Throw out_of_range
     if(p == nullptr)
@@ -77,12 +78,12 @@ void ChessMatrix::set(std::pair<int,int> pos, Piece* p)
         std::cout << "No piece there" << endl;
         return;
     }
-    std::pair<int,int>& lastPos = p->getPos();
+    Position& lastPos = p->getPos();
     if(p->validateMove(pos)==true)
     {
-        _pieces.at(pos.first).at(pos.second) = p;
+        _pieces.at(pos.x).at(pos.y) = p;
 
-        _pieces.at(lastPos.first).at(lastPos.second) = nullptr;
+        _pieces.at(lastPos.x).at(lastPos.y) = nullptr;
         p->move();
         p->setPos(pos);
     }
@@ -117,9 +118,9 @@ void ChessMatrix::printMatrix()
             std::cout << "pos:" << x << "|" << y << std::endl<<std::flush;
             if(_pieces.at(x).at(y)==nullptr) continue;
             std::cout << "validMoves:"<<std::flush;
-            for(pair<int,int> p : (_pieces.at(x).at(y))->getValidMoves())
+            for(Position p : (_pieces.at(x).at(y))->getValidMoves())
             {
-                std::cout << "first" <<p.first <<"second" << p.second<<std::flush;
+                std::cout << "first" <<p.x <<"second" << p.y<<std::flush;
             }
             std::cout << endl;
         }
@@ -135,7 +136,7 @@ int main()
     {
         int xOld,xNew,yOld,yNew;
         cin >> xOld >> yOld >> xNew >> yNew;
-        m->set(pair<int,int>(xNew,yNew),m->get(pair<int,int>(xOld,yOld)));
+        m->set(Position(xNew,yNew),m->get(Position(xOld,yOld)));
     
         std::cout << endl << endl;
         m->printMatrix();
