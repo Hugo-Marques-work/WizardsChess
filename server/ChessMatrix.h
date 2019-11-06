@@ -4,7 +4,8 @@
 #include <utility>
 #include <list>
 #include <array>
-#include "Piece.h"
+#include "Pieces/Piece.h"
+#include "Position.h"
 #include <iostream>
 class Piece;
 class ChessMatrix
@@ -18,13 +19,14 @@ private:
     void oneSideBoardCreation(bool white, bool forward);
 public:
     ChessMatrix();
-    inline Piece* get(std::pair<int,int> pos)
+
+    Piece* get(Position pos)
     {
         //Throw out_of_range    
-        return _pieces.at(pos.first).at(pos.second);
+        return _pieces.at(pos.x).at(pos.y);
     }
 
-    void set(std::pair<int,int> pos, Piece* p);
+    void set(Position pos, Piece* p);
 
     //Used for a text simulation of the game
     void printMatrix();
