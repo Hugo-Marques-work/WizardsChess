@@ -12,6 +12,7 @@ private:
     Message* parseGameMove (const char* string);
     Message* parseGameStatus (const char* string);
     Message* parseGameDrop (const char* string);
+    Message* parseGameLastMove(const char* string);
 public:
     //null terminated string
     Message* parse (const char* string);
