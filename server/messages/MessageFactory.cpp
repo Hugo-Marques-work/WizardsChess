@@ -29,3 +29,13 @@ Message* MessageFactory::parseGameDrop (const char* string)
 {
     
 }
+
+Message* MessageFactory::parseGameLastTurn(const char* string) 
+{
+    
+}
+
+Message* MessageFactory::parseGameLastMove(const char* string) 
+{
+    
+}

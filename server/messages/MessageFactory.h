@@ -2,7 +2,6 @@
 #define MESSAGEFACTORY_H
 
 #include "Message.h"
-#include <string>
 
 class MessageFactory
 {
@@ -13,6 +12,7 @@ private:
     Message* parseGameStatus (const char* string);
     Message* parseGameDrop (const char* string);
     Message* parseGameLastMove(const char* string);
+    Message* parseGameLastTurn(const char* string);
 public:
     //null terminated string
     Message* parse (const char* string);
