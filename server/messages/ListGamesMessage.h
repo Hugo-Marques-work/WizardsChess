@@ -1,7 +1,9 @@
 #ifndef LISTGANMESMESSAGE_H
 #define LISTGANMESMESSAGE_H
 
-class ListGameseMessage : public Message
+#include "Message.h"
+
+class ListGamesMessage : public Message
 {
 private:
 public:
