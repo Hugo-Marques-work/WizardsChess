@@ -1,7 +1,7 @@
 #ifndef GAMESTATUSMESSAGE_H
 #define GAMESTATUSMESSAGE_H
 
-#include "GameStatusMessage.h"
+#include "Message.h"
 
 class GameStatusMessage : public Message
 {
