@@ -5,8 +5,8 @@ void DropState::accept (GameStateVisitor* visitor)
     visitor->visitDrop(this);
 }
 
-void DropState::move(const std::pair<int, int>& origin, const std::pair<int, int>& dest) 
+void DropState::move(const Position& origin, const Position& dest) 
 {
-    
+    throw InvalidActionException();
 }
 

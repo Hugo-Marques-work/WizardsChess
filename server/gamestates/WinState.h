@@ -6,9 +6,13 @@
 class WinState : public GameState 
 {
 private:
+    bool _playerWhite;
 public:
-    void accept (GameStateVisitor* visitor);
-    void move(const std::pair<int, int>& origin, const std::pair<int, int>& dest);
+    WinState(bool white): _playerWhite(white) {}
+
+    void accept (GameStateVisitor* visitor) override;
+    
+    void move(const Position& origin, const Position& dest) override;
 };
 
 #endif

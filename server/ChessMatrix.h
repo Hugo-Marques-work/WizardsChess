@@ -4,9 +4,11 @@
 #include <utility>
 #include <list>
 #include <array>
-#include "Pieces/Piece.h"
+#include "pieces/Piece.h"
 #include "Position.h"
 #include <iostream>
+
+#include "exceptions/NoSuchPieceException.h"
 class Piece;
 class ChessMatrix
 {
@@ -26,7 +28,7 @@ public:
         return _pieces.at(pos.x).at(pos.y);
     }
 
-    void set(Position pos, Piece* p);
+    void set(Position pos, Piece* p) noexcept(false);
 
     //Used for a text simulation of the game
     void printMatrix();

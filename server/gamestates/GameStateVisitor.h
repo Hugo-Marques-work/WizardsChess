@@ -9,10 +9,10 @@
 class GameStateVisitor
 {
 public:
-    void visitPlaying (PlayingState* state) = 0;
-    void visitDraw (DrawState* state) = 0;
-    void visitWin (WinState* state) = 0;
-    void visitDrop (DropState* state) = 0;
+    virtual void visitPlaying (PlayingState* state) = 0;
+    virtual void visitDraw (DrawState* state) = 0;
+    virtual void visitWin (WinState* state) = 0;
+    virtual void visitDrop (DropState* state) = 0;
 };
-
+ 
 #endif

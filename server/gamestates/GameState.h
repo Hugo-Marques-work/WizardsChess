@@ -2,14 +2,21 @@
 #define GAMESTATE_H
 
 #include "GameStateVisitor.h"
-#include <>//FIXME ficheiro para std::pair
+#include "../Position.h"
+#include "../exceptions/InvalidActionException.h"
+#include "../exceptions/InvalidMoveException.h"
+#include "../exceptions/NotYourTurnException.h"
+#include "../Game.h"
 
 class GameState 
 {
-private:
+protected:
+    Game* _game;
 public:
-    virtual void accept (GameStateVisitor* visitor) = 0;
-    virtual void move(const std::pair<int, int>& origin, const std::pair<int, int>& dest) = 0;
-};
+    GameState(Game* game): _game(game) {}
 
+    virtual void accept (GameStateVisitor* visitor) noexcept(false) = 0 ;
+    virtual void move(const Position& origin, const Position& dest) noexcept(false) = 0;
+};
+ 
 #endif

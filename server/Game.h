@@ -13,7 +13,7 @@ private:
     GameState* _state;
 public:
     Game(int gameId);
-    void move(const std::pair<int, int>& origin, const std::pair<int, int>& dest);
+    void move(const Position& origin, const Position& dest);
     ChessMatrix* getMatrix () { return &_chessMatrix; }
 };
 

@@ -6,7 +6,7 @@ Game::Game (int gameId)
     _whiteTurn = false; //FIXME Quem e o primeiro?
 }
 
-void Game::move(const std::pair<int, int>& origin, const std::pair<int, int>& dest) 
+void Game::move(const Position& origin, const Position& dest) 
 {
-    
+    _state->move(origin,dest);
 }

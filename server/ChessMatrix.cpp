@@ -1,10 +1,10 @@
 #include <iostream>
-#include "Pieces/PawnPiece.cpp"
-#include "Pieces/RookPiece.cpp"
-#include "Pieces/QueenPiece.cpp"
-#include "Pieces/KingPiece.cpp"
-#include "Pieces/KnightPiece.cpp"
-#include "Pieces/BishopPiece.cpp"
+#include "pieces/PawnPiece.h"
+#include "pieces/RookPiece.h"
+#include "pieces/QueenPiece.h"
+#include "pieces/KingPiece.h"
+#include "pieces/KnightPiece.h"
+#include "pieces/BishopPiece.h"
 
 using namespace std;
 
@@ -72,11 +72,11 @@ ChessMatrix::ChessMatrix()
 //Has some std::couts to help with text simulation
 void ChessMatrix::set(Position pos, Piece* p)
 {
+
     //Throw out_of_range
     if(p == nullptr)
     {
-        std::cout << "No piece there" << endl;
-        return;
+        ///throw NoSuchPieceException();
     }
     Position& lastPos = p->getPos();
     if(p->validateMove(pos)==true)
