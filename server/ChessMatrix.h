@@ -22,13 +22,13 @@ private:
 public:
     ChessMatrix();
 
-    Piece* get(Position pos)
+    Piece* get(const Position& pos)
     {
         //Throw out_of_range    
         return _pieces.at(pos.x).at(pos.y);
     }
 
-    void set(Position pos, Piece* p) noexcept(false);
+    void set(const Position& pos, Piece* p) noexcept(false);
 
     //Used for a text simulation of the game
     void printMatrix();

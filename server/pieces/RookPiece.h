@@ -12,9 +12,10 @@ public:
 
     std::list<Position> getValidMoves() override;
 
-    virtual void move() { _hasMoved = true; }
+    void setPos(const Position& pos) override 
+    { Piece::setPos(pos); _hasMoved = true; } 
 
-    virtual void debugPrint() { std::cout << "R"; }
+    void debugPrint() override { std::cout << "R"; }
 };
 
 #endif

@@ -11,7 +11,7 @@ public:
         
     std::list<Position> getValidMoves() override;
 
-    virtual void debugPrint() { std::cout << "H"; }
+    void debugPrint() override { std::cout << "H"; }
 };
 
 #endif

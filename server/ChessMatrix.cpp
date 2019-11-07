@@ -70,27 +70,9 @@ ChessMatrix::ChessMatrix()
 }
 
 //Has some std::couts to help with text simulation
-void ChessMatrix::set(Position pos, Piece* p)
+void ChessMatrix::set(const Position& pos, Piece* p)
 {
-
-    //Throw out_of_range
-    if(p == nullptr)
-    {
-        ///throw NoSuchPieceException();
-    }
-    Position& lastPos = p->getPos();
-    if(p->validateMove(pos)==true)
-    {
-        _pieces.at(pos.x).at(pos.y) = p;
-
-        _pieces.at(lastPos.x).at(lastPos.y) = nullptr;
-        p->move();
-        p->setPos(pos);
-    }
-    else
-    {
-        std::cout << "Couldn't" << endl;
-    }
+    _pieces.at(pos.x).at(pos.y) = p;
 }
 
 //Optional

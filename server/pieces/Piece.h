@@ -23,15 +23,13 @@ public:
 
     bool validateMove(Position dst);
 
-    inline virtual void move() { }
-
     inline bool isWhite() { return _white; }
 
     inline int getId() { return _id; }
     
     inline Position& getPos() { return _myPos; }
     
-    inline void setPos(Position pos) { _myPos = pos; } 
+    virtual void setPos(const Position& pos) { _myPos = pos; } 
 
     //Used for a text simulation of the game
     inline virtual void debugPrint() {}

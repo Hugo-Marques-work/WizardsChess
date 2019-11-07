@@ -8,11 +8,12 @@ class WinState : public GameState
 private:
     bool _playerWhite;
 public:
-    WinState(bool white): _playerWhite(white) {}
+    WinState(Game* game, bool white): GameState(game),  _playerWhite(white) {}
 
     void accept (GameStateVisitor* visitor) override;
     
-    void move(const Position& origin, const Position& dest) override;
+    void move(bool white, const Position& origin,
+        const Position& dest) noexcept(false) override;
 };
 
 #endif

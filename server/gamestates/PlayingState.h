@@ -8,7 +8,10 @@ class PlayingState : public GameState
 private:
 public:
     void accept (GameStateVisitor* visitor) override;
-    void move(const Position& origin, const Position& dest) override;
+    
+    void move(bool white, const Position& origin,
+        const Position& dest) noexcept(false) override;
 };
 
 #endif
+ 
