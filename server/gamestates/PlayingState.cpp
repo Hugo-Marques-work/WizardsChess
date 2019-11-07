@@ -21,6 +21,8 @@ void PlayingState::move(bool white, const Position& origin, const Position& dest
 
     if(p->validateMove(dest)==true)
     {
+        Piece* destP = m->get(dest);
+        destP->die();
         m->set(dest, p);
         m->set(origin, nullptr);
         p->setPos(dest);

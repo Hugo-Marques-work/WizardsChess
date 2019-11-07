@@ -22,7 +22,7 @@ private:
 public:
     ChessMatrix();
 
-    Piece* get(const Position& pos)
+    Piece* get(const Position& pos) noexcept(false)
     {
         //Throw out_of_range    
         return _pieces.at(pos.x).at(pos.y);
