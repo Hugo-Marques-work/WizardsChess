@@ -19,6 +19,21 @@ Game::Game (int gameId)
     createDrawConditions();
 }
 
+void Game::createDrawConditions()
+{
+    std::list<Piece*> condition;
+    
+    condition.push_front();
+    condition.push_front(_bishopB[0]);
+    condition.push_front(_bishopB[1]);
+    condition.push_front(_bishopW[0]);
+    condition.push_front(_bishopW[1]);
+
+    condition.push_front(_knightB[0]);
+    condition.push_front(_knightB[1]);
+    condition.push_front(_knightW[0]);
+    condition.push_front(_knightW[1]);
+}
 void Game::boardCreation()
 {
     bool forward = true;
@@ -36,65 +51,65 @@ void Game::boardCreation()
         posW.x = x; 
         posB.x = x;
 
-        _pawnW[x].set(x*2, true, posW, _chessMatrix, forward);
-        _pawnB[x].set(x*2+1, false, posB, _chessMatrix, !forward);
+        _pawnW[x].set(x*2, true, posW, &_chessMatrix, forward);
+        _pawnB[x].set(x*2+1, false, posB, &_chessMatrix, !forward);
         
-        _pieces.set(posB, _pawnB);
-        _pieces.set(posA, _pawnA);
+        _chessMatrix.set(posB, &_pawnB[x]);
+        _chessMatrix.set(posW, &_pawnW[x]);
     }
 
     posW.y = secondYW;
     posB.y = secondYB;
 
-    int rookId = 0, knightId = 0, queenId = 0, bishopId = 0, knightId = 0;
+    int rookId = 0, knightId = 0, queenId = 0, bishopId = 0, kingId = 0;
     for(int x = 0; x < MAX_X; x++)
     {
         posW.x = x;
         posB.x = x; 
         if(x==0 || x == MAX_X - 1)
         {
-            _rookW[rookId].set(rookId*2, true, posW, _chessMatrix, forward);
-            _rookB[rookId].set(rookId*2+1, false, posB, _chessMatrix, !forward);
-            rookId++
-            _pieces.set(posB, _rookB);
-            _pieces.set(posA, _rookW);
+            _rookW[rookId].set(rookId*2, true, posW, &_chessMatrix, forward);
+            _rookB[rookId].set(rookId*2+1, false, posB, &_chessMatrix, !forward);
+            _chessMatrix.set(posB, &_rookB[rookId]);
+            _chessMatrix.set(posW, &_rookW[rookId]);
+            rookId++;
         }
         else if(x==1 || x == MAX_X -2)
         {
-            _knightW[knightId].set(knightId*2, true, posW, _chessMatrix, forward);
-            _knightB[knightId].set(knightId*2+1, false, posB, _chessMatrix, !forward);
+            _knightW[knightId].set(knightId*2, true, posW, &_chessMatrix, forward);
+            _knightB[knightId].set(knightId*2+1, false, posB, &_chessMatrix, !forward);
+            _chessMatrix.set(posB, &_knightB[knightId]);
+            _chessMatrix.set(posW, &_knightW[knightId]);
             knightId++;
-            _pieces.set(posB, _knightB);
-            _pieces.set(posW, _knightW);
         }
         else if(x==2 || x == MAX_X -3)
         {
-            _bishopW[bishopId].set(bishopId*2, true, posW, _chessMatrix, forward);
-            _bishopB[bishopId].set(bishopId*2+1, false, posB, _chessMatrix, !forward);
+            _bishopW[bishopId].set(bishopId*2, true, posW, &_chessMatrix, forward);
+            _bishopB[bishopId].set(bishopId*2+1, false, posB, &_chessMatrix, !forward);
+            _chessMatrix.set(posB, &_bishopB[bishopId]);
+            _chessMatrix.set(posW, &_bishopW[bishopId]);
             bishopId++;
-            _pieces.set(posB, _bishopB);
-            _pieces.set(posW, _bishopW);
         }
         else if(x==3)
         {
-            _kingW[kingId].set(kingId*2, true, posW, _chessMatrix, forward);
-            _kingB[kingId].set(kingId*2+1, false, posB, _chessMatrix, !forward);
+            _kingW.set(kingId*2, true, posW, &_chessMatrix, forward);
+            _kingB.set(kingId*2+1, false, posB, &_chessMatrix, !forward);
+            _chessMatrix.set(posB, &_kingB);
+            _chessMatrix.set(posW, &_kingW);
             kingId++;
-            _pieces.set(posB, _kingB);
-            _pieces.set(posW, _kingW);
-        }
+        } 
         else if(x==4)
         {
-            _queenW[queenId].set(queenId*2, true, posW, _chessMatrix, forward);
-            _queenB[queenId].set(queenId*2+1, false, posB, _chessMatrix, !forward);
+            _queenW.set(queenId*2, true, posW, &_chessMatrix, forward);
+            _queenB.set(queenId*2+1, false, posB, &_chessMatrix, !forward);
+            _chessMatrix.set(posB, &_queenB);
+            _chessMatrix.set(posW, &_queenW);
             queenId++;
-            _pieces.set(posB, _queenB);
-            _pieces.set(posW, _queenW);
         }
     }
 }
 
-void Game::move(const Position& origin, const Position& dest) 
+void Game::move(bool white, const Position& origin, const Position& dest) 
 {
-    _state->move(origin,dest);
+    _state->move(white, origin,dest);
 }

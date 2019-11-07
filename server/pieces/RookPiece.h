@@ -7,8 +7,6 @@ class RookPiece : Piece
 {
     bool _hasMoved = false;
 public:
-    RookPiece(int id,bool white,Position pos, ChessMatrix* m,
-        bool forward): Piece(id,white,pos,m,forward) {}
 
     std::list<Position> getValidMoves() override;
 
