@@ -14,25 +14,24 @@ Game::Game (int gameId)
     }
     
     boardCreation();
-    boardCreation();
 
     createDrawConditions();
 }
 
 void Game::createDrawConditions()
 {
-    std::list<Piece*> condition;
+    /*std::list<Piece*> condition;
     
-    condition.push_front();
-    condition.push_front(_bishopB[0]);
-    condition.push_front(_bishopB[1]);
-    condition.push_front(_bishopW[0]);
-    condition.push_front(_bishopW[1]);
+    _drawCondition.push_front();
+    _drawCondition.push_front(_bishopB[0]);
+    _drawCondition.push_front(_bishopB[1]);
+    _drawCondition.push_front(_bishopW[0]);
+    _drawCondition.push_front(_bishopW[1]);
 
-    condition.push_front(_knightB[0]);
-    condition.push_front(_knightB[1]);
-    condition.push_front(_knightW[0]);
-    condition.push_front(_knightW[1]);
+    _drawCondition.push_front(_knightB[0]);
+    _drawCondition.push_front(_knightB[1]);
+    _drawCondition.push_front(_knightW[0]);
+    _drawCondition.push_front(_knightW[1]);*/
 }
 void Game::boardCreation()
 {

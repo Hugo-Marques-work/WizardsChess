@@ -29,7 +29,7 @@ private:
     std::array<KnightPiece,2> _knightW, _knightB;
     std::array<BishopPiece,2> _bishopW, _bishopB;
     
-    std::list<std::list<Piece*> > drawCondition;
+    std::list<std::list<Piece*> > _drawCondition;
 public:
     Game(int gameId);
     void move(bool white, const Position& origin, const Position& dest);
@@ -37,6 +37,7 @@ public:
     bool getTurn() { return _whiteTurn; }
     void boardCreation();
 
+    void setState(GameState* state) { _state = state; }
     void createDrawConditions();
 
     std::list<std::list<Piece*> > getDrawConditions()
@@ -45,27 +46,27 @@ public:
     }
     std::array<BishopPiece,2>& getBishop(bool white)
     {
-        if(white) {return _bishopW;} else {return _bishopB};
+        if(white) {return _bishopW;} else {return _bishopB;}
     }
     std::array<KnightPiece,2>& getKnight(bool white)
     {
-        if(white) {return _knightW;} else {return _knightB};
+        if(white) {return _knightW;} else {return _knightB;}
     }
     std::array<RookPiece,2>& getRook(bool white)
     {
-        if(white) {return _rookW;} else {return _rookB};
+        if(white) {return _rookW;} else {return _rookB;}
     }
-    std::array<PawnPiece,2>& getPawn(bool white)
+    std::array<PawnPiece,8>& getPawn(bool white)
     {
-        if(white) {return _pawnW;} else {return _pawnB};
+        if(white) {return _pawnW;} else {return _pawnB;}
     }
     QueenPiece& getQueen(bool white)
     {
-        if(white) {return _queenW;} else {return _queenB};
+        if(white) {return _queenW;} else {return _queenB;}
     }
     KingPiece& getKing(bool white)
     {
-        if(white) {return _kingW;} else {return _kingB};
+        if(white) {return _kingW;} else {return _kingB;}
     }
  
 };

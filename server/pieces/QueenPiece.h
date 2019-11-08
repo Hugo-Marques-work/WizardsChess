@@ -3,7 +3,7 @@
 
 #include "Piece.h"
 #include <list>
-class QueenPiece : Piece
+class QueenPiece : public Piece
 {
 public:
 

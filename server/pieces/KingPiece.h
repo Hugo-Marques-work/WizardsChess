@@ -3,7 +3,7 @@
 
 #include "Piece.h"
 #include <list>
-class KingPiece : Piece
+class KingPiece : public Piece
 {
 private:
     bool _hasMoved = false;

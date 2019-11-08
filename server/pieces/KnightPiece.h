@@ -3,7 +3,7 @@
 
 #include "Piece.h"
 #include <list>
-class KnightPiece : Piece
+class KnightPiece : public Piece
 {
 public:
         

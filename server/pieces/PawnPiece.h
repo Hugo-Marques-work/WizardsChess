@@ -4,7 +4,7 @@
 #include "Piece.h"
 #include <list>
 
-class PawnPiece : Piece
+class PawnPiece : public Piece
 {
 private:
     bool _hasMoved = false;

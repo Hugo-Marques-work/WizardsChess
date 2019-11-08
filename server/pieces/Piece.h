@@ -50,6 +50,8 @@ public:
     virtual void setPos(const Position& pos) { _myPos = pos; } 
 
     void die() { _alive = false;}
+
+    bool getAlive() { return _alive; }
     //Used for a text simulation of the game
     inline virtual void debugPrint() {}
 };
