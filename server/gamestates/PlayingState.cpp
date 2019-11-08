@@ -75,7 +75,7 @@ void PlayingState::checkVictory()
         delete this;
     }
     /*
-    FIXME IF ENEMY KING IS CHECKED AND CAN'T MOVE, THEN WIN*/
+    FIXME IF ENEMY KING IS CHECKED AND CAN'T MOVE AND SOMEONE CAN'T DE_CHECK KING, THEN WIN*/
 }
 
 void PlayingState::checkDraw()
