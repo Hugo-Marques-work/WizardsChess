@@ -7,6 +7,7 @@ class RookPiece : public Piece
 {
     bool _hasMoved = false;
 public:
+    using Piece::Piece;
 
     std::list<Position> getValidMoves() override;
 

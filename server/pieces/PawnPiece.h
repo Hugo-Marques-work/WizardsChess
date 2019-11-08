@@ -9,6 +9,7 @@ class PawnPiece : public Piece
 private:
     bool _hasMoved = false;
 public:
+    using Piece::Piece;
     
     std::list<Position> getValidMoves() override;
 

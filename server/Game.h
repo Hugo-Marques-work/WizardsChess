@@ -22,12 +22,12 @@ private:
     GameState* _state;
 
     KingPiece _kingW, _kingB;
-    QueenPiece _queenW, _queenB;
+    std::list<QueenPiece> _queenW, _queenB;
     
-    std::array<PawnPiece,8> _pawnW, _pawnB;
-    std::array<RookPiece,2> _rookW, _rookB;
-    std::array<KnightPiece,2> _knightW, _knightB;
-    std::array<BishopPiece,2> _bishopW, _bishopB;
+    std::list<PawnPiece> _pawnW, _pawnB;
+    std::list<RookPiece> _rookW, _rookB;
+    std::list<KnightPiece> _knightW, _knightB;
+    std::list<BishopPiece> _bishopW, _bishopB;
     
     std::list<std::list<Piece*> > _drawCondition;
 public:
@@ -44,23 +44,23 @@ public:
     {
         return _drawCondition;
     }
-    std::array<BishopPiece,2>& getBishop(bool white)
+    std::list<BishopPiece>& getBishop(bool white)
     {
         if(white) {return _bishopW;} else {return _bishopB;}
-    }
-    std::array<KnightPiece,2>& getKnight(bool white)
+    } 
+    std::list<KnightPiece>& getKnight(bool white)
     {
         if(white) {return _knightW;} else {return _knightB;}
     }
-    std::array<RookPiece,2>& getRook(bool white)
+    std::list<RookPiece>& getRook(bool white)
     {
         if(white) {return _rookW;} else {return _rookB;}
     }
-    std::array<PawnPiece,8>& getPawn(bool white)
+    std::list<PawnPiece>& getPawn(bool white)
     {
         if(white) {return _pawnW;} else {return _pawnB;}
     }
-    QueenPiece& getQueen(bool white)
+    std::list<QueenPiece>& getQueen(bool white)
     {
         if(white) {return _queenW;} else {return _queenB;}
     }

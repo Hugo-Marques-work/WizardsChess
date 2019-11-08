@@ -19,6 +19,7 @@ protected:
 public:
     Piece(): _id(0), _white(true), _myPos(Position(0,0)), 
         _matrix(nullptr), _forward(true) {}
+        
     Piece(int id, bool white, Position pos, ChessMatrix* m, bool forward): 
         _id(id), _white(white), _myPos(pos), _matrix(m), _forward(forward) {}
     //list or array or forward_list
