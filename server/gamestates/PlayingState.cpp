@@ -48,6 +48,7 @@ void PlayingState::move(bool white, const Position& origin, const Position& dest
 
         m->set(dest, p);
         m->set(origin, nullptr);
+        //CAN THROW "PAWN_PROMOTION_EXCEPTION"
         p->setPos(dest);
     }
     else 
@@ -115,41 +116,58 @@ bool PlayingState::checkSpecialCase()
     //king against king and bishop or king against king and knight
     else if(_currentPieces==3)
     {
-        std::array<BishopPiece,2>& bishops1 = _game->getBishop(true); 
-        std::array<BishopPiece,2>& bishops2 = _game->getBishop(false);
-        std::array<KnightPiece,2>& knights1 = _game->getKnight(true);
-        std::array<KnightPiece,2>& knights2 = _game->getKnight(false);
-        
-        if(bishops1[0].getAlive() || bishops1[1].getAlive() ||
-            bishops2[0].getAlive() || bishops2[1].getAlive() ||
-            knights1[0].getAlive() || knights1[1].getAlive() ||
-            knights2[0].getAlive() || knights2[1].getAlive() )
+        std::list<BishopPiece>& bishops1 = _game->getBishop(true); 
+        std::list<BishopPiece>& bishops2 = _game->getBishop(false);
+        std::list<KnightPiece>& knights1 = _game->getKnight(true);
+        std::list<KnightPiece>& knights2 = _game->getKnight(false);
+        for(BishopPiece& p : bishops1)
         {
-            return true;
+            if(p.getAlive()) return true;
+        }
+        for(BishopPiece& p : bishops2)
+        {
+            if(p.getAlive()) return true;
+        }
+        for(KnightPiece& p : knights1)
+        {
+            if(p.getAlive()) return true;
+        }
+        for(KnightPiece& p : knights2)
+        {
+            if(p.getAlive()) return true;
         }
     }
 
     //king and bishop versus king and bishop with the bishops on the same colored square.
     else if(_currentPieces==4)
     {    
-        std::array<BishopPiece,2>& bishopsW = _game->getBishop(true); 
-        std::array<BishopPiece,2>& bishopsB = _game->getBishop(false);
-        
-        //Same parity in pos.x + pos.y = same color squares
-        if( (bishopsW[0].getAlive() || bishopsW[1].getAlive() ) &&
-            (bishopsB[0].getAlive() || bishopsB[1].getAlive() ) )
+        std::list<BishopPiece>& bishopsW = _game->getBishop(true); 
+        std::list<BishopPiece>& bishopsB = _game->getBishop(false);
+        int counter = 0;
+        int parity = 0;
+        for(BishopPiece& b : bishopsW)
         {
-            int parityW = bishopsW[0].getAlive() ? 
-                bishopsW[0].getPos().x + bishopsW[0].getPos().y :
-                bishopsW[1].getPos().x + bishopsW[1].getPos().y ;
-
-            int parityB = bishopsB[0].getAlive() ? 
-                bishopsB[0].getPos().x + bishopsB[0].getPos().y :
-                bishopsB[1].getPos().x + bishopsB[1].getPos().y ;
-
-            if(parityB == parityW) return true;
+            if(b.getAlive())
+            {
+                counter++;
+                parity = (b.getPos().x + b.getPos().y)%2;
+            }
         }
-    }
+        if(counter==1)
+        {
+            for(BishopPiece& b : bishopsB)
+            {
+                if(b.getAlive()) 
+                {
+                    int parity2 = (b.getPos().x + b.getPos().y)%2;
+                    if(parity == parity2)
+                    {
+                        return true;
+                    }
+                }
+            }   
+        }
+    } 
 
     return false;
 }
@@ -165,6 +183,12 @@ bool PlayingState::checkFiftyMove()
 
 /*FIXME MISSING CASE:
     Draw - https://en.wikipedia.org/wiki/Threefold_repetition
+    
     Capture - https://en.wikipedia.org/wiki/En_passant
+    HAVE AN IDEA!
+
     Moves - https://en.wikipedia.org/wiki/Castling 
-    Misc - Pawn Promotion!*/
+
+    Misc - Pawn Promotion!
+    EXCEPTION!!!
+*/

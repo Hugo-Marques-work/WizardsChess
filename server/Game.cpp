@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include <list> 
 Game::Game (int gameId) 
 {
     _gameId = gameId;
@@ -50,11 +50,11 @@ void Game::boardCreation()
         posW.x = x; 
         posB.x = x;
 
-        _pawnW[x].set(x*2, true, posW, &_chessMatrix, forward);
-        _pawnB[x].set(x*2+1, false, posB, &_chessMatrix, !forward);
+        _pawnW.push_back(PawnPiece(x*2, true, posW, &_chessMatrix, forward) );
+        _pawnB.push_back(PawnPiece(x*2+1, false, posB, &_chessMatrix, !forward) );
         
-        _chessMatrix.set(posB, &_pawnB[x]);
-        _chessMatrix.set(posW, &_pawnW[x]);
+        _chessMatrix.set(posB, &_pawnB.back);
+        _chessMatrix.set(posW, &_pawnW.back);
     }
 
     posW.y = secondYW;
@@ -67,26 +67,26 @@ void Game::boardCreation()
         posB.x = x; 
         if(x==0 || x == MAX_X - 1)
         {
-            _rookW[rookId].set(rookId*2, true, posW, &_chessMatrix, forward);
-            _rookB[rookId].set(rookId*2+1, false, posB, &_chessMatrix, !forward);
-            _chessMatrix.set(posB, &_rookB[rookId]);
-            _chessMatrix.set(posW, &_rookW[rookId]);
+            _rookW.push_back(RookPiece(rookId*2, true, posW, &_chessMatrix, forward) );
+            _rookB.push_back(RookPiece(rookId*2+1, false, posB, &_chessMatrix, !forward) );
+            _chessMatrix.set(posB, &_rookB.back);
+            _chessMatrix.set(posW, &_rookW.back);
             rookId++;
         }
         else if(x==1 || x == MAX_X -2)
         {
-            _knightW[knightId].set(knightId*2, true, posW, &_chessMatrix, forward);
-            _knightB[knightId].set(knightId*2+1, false, posB, &_chessMatrix, !forward);
-            _chessMatrix.set(posB, &_knightB[knightId]);
-            _chessMatrix.set(posW, &_knightW[knightId]);
+            _knightW.push_back(KnightPiece(knightId*2, true, posW, &_chessMatrix, forward) );
+            _knightB.push_back(KnightPiece(knightId*2+1, false, posB, &_chessMatrix, !forward) );
+            _chessMatrix.set(posB, &_knightB.back);
+            _chessMatrix.set(posW, &_knightW.back);
             knightId++;
         }
         else if(x==2 || x == MAX_X -3)
         {
-            _bishopW[bishopId].set(bishopId*2, true, posW, &_chessMatrix, forward);
-            _bishopB[bishopId].set(bishopId*2+1, false, posB, &_chessMatrix, !forward);
-            _chessMatrix.set(posB, &_bishopB[bishopId]);
-            _chessMatrix.set(posW, &_bishopW[bishopId]);
+            _bishopW.push_back(BishopPiece(bishopId*2, true, posW, &_chessMatrix, forward) );
+            _bishopB.push_back(BishopPiece(bishopId*2+1, false, posB, &_chessMatrix, !forward) );
+            _chessMatrix.set(posB, &_bishopB.back);
+            _chessMatrix.set(posW, &_bishopW.back);
             bishopId++;
         }
         else if(x==3)
@@ -99,10 +99,10 @@ void Game::boardCreation()
         } 
         else if(x==4)
         {
-            _queenW.set(queenId*2, true, posW, &_chessMatrix, forward);
-            _queenB.set(queenId*2+1, false, posB, &_chessMatrix, !forward);
-            _chessMatrix.set(posB, &_queenB);
-            _chessMatrix.set(posW, &_queenW);
+            _queenW.push_back(QueenPiece(queenId*2, true, posW, &_chessMatrix, forward) );
+            _queenB.push_back(QueenPiece(queenId*2+1, false, posB, &_chessMatrix, !forward) );
+            _chessMatrix.set(posB, &_queenB.back);
+            _chessMatrix.set(posW, &_queenW.back);
             queenId++;
         }
     }
@@ -112,3 +112,4 @@ void Game::move(bool white, const Position& origin, const Position& dest)
 {
     _state->move(white, origin,dest);
 }
+ 

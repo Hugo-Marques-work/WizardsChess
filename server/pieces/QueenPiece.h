@@ -6,6 +6,7 @@
 class QueenPiece : public Piece
 {
 public:
+    using Piece::Piece;
 
     std::list<Position> getValidMoves() override;
     
