@@ -15,7 +15,7 @@ std::list<Position> RookPiece::getValidMoves()
         {
             try
             {
-                piece = _matrix->get( Position(_myPos.x+tempX, _myPos.y) ); 
+                piece = _game->getCell( Position(_myPos.x+tempX, _myPos.y) ); 
                 if( piece == nullptr || (piece!=nullptr && piece->isWhite() != _white))
                     valid.push_front( Position(_myPos.x+tempX, _myPos.y) );
                 tempX+=x;
@@ -31,7 +31,7 @@ std::list<Position> RookPiece::getValidMoves()
         {
             try
             {
-                piece = _matrix->get( Position(_myPos.x, _myPos.y + tempY) ); 
+                piece = _game->getCell( Position(_myPos.x, _myPos.y + tempY) ); 
                 if( piece == nullptr || (piece!=nullptr && piece->isWhite() != _white))
                     valid.push_front( Position(_myPos.x, _myPos.y + tempY) );
                 tempY+=y;

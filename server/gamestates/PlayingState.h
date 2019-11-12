@@ -5,7 +5,17 @@
 
 class PlayingState : public GameState 
 {
-private:
+private:    
+    using GameState::GameState;
+
+    int _currentPieces = 32;
+    const int MAX_COUNTER = 50;
+    int _moveCounter = 0;
+    void checkVictory();
+    void checkDraw();
+    bool checkStalemate();
+    bool checkSpecialCase();
+    bool checkFiftyMove();
 public:
     void accept (GameStateVisitor* visitor) override;
     

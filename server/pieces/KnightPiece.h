@@ -3,12 +3,11 @@
 
 #include "Piece.h"
 #include <list>
-class KnightPiece : Piece
+class KnightPiece : public Piece
 {
 public:
-    KnightPiece(int id, bool white, Position pos, ChessMatrix* m,
-        bool forward): Piece(id,white,pos,m,forward) {}
-        
+    using Piece::Piece;
+
     std::list<Position> getValidMoves() override;
 
     void debugPrint() override { std::cout << "H"; }

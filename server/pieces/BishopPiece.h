@@ -3,11 +3,10 @@
 
 #include "Piece.h"
 #include <list>
-class BishopPiece : Piece
+class BishopPiece : public Piece
 {
 public:
-    BishopPiece(int id, bool white, Position pos, ChessMatrix* m,
-        bool forward): Piece(id,white,pos,m,forward) {}
+    using Piece::Piece;
         
     std::list<Position> getValidMoves() override;
 

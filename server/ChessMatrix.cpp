@@ -10,63 +10,11 @@ using namespace std;
 
 void ChessMatrix::oneSideBoardCreation(bool white,bool forward)
 {
-    int id = 0;
-    int firstY = 6;
-    int secondY = 7;
-    if(forward == true)
-    {
-        firstY = 1;
-        secondY = 0;
-    }
-    int y = firstY;
-    for(int x = 0; x < MAX_X; x++)
-    {
-        _pieces.at(x).at(y) = (Piece*) new PawnPiece(id++,
-            white,Position(x,y),this,forward);
-    }
-    y = secondY;
-    for(int x = 0; x < MAX_X; x++)
-    {
-        if(x==0 || x == MAX_X - 1)
-        {
-            _pieces.at(x).at(y) = (Piece*) new RookPiece(id++,
-                white,Position(x,y),this,forward);
-        }
-        else if(x==1 || x == MAX_X -2)
-        {
-            _pieces.at(x).at(y) = (Piece*) new KnightPiece(id++,
-                white,Position(x,y),this, forward);
-        }
-        else if(x==2 || x == MAX_X -3)
-        {
-            _pieces.at(x).at(y) = (Piece*) new BishopPiece(id++,
-                white,Position(x,y),this, forward);
-        }
-        else if(x==3)
-        {
-            _pieces.at(x).at(y) = (Piece*) new KingPiece(id++,
-                white,Position(x,y),this, forward);
-        }
-        else if(x==4)
-        {
-            _pieces.at(x).at(y) = (Piece*) new QueenPiece(id++,
-                white,Position(x,y),this, forward);
-        }
-    }
 
 }
 ChessMatrix::ChessMatrix()
 { 
     _pieces = array< array<Piece*,8>, 8>();
-    for(int x = 0; x < MAX_X; x++)
-    {
-        for(int y = 0; y < MAX_Y; y++)
-        {
-            _pieces.at(x).at(y) = nullptr;
-        }
-    }
-    oneSideBoardCreation(true,true);
-    oneSideBoardCreation(false,false);
 }
 
 //Has some std::couts to help with text simulation

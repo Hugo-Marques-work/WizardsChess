@@ -5,7 +5,8 @@
 
 class DrawState : public GameState 
 {
-private:
+private:   
+    using GameState::GameState;
 public:
     void accept (GameStateVisitor* visitor) override;
 

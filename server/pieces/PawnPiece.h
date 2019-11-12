@@ -4,13 +4,12 @@
 #include "Piece.h"
 #include <list>
 
-class PawnPiece : Piece
+class PawnPiece : public Piece
 {
 private:
     bool _hasMoved = false;
 public:
-    PawnPiece(int id,bool white, Position pos, ChessMatrix* m,
-         bool forward): Piece(id,white,pos,m,forward) {}
+    using Piece::Piece;
     
     std::list<Position> getValidMoves() override;
 
