@@ -5,6 +5,7 @@
 #include <list>
 #include <array>
 #include "pieces/Piece.h"
+#include "pieces/EnPassantePiece.h"
 #include "Position.h"
 #include <iostream>
 
@@ -18,6 +19,9 @@ private:
     //FIXME: Hugo, por que usas MAX_X e MAX_Y, e depois 8 har-coded?
     //FIXME: É um workaround
     std::array< std::array<Piece*,8>, 8> _pieces;
+    std::list<Position> _enPassant;
+    Position* _enPassantOrigin;
+
     void oneSideBoardCreation(bool white, bool forward);
 public:
     ChessMatrix();
@@ -30,6 +34,28 @@ public:
 
     void set(const Position& pos, Piece* p) noexcept(false);
 
+    void clearEnPassant()
+    {
+        if(_enPassant.empty()) return;
+        _enPassant = std::list<Position>();
+    }
+    void setEnPassant(std::list<Position>& p, Position& origin)
+    {
+        clearEnPassant();
+        _enPassant = p;
+        _enPassantOrigin = new Position(origin.x,origin.y);
+
+    }
+
+    std::list<Position> getPassantOrigin()
+    {
+        return _enPassant;
+    }
+
+    std::list<Position> getPassantOrigin()
+    {
+        return _enPassantOrigin;
+    }
     //Used for a text simulation of the game
     void printMatrix();
 };

@@ -1,16 +1,19 @@
 #ifndef _PIECE_H_
 #define _PIECE_H_
+#include "../Game.h"
 #include "../ChessMatrix.h"
 #include "../Position.h"
 #include <list>
 #include <utility>
 
 class ChessMatrix;
+class Game;
 
 class Piece
 {
 protected:
-    ChessMatrix* _matrix; 
+    Game* _game;
+
     bool _forward;
     int _id;
     bool _white;
@@ -18,10 +21,10 @@ protected:
     Position _myPos;
 public:
     Piece(): _id(0), _white(true), _myPos(Position(0,0)), 
-        _matrix(nullptr), _forward(true) {}
+        _game(nullptr), _forward(true) {}
         
-    Piece(int id, bool white, Position pos, ChessMatrix* m, bool forward): 
-        _id(id), _white(white), _myPos(pos), _matrix(m), _forward(forward) {}
+    Piece(int id, bool white, Position pos, Game* g, bool forward): 
+        _id(id), _white(white), _myPos(pos), _game(g), _forward(forward) {}
     //list or array or forward_list
     virtual std::list<Position> getValidMoves() = 0;
 
@@ -35,12 +38,12 @@ public:
 
     //void setForward(bool forward) { _forward = forward; }
 
-    void set(int id, bool white, Position pos, ChessMatrix* m, bool forward)
+    void set(int id, bool white, Position pos, Game* m, bool forward)
     {
         _id = id;
         _white = white;
         _myPos = pos;
-        _matrix = m;
+        _game = m;
         _forward = forward;
     }
 
@@ -50,7 +53,7 @@ public:
     
     virtual void setPos(const Position& pos) { _myPos = pos; } 
 
-    void die() { _alive = false;}
+    virtual void die() { _alive = false;}
 
     bool getAlive() { return _alive; }
     //Used for a text simulation of the game

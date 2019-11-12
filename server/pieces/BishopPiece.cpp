@@ -16,7 +16,7 @@ std::list<Position> BishopPiece::getValidMoves()
             {
                 try
                 {
-                    piece = _matrix->get( Position(_myPos.x+tempX, _myPos.y+tempY) ); 
+                    piece = _game->getCell( Position(_myPos.x+tempX, _myPos.y+tempY) ); 
                     if( piece == nullptr || (piece!=nullptr && piece->isWhite() != _white))
                         valid.push_front( Position(_myPos.x+tempX, _myPos.y+tempY) );
                     tempX+=x;

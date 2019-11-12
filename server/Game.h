@@ -36,8 +36,22 @@ public:
     ChessMatrix* getMatrix () { return &_chessMatrix; }
     bool getTurn() { return _whiteTurn; }
     void boardCreation();
+ 
+    Piece* getCell(const Position& pos)
+    {
+        return _chessMatrix.get(pos);
+    }
+
+    void fillingEnPassant(const Position& pos, bool color);
+    
+    std::list<Position>& getEnPassantOrigin() 
+    { return _chessMatrix.getEnPassantOrigin(); }
+
+    std::list<Position>& getEnPassantDest() 
+    { return _chessMatrix.getEnPassantDest(); }
 
     void setState(GameState* state) { _state = state; }
+
     void createDrawConditions();
 
     std::list<std::list<Piece*> > getDrawConditions()

@@ -19,7 +19,7 @@ Game::Game (int gameId)
 }
 
 void Game::createDrawConditions()
-{
+{ 
     /*std::list<Piece*> condition;
     
     _drawCondition.push_front();
@@ -33,6 +33,7 @@ void Game::createDrawConditions()
     _drawCondition.push_front(_knightW[0]);
     _drawCondition.push_front(_knightW[1]);*/
 }
+
 void Game::boardCreation()
 {
     bool forward = true;
@@ -50,8 +51,8 @@ void Game::boardCreation()
         posW.x = x; 
         posB.x = x;
 
-        _pawnW.push_back(PawnPiece(x*2, true, posW, &_chessMatrix, forward) );
-        _pawnB.push_back(PawnPiece(x*2+1, false, posB, &_chessMatrix, !forward) );
+        _pawnW.push_back(PawnPiece(x*2, true, posW, this, forward) );
+        _pawnB.push_back(PawnPiece(x*2+1, false, posB, this, !forward) );
         
         _chessMatrix.set(posB, &_pawnB.back);
         _chessMatrix.set(posW, &_pawnW.back);
@@ -67,40 +68,40 @@ void Game::boardCreation()
         posB.x = x; 
         if(x==0 || x == MAX_X - 1)
         {
-            _rookW.push_back(RookPiece(rookId*2, true, posW, &_chessMatrix, forward) );
-            _rookB.push_back(RookPiece(rookId*2+1, false, posB, &_chessMatrix, !forward) );
+            _rookW.push_back(RookPiece(rookId*2, true, posW, this, forward) );
+            _rookB.push_back(RookPiece(rookId*2+1, false, posB, this, !forward) );
             _chessMatrix.set(posB, &_rookB.back);
             _chessMatrix.set(posW, &_rookW.back);
             rookId++;
         }
         else if(x==1 || x == MAX_X -2)
         {
-            _knightW.push_back(KnightPiece(knightId*2, true, posW, &_chessMatrix, forward) );
-            _knightB.push_back(KnightPiece(knightId*2+1, false, posB, &_chessMatrix, !forward) );
+            _knightW.push_back(KnightPiece(knightId*2, true, posW, this, forward) );
+            _knightB.push_back(KnightPiece(knightId*2+1, false, posB, this, !forward) );
             _chessMatrix.set(posB, &_knightB.back);
             _chessMatrix.set(posW, &_knightW.back);
             knightId++;
         }
         else if(x==2 || x == MAX_X -3)
         {
-            _bishopW.push_back(BishopPiece(bishopId*2, true, posW, &_chessMatrix, forward) );
-            _bishopB.push_back(BishopPiece(bishopId*2+1, false, posB, &_chessMatrix, !forward) );
+            _bishopW.push_back(BishopPiece(bishopId*2, true, posW, this, forward) );
+            _bishopB.push_back(BishopPiece(bishopId*2+1, false, posB, this, !forward) );
             _chessMatrix.set(posB, &_bishopB.back);
             _chessMatrix.set(posW, &_bishopW.back);
             bishopId++;
         }
         else if(x==3)
         {
-            _kingW.set(kingId*2, true, posW, &_chessMatrix, forward);
-            _kingB.set(kingId*2+1, false, posB, &_chessMatrix, !forward);
+            _kingW.set(kingId*2, true, posW, this, forward);
+            _kingB.set(kingId*2+1, false, posB, this, !forward);
             _chessMatrix.set(posB, &_kingB);
             _chessMatrix.set(posW, &_kingW);
             kingId++;
-        } 
+        }  
         else if(x==4)
         {
-            _queenW.push_back(QueenPiece(queenId*2, true, posW, &_chessMatrix, forward) );
-            _queenB.push_back(QueenPiece(queenId*2+1, false, posB, &_chessMatrix, !forward) );
+            _queenW.push_back(QueenPiece(queenId*2, true, posW, this, forward) );
+            _queenB.push_back(QueenPiece(queenId*2+1, false, posB, this, !forward) );
             _chessMatrix.set(posB, &_queenB.back);
             _chessMatrix.set(posW, &_queenW.back);
             queenId++;
@@ -113,3 +114,31 @@ void Game::move(bool white, const Position& origin, const Position& dest)
     _state->move(white, origin,dest);
 }
  
+void Game::fillingEnPassant(const Position& pos, bool white)
+{
+    std::list<Position> posList;
+    if(white)
+    {
+        for(PawnPiece& p : _pawnW)
+        {
+            if(p.getPos().y == pos.y && (p.getPos().x+1 == 
+                pos.x || p.getPos().x-1 == pos.x) )
+            {
+                posList.push_front(pos);
+            }
+        }
+    }
+    else
+    {
+        for(PawnPiece& p : _pawnB)
+        {
+            if(p.getPos().y == pos.y && (p.getPos().x+1 == 
+                pos.x || p.getPos().x-1 == pos.x) )
+            {
+                posList.push_front(pos);
+            }
+        }        
+    }
+
+    _chessMatrix.setEnPassant(posList);
+}

@@ -11,7 +11,7 @@ std::list<Position> KingPiece::getValidMoves()
             if(x==0 && y==0) continue;
             try
             {
-                piece = _matrix->get( Position(_myPos.x+x, _myPos.y+y) ); 
+                piece = _game->getCell( Position(_myPos.x+x, _myPos.y+y) ); 
                 if( piece == NULL)
                     valid.push_front( Position(_myPos.x+x, _myPos.y+y) );
             }catch(std::out_of_range &e) { continue; }
@@ -28,7 +28,7 @@ std::list<Position> KingPiece::getValidMoves()
             int y = 0;
             while(_myPos.x + x != rooks[0].getPos().x)
             {
-                if(_matrix->get( Position(_myPos.x+x, _myPos.y+y)) != nullptr) break;
+                if(_game->getCell( Position(_myPos.x+x, _myPos.y+y)) != nullptr) break;
             }
             if(_myPos.x + x == rooks[0].getPos().x)
             {

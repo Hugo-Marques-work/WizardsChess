@@ -21,7 +21,13 @@ void PlayingState::move(bool white, const Position& origin, const Position& dest
 
     _moveCounter++;
 
-    if(p->validateMove(dest)==true)
+    bool enPassant = false;
+    for(Position& pos : _game.getEnPassantOrigin())
+    {
+        if(pos==origin) enPassant = true;
+    }
+
+    if(p->validateMove(dest)==true || ( enPassant)
     {
         Piece* destP = m->get(dest);
         if(destP != nullptr)
@@ -185,7 +191,7 @@ bool PlayingState::checkFiftyMove()
     Draw - https://en.wikipedia.org/wiki/Threefold_repetition
     
     Capture - https://en.wikipedia.org/wiki/En_passant
-    HAVE AN IDEA!
+    HAVE AN IDEA! Ponteiro no board
 
     Moves - https://en.wikipedia.org/wiki/Castling 
 

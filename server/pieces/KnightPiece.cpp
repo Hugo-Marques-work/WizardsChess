@@ -15,7 +15,7 @@ std::list<Position> KnightPiece::getValidMoves()
             if(y==0) continue;
             try
             {
-                piece = _matrix->get( Position(_myPos.x+x, _myPos.y+y) ); 
+                piece = _game->getCell( Position(_myPos.x+x, _myPos.y+y) ); 
                 if( piece == nullptr || (piece!=nullptr && piece->isWhite() != _white))
                     valid.push_front( Position(_myPos.x+x, _myPos.y+y) );
             }catch(std::out_of_range &e)
