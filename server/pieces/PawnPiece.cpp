@@ -23,7 +23,6 @@ std::list<Position> PawnPiece::getValidMoves()
                 if(piece == nullptr)
                 {
                     valid.push_front( Position(_myPos.x, _myPos.y+yToAdd*2) );
-                    _game->fillPassante(_myPos, _white);
                 }
             }
         }
@@ -48,4 +47,20 @@ std::list<Position> PawnPiece::getValidMoves()
     }catch(std::out_of_range &e){;}
     
     return valid;
+}
+
+void PawnPiece::setPos(const Position& pos)
+{
+    if(!_hasMoved)
+    {
+        if(pos.y - _myPos.y == 2 || pos.y - _myPos.y == -2)
+        {
+            Position& lastPos = _game->getPos();
+            Piece::setPos(pos);
+            _game->fillEnPassant(lastPos,this);
+        }
+    }
+    else
+        Piece::setPos(pos); 
+    _hasMoved = true;
 }

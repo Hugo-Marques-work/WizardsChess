@@ -22,12 +22,24 @@ void PlayingState::move(bool white, const Position& origin, const Position& dest
     _moveCounter++;
 
     bool enPassant = false;
-    for(Position& pos : _game.getEnPassantOrigin())
+    for(Position& pos : _game->getEnPassantOrigin())
     {
-        if(pos==origin) enPassant = true;
+        if(pos==origin && dest == (*const _game->getEnPassantDest() )) 
+            enPassant = true;
     }
+    if(enPassant) 
+    {
+        Piece* pAlt = _game->getEnPassantPiece();
 
-    if(p->validateMove(dest)==true || ( enPassant)
+        pAlt->die();
+        _currentPieces--;
+        _moveCounter = 0; 
+
+        m->set(dest, p);
+        m->set(origin, nullptr);
+        p->setPos(dest);
+    }
+    else if(p->validateMove(dest)==true)
     {
         Piece* destP = m->get(dest);
         if(destP != nullptr)
@@ -36,17 +48,6 @@ void PlayingState::move(bool white, const Position& origin, const Position& dest
             _currentPieces--;
             _moveCounter = 0;
         }
-        /* FIXME! ANALYZE INSTANCEOF
-        std::array<PawnPiece,8>& pawns = _game->getPawn(white);
-        for(PawnPiece& p2 : pawns)
-        {
-            if(p2.getId()==p->getId()) 
-            {
-                _moveCounter = 0;
-                break;
-            }
-        }*/
-        //FIXME check if works
 
         // p is pawnpiece
         if( dynamic_cast<PawnPiece*>(p) != nullptr )

@@ -15,7 +15,7 @@ Game::Game (int gameId)
     
     boardCreation();
 
-    createDrawConditions();
+    createDrawConditions(); 
 }
 
 void Game::createDrawConditions()
@@ -114,9 +114,11 @@ void Game::move(bool white, const Position& origin, const Position& dest)
     _state->move(white, origin,dest);
 }
  
-void Game::fillingEnPassant(const Position& pos, bool white)
+void Game::fillEnPassant(const Position& lastPos,Piece* piece)
 {
+    bool white = piece->isWhite();
     std::list<Position> posList;
+    Position& pos = piece->getPos();
     if(white)
     {
         for(PawnPiece& p : _pawnW)
@@ -140,5 +142,35 @@ void Game::fillingEnPassant(const Position& pos, bool white)
         }        
     }
 
-    _chessMatrix.setEnPassant(posList);
+    _chessMatrix.setEnPassant(piece, lastPos, posList);
+}
+
+#include <iostream>
+
+//Removing this will remove the text simulation
+int main()
+{
+    Game* game(0); 
+    ChessMatrix* m = game->getMatrix();
+    m->printMatrix();
+    bool white = true;        
+    int xOld,xNew,yOld,yNew;
+    while(true)
+    {
+        std::cin >> xOld >> yOld >> xNew >> yNew;
+
+        Position lastPos(xOld,yOld);
+        Position newPos(xNew,yNew);
+
+        if(white != game->getCell(lastPos)->isWhite())
+            continue;
+
+        game->move(white,lastPos,newPos); 
+
+        std::cout << std::endl << std::endl;
+        
+        m->printMatrix();
+        white = !white;
+    }
+    return 0;
 }

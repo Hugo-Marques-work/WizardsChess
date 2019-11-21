@@ -13,8 +13,7 @@ public:
     
     std::list<Position> getValidMoves() override;
 
-    void setPos(const Position& pos) override 
-    { Piece::setPos(pos); _hasMoved = true; } 
+    void setPos(const Position& pos) override ;
 
     void debugPrint() override { std::cout << "P"; }
 };

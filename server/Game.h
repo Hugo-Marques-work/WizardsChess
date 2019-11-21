@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "GameState.h"
+#include "gamestates/GameState.h"
 #include "ChessMatrix.h"
 #include "pieces/Piece.h"
 #include "pieces/PawnPiece.h"
@@ -42,13 +42,16 @@ public:
         return _chessMatrix.get(pos);
     }
 
-    void fillingEnPassant(const Position& pos, bool color);
+    void fillEnPassant(const Position& lastPos,Piece* piece);
     
     std::list<Position>& getEnPassantOrigin() 
     { return _chessMatrix.getEnPassantOrigin(); }
 
-    std::list<Position>& getEnPassantDest() 
+    Position* getEnPassantDest() 
     { return _chessMatrix.getEnPassantDest(); }
+
+    Piece* getEnPassantPiece() 
+    { return _chessMatrix.getEnPassantPiece(); }
 
     void setState(GameState* state) { _state = state; }
 

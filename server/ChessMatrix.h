@@ -5,22 +5,24 @@
 #include <list>
 #include <array>
 #include "pieces/Piece.h"
-#include "pieces/EnPassantePiece.h"
 #include "Position.h"
 #include <iostream>
 
 #include "exceptions/NoSuchPieceException.h"
 class Piece;
+
 class ChessMatrix
 {
 private:
     const int MAX_X = 8;
     const int MAX_Y = 8;
-    //FIXME: Hugo, por que usas MAX_X e MAX_Y, e depois 8 har-coded?
+    //FIXME: Hugo, por que usas MAX_X e MAX_Y, e depois 8 hard-coded?
     //FIXME: É um workaround
     std::array< std::array<Piece*,8>, 8> _pieces;
-    std::list<Position> _enPassant;
-    Position* _enPassantOrigin;
+    
+    std::list<Position> _enPassantOrigin;
+    Position* _enPassantDest;
+    Piece* _enPassantPiece;
 
     void oneSideBoardCreation(bool white, bool forward);
 public:
@@ -36,25 +38,32 @@ public:
 
     void clearEnPassant()
     {
-        if(_enPassant.empty()) return;
-        _enPassant = std::list<Position>();
+        if(_enPassantOrigin.empty() && _enPassantDest==nullptr) return;
+        _enPassantOrigin = std::list<Position>();
+        delete(_enPassantDest);
     }
-    void setEnPassant(std::list<Position>& p, Position& origin)
+
+    void setEnPassant(Piece* piece, const std::list<Position>& p, const Position& origin)
     {
         clearEnPassant();
-        _enPassant = p;
-        _enPassantOrigin = new Position(origin.x,origin.y);
-
+        _enPassantOrigin = p;
+        _enPassantDest = new Position(origin.x,origin.y);
+        _enPassantPiece = piece;
     }
 
-    std::list<Position> getPassantOrigin()
+    Piece* getEnPassantPiece()
     {
-        return _enPassant;
+        return _enPassantPiece;
     }
 
-    std::list<Position> getPassantOrigin()
+    std::list<Position>& getEnPassantOrigin()
     {
         return _enPassantOrigin;
+    }
+
+    Position* getEnPassantDest()
+    {
+        return _enPassantDest;
     }
     //Used for a text simulation of the game
     void printMatrix();

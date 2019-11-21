@@ -57,19 +57,3 @@ void ChessMatrix::printMatrix()
     }*/
 
 }
-//Removing this will remove the text simulation
-int main()
-{
-    ChessMatrix* m = new ChessMatrix();
-    m->printMatrix();
-    while(true)
-    {
-        int xOld,xNew,yOld,yNew;
-        cin >> xOld >> yOld >> xNew >> yNew;
-        m->set(Position(xNew,yNew),m->get(Position(xOld,yOld)));
-    
-        std::cout << endl << endl;
-        m->printMatrix();
-    }
-    return 0;
-}
