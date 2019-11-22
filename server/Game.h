@@ -42,8 +42,11 @@ private:
 public:
     Game(int gameId);
     void move(const Position& origin, const Position& dest);
+
     ChessMatrix* getMatrix () { return &_chessMatrix; }
+
     bool getTurn() { return _whiteTurn; }
+    
     void boardCreation();
  
     Piece* getCell(const Position& pos)

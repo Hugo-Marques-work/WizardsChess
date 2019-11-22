@@ -115,7 +115,8 @@ void Game::boardCreation()
 
 void Game::move(const Position& origin, const Position& dest) 
 {
-    _state->move(_whiteTurn, origin,dest);
+    _state->move(origin,dest);
+
     _whiteTurn = !_whiteTurn;
 }
  
@@ -171,7 +172,12 @@ int main()
         Position lastPos(xOld,yOld);
         Position newPos(xNew,yNew);
 
-        game.move(lastPos,newPos); 
+        try{
+            game.move(lastPos,newPos); 
+        } catch( ... )
+        {
+            std::cout<<"Exception"<<std::endl;
+        }
 
         std::cout << std::endl << std::endl;
         
