@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "exceptions/NoSuchPieceException.h"
-class Piece;
+//class Piece;
 
 class ChessMatrix
 {

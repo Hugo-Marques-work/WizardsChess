@@ -1,4 +1,5 @@
 #include "PlayingState.h"
+#include "../Game.h"
 
 void PlayingState::accept (GameStateVisitor* visitor) 
 {
@@ -24,7 +25,7 @@ void PlayingState::move(bool white, const Position& origin, const Position& dest
     bool enPassant = false;
     for(Position& pos : _game->getEnPassantOrigin())
     {
-        if(pos==origin && dest == (*const _game->getEnPassantDest() )) 
+        if(pos==origin && dest == (*_game->getEnPassantDest() )) 
             enPassant = true;
     }
     if(enPassant) 
@@ -39,6 +40,8 @@ void PlayingState::move(bool white, const Position& origin, const Position& dest
         m->set(origin, nullptr);
         p->setPos(dest);
     }
+
+    
     else if(p->validateMove(dest)==true)
     {
         Piece* destP = m->get(dest);
@@ -67,6 +70,8 @@ void PlayingState::move(bool white, const Position& origin, const Position& dest
     checkDraw();
     checkFiftyMove();
 }
+
+#include <iostream>
  
 void PlayingState::checkVictory()
 {
@@ -80,6 +85,9 @@ void PlayingState::checkVictory()
         }
         bool white = ! kW.getAlive();
         _game->setState(new WinState(_game, white));
+
+        std::cout << "win" << std::endl;
+        
         delete this;
     }
     /*
@@ -90,7 +98,9 @@ void PlayingState::checkDraw()
 {
     if( checkStalemate() || checkSpecialCase() )
     {
-        _game->setState( new DrawState(_game) );
+        _game->setState( new DrawState(_game) );        
+        std::cout << "draw" << std::endl;
+
         delete this; 
     }
 }
@@ -107,12 +117,12 @@ bool PlayingState::checkStalemate()
             if(p==nullptr || p->isWhite()!=_game->getTurn()) continue;
             if(!p->getValidMoves().empty())
             {
-                return true;
+                return false;
             }
         }
     }
 
-    return false;
+    return true;
 }
 
 bool PlayingState::checkSpecialCase()

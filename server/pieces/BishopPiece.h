@@ -3,6 +3,9 @@
 
 #include "Piece.h"
 #include <list>
+
+#include <iostream>
+
 class BishopPiece : public Piece
 {
 public:

@@ -8,7 +8,9 @@
 #include "../exceptions/NotYourTurnException.h"
 #include "../exceptions/NoSuchPieceException.h"
 #include "../exceptions/ImpossibleBoardStateException.h"
-#include "../Game.h"
+
+//#include "../Game.h"
+class Game;
 
 class GameState 
 {

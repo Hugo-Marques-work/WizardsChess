@@ -3,6 +3,8 @@
 
 #include "Piece.h"
 #include <list>
+
+#include <iostream>
 class QueenPiece : public Piece
 {
 public:

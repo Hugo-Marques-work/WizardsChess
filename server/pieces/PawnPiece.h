@@ -4,6 +4,7 @@
 #include "Piece.h"
 #include <list>
 
+#include <iostream>
 class PawnPiece : public Piece
 {
 private:

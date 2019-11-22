@@ -1,4 +1,5 @@
 #include "BishopPiece.h"
+#include "../Game.h"
 
 std::list<Position> BishopPiece::getValidMoves()
 {

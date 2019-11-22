@@ -3,6 +3,8 @@
 
 #include "gamestates/GameState.h"
 #include "ChessMatrix.h"
+
+
 #include "pieces/Piece.h"
 #include "pieces/PawnPiece.h"
 #include "pieces/QueenPiece.h"
@@ -10,7 +12,14 @@
 #include "pieces/KingPiece.h"
 #include "pieces/RookPiece.h"
 #include "pieces/BishopPiece.h"
-
+ 
+/*class Piece;
+class BishopPiece;
+class PawnPiece;
+class KingPiece;
+class QueenPiece;
+class RookPiece;
+class KnightPiece;*/
 class Game
 {
 private:
@@ -32,7 +41,7 @@ private:
     std::list<std::list<Piece*> > _drawCondition;
 public:
     Game(int gameId);
-    void move(bool white, const Position& origin, const Position& dest);
+    void move(const Position& origin, const Position& dest);
     ChessMatrix* getMatrix () { return &_chessMatrix; }
     bool getTurn() { return _whiteTurn; }
     void boardCreation();
@@ -86,6 +95,8 @@ public:
         if(white) {return _kingW;} else {return _kingB;}
     }
  
+
+    void printMatrix();
 };
 
 #endif

@@ -1,4 +1,5 @@
 #include "QueenPiece.h"
+#include "../Game.h"
 
 std::list<Position> QueenPiece::getValidMoves()
 {

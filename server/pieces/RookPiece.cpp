@@ -1,4 +1,5 @@
 #include "RookPiece.h"
+#include "../Game.h"
 
 std::list<Position> RookPiece::getValidMoves()
 {

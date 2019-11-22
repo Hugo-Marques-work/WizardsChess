@@ -1,5 +1,5 @@
 #include "PawnPiece.h"
-
+#include "../Game.h"
 
 std::list<Position> PawnPiece::getValidMoves()
 {
@@ -46,6 +46,10 @@ std::list<Position> PawnPiece::getValidMoves()
             valid.push_front(Position(_myPos.x-1, _myPos.y+yToAdd));
     }catch(std::out_of_range &e){;}
     
+    for (Position& pos : valid)
+    {
+        std::cout << pos.x << " " << pos.y << std::endl;
+    }
     return valid;
 }
 
@@ -55,7 +59,7 @@ void PawnPiece::setPos(const Position& pos)
     {
         if(pos.y - _myPos.y == 2 || pos.y - _myPos.y == -2)
         {
-            Position& lastPos = _game->getPos();
+            Position& lastPos = _myPos;
             Piece::setPos(pos);
             _game->fillEnPassant(lastPos,this);
         }

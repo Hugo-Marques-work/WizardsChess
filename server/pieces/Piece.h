@@ -1,11 +1,12 @@
 #ifndef _PIECE_H_
 #define _PIECE_H_
-#include "../Game.h"
-#include "../ChessMatrix.h"
 #include "../Position.h"
 #include <list>
 #include <utility>
 
+
+/*#include "../Game.h"
+#include "../ChessMatrix.h"*/
 class ChessMatrix;
 class Game;
 

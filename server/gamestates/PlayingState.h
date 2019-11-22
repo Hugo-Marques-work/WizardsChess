@@ -2,6 +2,9 @@
 #define PLAYINGSTATE_H
 
 #include "GameState.h"
+#include "DrawState.h"
+#include "WinState.h"
+#include "DropState.h"
 
 class PlayingState : public GameState 
 {

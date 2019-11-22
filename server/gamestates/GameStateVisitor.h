@@ -1,11 +1,16 @@
 #ifndef GAMESTATEVISITOR_H
 #define GAMESTATEVISITOR_H
 
+/*
 #include "PlayingState.h"
 #include "DrawState.h"
 #include "WinState.h"
-#include "DropState.h"
+#include "DropState.h"*/
 
+class PlayingState;
+class DrawState;
+class WinState;
+class DropState;
 class GameStateVisitor
 {
 public:
