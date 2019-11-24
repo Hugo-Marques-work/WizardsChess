@@ -4,6 +4,8 @@
 #include "MessageVisitor.h"
 #include "../exceptions/WrongInputException.h"
 
+#include "Parser.h"
+
 class PrintMessage : public MessageVisitor {
 public:
     void visitReg (RegMessage* message) {
@@ -53,6 +55,5 @@ int main () {
         
         delete message;
     }
-    
     return 0;
 }
