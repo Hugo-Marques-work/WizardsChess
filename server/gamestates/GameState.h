@@ -8,7 +8,9 @@
 #include "../exceptions/NotYourTurnException.h"
 #include "../exceptions/NoSuchPieceException.h"
 #include "../exceptions/ImpossibleBoardStateException.h"
-#include "../Game.h"
+
+//#include "../Game.h"
+class Game;
 
 class GameState 
 {
@@ -21,7 +23,7 @@ public:
     GameState(Game* game): _game(game) {}
 
     virtual void accept (GameStateVisitor* visitor) noexcept(false) = 0 ;
-    virtual void move(bool white, const Position& origin,
+    virtual void move(const Position& origin,
          const Position& dest) noexcept(false) = 0;
 };
  

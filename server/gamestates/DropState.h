@@ -11,7 +11,7 @@ public:
     DropState(Game* game, bool white): GameState(game), _playerWhite(white) {}
     void accept (GameStateVisitor* visitor) override;
 
-    void move(bool white, const Position& origin,
+    void move(const Position& origin,
         const Position& dest) noexcept(false) override;
 };
 

@@ -1,16 +1,13 @@
 #include "PlayingState.h"
+#include "../Game.h"
 
 void PlayingState::accept (GameStateVisitor* visitor) 
 {
     visitor->visitPlaying(this);
 }
 
-void PlayingState::move(bool white, const Position& origin, const Position& dest) 
+void PlayingState::move(const Position& origin, const Position& dest) 
 {
-    if( white != _game->getTurn() )
-    {
-        throw NotYourTurnException();
-    }
     ChessMatrix* m = _game->getMatrix();
     Piece* p = m->get(origin);
 
@@ -18,16 +15,35 @@ void PlayingState::move(bool white, const Position& origin, const Position& dest
     {
         throw NoSuchPieceException();
     }
+    if( p->isWhite() != _game->getTurn() )
+    {
+        throw NotYourTurnException();
+    }
 
     _moveCounter++;
 
     bool enPassant = false;
-    for(Position& pos : _game.getEnPassantOrigin())
+    for(Position& pos : _game->getEnPassantOrigin())
     {
-        if(pos==origin) enPassant = true;
+        if(pos==origin && dest == (*_game->getEnPassantDest() )) 
+            enPassant = true;
     }
 
-    if(p->validateMove(dest)==true || ( enPassant)
+    if(enPassant) 
+    {
+        Piece* pAlt = _game->getEnPassantPiece();
+
+        pAlt->die();
+        _currentPieces--;
+        _moveCounter = 0; 
+
+        m->set(dest, p);
+        m->set(origin, nullptr);
+        p->setPos(dest);
+    }
+
+    
+    else if(p->validateMove(dest)==true)
     {
         Piece* destP = m->get(dest);
         if(destP != nullptr)
@@ -36,17 +52,6 @@ void PlayingState::move(bool white, const Position& origin, const Position& dest
             _currentPieces--;
             _moveCounter = 0;
         }
-        /* FIXME! ANALYZE INSTANCEOF
-        std::array<PawnPiece,8>& pawns = _game->getPawn(white);
-        for(PawnPiece& p2 : pawns)
-        {
-            if(p2.getId()==p->getId()) 
-            {
-                _moveCounter = 0;
-                break;
-            }
-        }*/
-        //FIXME check if works
 
         // p is pawnpiece
         if( dynamic_cast<PawnPiece*>(p) != nullptr )
@@ -66,6 +71,8 @@ void PlayingState::move(bool white, const Position& origin, const Position& dest
     checkDraw();
     checkFiftyMove();
 }
+
+#include <iostream>
  
 void PlayingState::checkVictory()
 {
@@ -79,6 +86,9 @@ void PlayingState::checkVictory()
         }
         bool white = ! kW.getAlive();
         _game->setState(new WinState(_game, white));
+
+        std::cout << "win" << std::endl;
+        
         delete this;
     }
     /*
@@ -89,7 +99,9 @@ void PlayingState::checkDraw()
 {
     if( checkStalemate() || checkSpecialCase() )
     {
-        _game->setState( new DrawState(_game) );
+        _game->setState( new DrawState(_game) );        
+        std::cout << "draw" << std::endl;
+
         delete this; 
     }
 }
@@ -106,12 +118,12 @@ bool PlayingState::checkStalemate()
             if(p==nullptr || p->isWhite()!=_game->getTurn()) continue;
             if(!p->getValidMoves().empty())
             {
-                return true;
+                return false;
             }
         }
     }
 
-    return false;
+    return true;
 }
 
 bool PlayingState::checkSpecialCase()

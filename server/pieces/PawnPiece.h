@@ -4,6 +4,7 @@
 #include "Piece.h"
 #include <list>
 
+#include <iostream>
 class PawnPiece : public Piece
 {
 private:
@@ -13,8 +14,7 @@ public:
     
     std::list<Position> getValidMoves() override;
 
-    void setPos(const Position& pos) override 
-    { Piece::setPos(pos); _hasMoved = true; } 
+    void setPos(const Position& pos) override ;
 
     void debugPrint() override { std::cout << "P"; }
 };

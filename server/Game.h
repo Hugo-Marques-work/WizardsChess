@@ -1,8 +1,10 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "GameState.h"
+#include "gamestates/GameState.h"
 #include "ChessMatrix.h"
+
+
 #include "pieces/Piece.h"
 #include "pieces/PawnPiece.h"
 #include "pieces/QueenPiece.h"
@@ -10,7 +12,14 @@
 #include "pieces/KingPiece.h"
 #include "pieces/RookPiece.h"
 #include "pieces/BishopPiece.h"
-
+ 
+/*class Piece;
+class BishopPiece;
+class PawnPiece;
+class KingPiece;
+class QueenPiece;
+class RookPiece;
+class KnightPiece;*/
 class Game
 {
 private:
@@ -32,9 +41,12 @@ private:
     std::list<std::list<Piece*> > _drawCondition;
 public:
     Game(int gameId);
-    void move(bool white, const Position& origin, const Position& dest);
+    void move(const Position& origin, const Position& dest);
+
     ChessMatrix* getMatrix () { return &_chessMatrix; }
+
     bool getTurn() { return _whiteTurn; }
+    
     void boardCreation();
  
     Piece* getCell(const Position& pos)
@@ -42,13 +54,16 @@ public:
         return _chessMatrix.get(pos);
     }
 
-    void fillingEnPassant(const Position& pos, bool color);
+    void fillEnPassant(const Position& lastPos,Piece* piece);
     
     std::list<Position>& getEnPassantOrigin() 
     { return _chessMatrix.getEnPassantOrigin(); }
 
-    std::list<Position>& getEnPassantDest() 
+    Position* getEnPassantDest() 
     { return _chessMatrix.getEnPassantDest(); }
+
+    Piece* getEnPassantPiece() 
+    { return _chessMatrix.getEnPassantPiece(); }
 
     void setState(GameState* state) { _state = state; }
 
@@ -83,6 +98,8 @@ public:
         if(white) {return _kingW;} else {return _kingB;}
     }
  
+
+    void printMatrix();
 };
 
 #endif

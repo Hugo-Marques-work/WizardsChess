@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "gamestates/PlayingState.h"
 #include <list> 
 Game::Game (int gameId) 
 {
@@ -12,10 +13,13 @@ Game::Game (int gameId)
             _chessMatrix.set(Position(x,y), nullptr);
         }
     }
+    printMatrix();
     
     boardCreation();
 
-    createDrawConditions();
+    createDrawConditions(); 
+
+    _state = new PlayingState(this);
 }
 
 void Game::createDrawConditions()
@@ -54,8 +58,8 @@ void Game::boardCreation()
         _pawnW.push_back(PawnPiece(x*2, true, posW, this, forward) );
         _pawnB.push_back(PawnPiece(x*2+1, false, posB, this, !forward) );
         
-        _chessMatrix.set(posB, &_pawnB.back);
-        _chessMatrix.set(posW, &_pawnW.back);
+        _chessMatrix.set(posB, &(_pawnB.back()) );
+        _chessMatrix.set(posW, &( _pawnW.back()) );
     }
 
     posW.y = secondYW;
@@ -70,24 +74,24 @@ void Game::boardCreation()
         {
             _rookW.push_back(RookPiece(rookId*2, true, posW, this, forward) );
             _rookB.push_back(RookPiece(rookId*2+1, false, posB, this, !forward) );
-            _chessMatrix.set(posB, &_rookB.back);
-            _chessMatrix.set(posW, &_rookW.back);
+            _chessMatrix.set(posB, &_rookB.back());
+            _chessMatrix.set(posW, &_rookW.back());
             rookId++;
         }
         else if(x==1 || x == MAX_X -2)
         {
             _knightW.push_back(KnightPiece(knightId*2, true, posW, this, forward) );
             _knightB.push_back(KnightPiece(knightId*2+1, false, posB, this, !forward) );
-            _chessMatrix.set(posB, &_knightB.back);
-            _chessMatrix.set(posW, &_knightW.back);
+            _chessMatrix.set(posB, &_knightB.back());
+            _chessMatrix.set(posW, &_knightW.back());
             knightId++;
         }
         else if(x==2 || x == MAX_X -3)
         {
             _bishopW.push_back(BishopPiece(bishopId*2, true, posW, this, forward) );
             _bishopB.push_back(BishopPiece(bishopId*2+1, false, posB, this, !forward) );
-            _chessMatrix.set(posB, &_bishopB.back);
-            _chessMatrix.set(posW, &_bishopW.back);
+            _chessMatrix.set(posB, &_bishopB.back());
+            _chessMatrix.set(posW, &_bishopW.back());
             bishopId++;
         }
         else if(x==3)
@@ -102,21 +106,25 @@ void Game::boardCreation()
         {
             _queenW.push_back(QueenPiece(queenId*2, true, posW, this, forward) );
             _queenB.push_back(QueenPiece(queenId*2+1, false, posB, this, !forward) );
-            _chessMatrix.set(posB, &_queenB.back);
-            _chessMatrix.set(posW, &_queenW.back);
+            _chessMatrix.set(posB, &_queenB.back());
+            _chessMatrix.set(posW, &_queenW.back());
             queenId++;
         }
     }
 }
 
-void Game::move(bool white, const Position& origin, const Position& dest) 
+void Game::move(const Position& origin, const Position& dest) 
 {
-    _state->move(white, origin,dest);
+    _state->move(origin,dest);
+
+    _whiteTurn = !_whiteTurn;
 }
  
-void Game::fillingEnPassant(const Position& pos, bool white)
+void Game::fillEnPassant(const Position& lastPos,Piece* piece)
 {
+    bool white = piece->isWhite();
     std::list<Position> posList;
+    Position& pos = piece->getPos();
     if(white)
     {
         for(PawnPiece& p : _pawnW)
@@ -140,5 +148,40 @@ void Game::fillingEnPassant(const Position& pos, bool white)
         }        
     }
 
-    _chessMatrix.setEnPassant(posList);
+    _chessMatrix.setEnPassant(piece, posList,lastPos);
+}
+
+void Game::printMatrix()
+{
+    _chessMatrix.printMatrix();
+}
+#include <iostream>
+
+//Removing this will remove the text simulation
+int main()
+{
+    Game game(0); 
+    game.printMatrix();
+    /*ChessMatrix* m = game->getMatrix();
+    m->printMatrix();*/
+    int xOld,xNew,yOld,yNew;
+    while(true)
+    {
+        std::cin >> xOld >> yOld >> xNew >> yNew;
+
+        Position lastPos(xOld,yOld);
+        Position newPos(xNew,yNew);
+
+        try{
+            game.move(lastPos,newPos); 
+        } catch( ... )
+        {
+            std::cout<<"Exception"<<std::endl;
+        }
+
+        std::cout << std::endl << std::endl;
+        
+        game.printMatrix(); 
+    }
+    return 0;
 }

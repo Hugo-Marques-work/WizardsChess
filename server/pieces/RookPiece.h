@@ -3,6 +3,8 @@
 
 #include "Piece.h"
 #include <list>
+
+#include <iostream>
 class RookPiece : public Piece
 {
     bool _hasMoved = false;

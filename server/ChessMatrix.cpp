@@ -1,4 +1,5 @@
 #include <iostream>
+#include "ChessMatrix.h"
 #include "pieces/PawnPiece.h"
 #include "pieces/RookPiece.h"
 #include "pieces/QueenPiece.h"
@@ -32,7 +33,7 @@ void ChessMatrix::printMatrix()
         if(y!=-1)std::cout << y << ":";
         else std::cout << " " << ":";
         for(int x = 0; x < MAX_X; x++)
-        {
+        { 
             if(y==-1) std::cout << x;
             else if(_pieces.at(x).at(y)==nullptr) std::cout << "-";
             else _pieces.at(x).at(y)->debugPrint();
@@ -56,20 +57,4 @@ void ChessMatrix::printMatrix()
         }
     }*/
 
-}
-//Removing this will remove the text simulation
-int main()
-{
-    ChessMatrix* m = new ChessMatrix();
-    m->printMatrix();
-    while(true)
-    {
-        int xOld,xNew,yOld,yNew;
-        cin >> xOld >> yOld >> xNew >> yNew;
-        m->set(Position(xNew,yNew),m->get(Position(xOld,yOld)));
-    
-        std::cout << endl << endl;
-        m->printMatrix();
-    }
-    return 0;
 }
