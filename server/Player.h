@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include <string>
 
