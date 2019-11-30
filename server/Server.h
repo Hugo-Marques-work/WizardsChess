@@ -3,6 +3,7 @@
 
 #include "Game.h"
 #include <list>
+#include <map>
 
 class Server 
 {

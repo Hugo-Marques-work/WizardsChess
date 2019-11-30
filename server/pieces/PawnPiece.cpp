@@ -4,6 +4,7 @@
 std::list<Position> PawnPiece::getValidMoves()
 {
     //InFrontOfMe
+    std::cout << _myPos.x << " " << _myPos.y <<std::endl;
     int yToAdd = 1;
     if(_forward==false)
         yToAdd = -1;
@@ -55,12 +56,17 @@ std::list<Position> PawnPiece::getValidMoves()
 
 void PawnPiece::setPos(const Position& pos)
 {
+    std::cout <<"changing pos" << std::endl;
     if(!_hasMoved)
     {
-        if(pos.y - _myPos.y == 2 || pos.y - _myPos.y == -2)
+        Position lastPos = _myPos;
+        Piece::setPos(pos);
+        if(lastPos.y - _myPos.y == 2 || lastPos.y - _myPos.y == -2)
         {
-            Position& lastPos = _myPos;
-            Piece::setPos(pos);
+            if(lastPos.y -_myPos.y == 2)
+                lastPos.y--;
+            else
+                lastPos.y++;
             _game->fillEnPassant(lastPos,this);
         }
     }

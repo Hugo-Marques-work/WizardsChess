@@ -32,7 +32,8 @@ void PlayingState::move(const Position& origin, const Position& dest)
     if(enPassant) 
     {
         Piece* pAlt = _game->getEnPassantPiece();
-
+        
+        m->set(pAlt->getPos(),nullptr);
         pAlt->die();
         _currentPieces--;
         _moveCounter = 0; 
@@ -41,7 +42,6 @@ void PlayingState::move(const Position& origin, const Position& dest)
         m->set(origin, nullptr);
         p->setPos(dest);
     }
-
     
     else if(p->validateMove(dest)==true)
     {
@@ -66,7 +66,7 @@ void PlayingState::move(const Position& origin, const Position& dest)
     {
         throw InvalidMoveException();
     }
-
+    
     checkVictory();
     checkDraw();
     checkFiftyMove();

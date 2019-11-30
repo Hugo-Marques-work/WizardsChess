@@ -1,6 +1,10 @@
 #include "Game.h"
 #include "gamestates/PlayingState.h"
 #include <list> 
+#include "exceptions/InvalidActionException.h"
+#include "exceptions/InvalidMoveException.h"
+#include "exceptions/NoSuchPieceException.h"
+#include "exceptions/NotYourTurnException.h"
 Game::Game (int gameId) 
 {
     _gameId = gameId;
@@ -118,6 +122,7 @@ void Game::move(const Position& origin, const Position& dest)
     _state->move(origin,dest);
 
     _whiteTurn = !_whiteTurn;
+    _chessMatrix.newTurn();
 }
  
 void Game::fillEnPassant(const Position& lastPos,Piece* piece)
@@ -125,14 +130,14 @@ void Game::fillEnPassant(const Position& lastPos,Piece* piece)
     bool white = piece->isWhite();
     std::list<Position> posList;
     Position& pos = piece->getPos();
-    if(white)
+    if(!white)
     {
         for(PawnPiece& p : _pawnW)
         {
             if(p.getPos().y == pos.y && (p.getPos().x+1 == 
                 pos.x || p.getPos().x-1 == pos.x) )
             {
-                posList.push_front(pos);
+                posList.push_front(p.getPos());
             }
         }
     }
@@ -143,7 +148,7 @@ void Game::fillEnPassant(const Position& lastPos,Piece* piece)
             if(p.getPos().y == pos.y && (p.getPos().x+1 == 
                 pos.x || p.getPos().x-1 == pos.x) )
             {
-                posList.push_front(pos);
+                posList.push_front(p.getPos());
             }
         }        
     }
@@ -174,9 +179,9 @@ int main()
 
         try{
             game.move(lastPos,newPos); 
-        } catch( ... )
+        } catch( const std::exception& e)
         {
-            std::cout<<"Exception"<<std::endl;
+            std::cout<< "Error: " << e.what() <<std::endl;
         }
 
         std::cout << std::endl << std::endl;
