@@ -1,5 +1,6 @@
 #include "PawnPiece.h"
 #include "../Game.h"
+#include "../exceptions/PawnPromotionException.h"
 
 std::list<Position> PawnPiece::getValidMoves()
 {
@@ -73,4 +74,8 @@ void PawnPiece::setPos(const Position& pos)
     else
         Piece::setPos(pos); 
     _hasMoved = true;
+    if(_myPos.y == MIN_POX_Y || _myPos.y == MAX_POS_Y)
+    {
+        throw PawnPromotionException(this);
+    }
 }

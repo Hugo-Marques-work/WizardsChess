@@ -59,8 +59,22 @@ void PlayingState::move(const Position& origin, const Position& dest)
 
         m->set(dest, p);
         m->set(origin, nullptr);
+
+        try
+        {
         //CAN THROW "PAWN_PROMOTION_EXCEPTION"
-        p->setPos(dest);
+            p->setPos(dest);
+        }
+        catch( PawnPromotionException& e)
+        { 
+            _game->setState(new WaitingForPromotionState(this,_game,e.getPawn()));
+
+            checkVictory();
+            checkDraw();
+            checkFiftyMove();
+
+            throw e;
+        }
     }
     else 
     {
@@ -70,6 +84,7 @@ void PlayingState::move(const Position& origin, const Position& dest)
     checkVictory();
     checkDraw();
     checkFiftyMove();
+    _game->tickTurn();
 }
 
 #include <iostream>

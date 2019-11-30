@@ -5,6 +5,7 @@
 #include "DrawState.h"
 #include "WinState.h"
 #include "DropState.h"
+#include "WaitingForPromotionState.h"
 
 class PlayingState : public GameState 
 {

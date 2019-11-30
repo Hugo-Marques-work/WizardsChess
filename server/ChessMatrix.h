@@ -57,7 +57,7 @@ public:
         _enPassantLiveTime = 2;
     }
 
-    void newTurn()
+    void tickTurn()
     {
         _enPassantLiveTime--;
         if(_enPassantLiveTime<0)
