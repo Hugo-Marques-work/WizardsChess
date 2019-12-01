@@ -8,6 +8,7 @@
 #include "../exceptions/NotYourTurnException.h"
 #include "../exceptions/NoSuchPieceException.h"
 #include "../exceptions/ImpossibleBoardStateException.h"
+#include "../exceptions/PawnPromotionException.h"
 
 //#include "../Game.h"
 class Game;
@@ -25,6 +26,8 @@ public:
     virtual void accept (GameStateVisitor* visitor) noexcept(false) = 0 ;
     virtual void move(const Position& origin,
          const Position& dest) noexcept(false) = 0;
+    virtual void promote(Piece* p) 
+    { throw InvalidActionException(); }
 };
  
 #endif

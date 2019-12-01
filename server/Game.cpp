@@ -1,6 +1,10 @@
 #include "Game.h"
 #include "gamestates/PlayingState.h"
 #include <list> 
+#include "exceptions/InvalidActionException.h"
+#include "exceptions/InvalidMoveException.h"
+#include "exceptions/NoSuchPieceException.h"
+#include "exceptions/NotYourTurnException.h"
 Game::Game (int gameId) 
 {
     _gameId = gameId;
@@ -116,8 +120,6 @@ void Game::boardCreation()
 void Game::move(const Position& origin, const Position& dest) 
 {
     _state->move(origin,dest);
-
-    _whiteTurn = !_whiteTurn;
 }
  
 void Game::fillEnPassant(const Position& lastPos,Piece* piece)
@@ -125,14 +127,14 @@ void Game::fillEnPassant(const Position& lastPos,Piece* piece)
     bool white = piece->isWhite();
     std::list<Position> posList;
     Position& pos = piece->getPos();
-    if(white)
+    if(!white)
     {
         for(PawnPiece& p : _pawnW)
         {
             if(p.getPos().y == pos.y && (p.getPos().x+1 == 
                 pos.x || p.getPos().x-1 == pos.x) )
             {
-                posList.push_front(pos);
+                posList.push_front(p.getPos());
             }
         }
     }
@@ -143,7 +145,7 @@ void Game::fillEnPassant(const Position& lastPos,Piece* piece)
             if(p.getPos().y == pos.y && (p.getPos().x+1 == 
                 pos.x || p.getPos().x-1 == pos.x) )
             {
-                posList.push_front(pos);
+                posList.push_front(p.getPos());
             }
         }        
     }
@@ -151,6 +153,29 @@ void Game::fillEnPassant(const Position& lastPos,Piece* piece)
     _chessMatrix.setEnPassant(piece, posList,lastPos);
 }
 
+void Game::removePawn(PawnPiece* p)
+{
+    if(p->isWhite())
+    {
+        for(auto it = _pawnW.begin(); it != _pawnW.end(); it++)
+        {
+            if((*it).getId()==p->getId())
+            {
+                _pawnW.erase(it);
+            }
+        }
+    }
+    else
+    {
+        for(auto it = _pawnB.begin(); it != _pawnB.end(); it++)
+        {
+            if((*it).getId()==p->getId())
+            {
+                _pawnB.erase(it);
+            }
+        }
+    }
+}
 void Game::printMatrix()
 {
     _chessMatrix.printMatrix();
@@ -165,18 +190,30 @@ int main()
     /*ChessMatrix* m = game->getMatrix();
     m->printMatrix();*/
     int xOld,xNew,yOld,yNew;
+    bool promote = false;
     while(true)
     {
         std::cin >> xOld >> yOld >> xNew >> yNew;
 
         Position lastPos(xOld,yOld);
         Position newPos(xNew,yNew);
-
-        try{
-            game.move(lastPos,newPos); 
-        } catch( ... )
+        try
         {
-            std::cout<<"Exception"<<std::endl;
+            if(promote==false)
+                game.move(lastPos,newPos); 
+            else
+            {
+                QueenPiece q = QueenPiece();
+                game.promote(&q);
+                game.insertQueen(q.isWhite(),q);
+                promote = false;
+            }
+        }catch(PawnPromotionException& e)
+        {
+            promote = true;
+        }catch( const std::exception& e)
+        {
+            std::cout<< "Error: " << e.what() <<std::endl;
         }
 
         std::cout << std::endl << std::endl;

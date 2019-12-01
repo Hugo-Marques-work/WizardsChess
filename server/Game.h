@@ -43,15 +43,28 @@ public:
     Game(int gameId);
     void move(const Position& origin, const Position& dest);
 
+    void promote(Piece* p)
+    {
+        //Inserting the piece must be done by the messages otherwise
+        // it needs 6 different methods or a instanceof
+        _state->promote(p);
+    }
+
     ChessMatrix* getMatrix () { return &_chessMatrix; }
 
     bool getTurn() { return _whiteTurn; }
-    
+
     void boardCreation();
  
     Piece* getCell(const Position& pos)
     {
         return _chessMatrix.get(pos);
+    }
+
+    void tickTurn() 
+    { 
+        _whiteTurn = !_whiteTurn; 
+        _chessMatrix.tickTurn(); 
     }
 
     void fillEnPassant(const Position& lastPos,Piece* piece);
@@ -73,6 +86,7 @@ public:
     {
         return _drawCondition;
     }
+    
     std::list<BishopPiece>& getBishop(bool white)
     {
         if(white) {return _bishopW;} else {return _bishopB;}
@@ -97,7 +111,31 @@ public:
     {
         if(white) {return _kingW;} else {return _kingB;}
     }
+
+    void removePawn(PawnPiece* p);
  
+
+    std::list<BishopPiece>& insertBishop(bool white,BishopPiece& p)
+    {
+        if(white) {_bishopW.push_front(p);} else {_bishopB.push_front(p);}
+    } 
+    std::list<KnightPiece>& insertKnight(bool white,KnightPiece& p)
+    {
+        if(white) { _knightW.push_front(p);} else { _knightB.push_front(p);}
+    }
+    std::list<RookPiece>& insertRook(bool white,RookPiece& p)
+    {
+        if(white) { _rookW.push_front(p);} else { _rookB.push_front(p);}
+    }
+    std::list<PawnPiece>& insertPawn(bool white,PawnPiece& p)
+    {
+        if(white) { _pawnW.push_front(p);} else { _pawnB.push_front(p);}
+    }
+    std::list<QueenPiece>& insertQueen(bool white, QueenPiece& p)
+    {
+        if(white) { _queenW.push_front(p);} else { _queenB.push_front(p);}
+    }
+    //can't insert a king
 
     void printMatrix();
 };

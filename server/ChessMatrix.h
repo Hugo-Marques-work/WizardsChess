@@ -22,7 +22,8 @@ private:
     
     std::list<Position> _enPassantOrigin;
     Position* _enPassantDest;
-    Piece* _enPassantPiece;
+    Piece* _enPassantPiece; 
+    int _enPassantLiveTime = 0;
 
     void oneSideBoardCreation(bool white, bool forward);
 public:
@@ -39,16 +40,28 @@ public:
     void clearEnPassant()
     {
         if(_enPassantOrigin.empty() && _enPassantDest==nullptr) return;
-        _enPassantOrigin = std::list<Position>();
-        delete(_enPassantDest);
+        _enPassantOrigin.clear();
+        _enPassantDest = nullptr;
+        _enPassantPiece = nullptr;
     }
 
     void setEnPassant(Piece* piece, const std::list<Position>& p, const Position& origin)
     {
         clearEnPassant();
-        _enPassantOrigin = p;
+        for(const Position& pos : p)
+        {
+            _enPassantOrigin.emplace_front(pos);
+        }
         _enPassantDest = new Position(origin.x,origin.y);
         _enPassantPiece = piece;
+        _enPassantLiveTime = 2;
+    }
+
+    void tickTurn()
+    {
+        _enPassantLiveTime--;
+        if(_enPassantLiveTime<0)
+            clearEnPassant();
     }
 
     Piece* getEnPassantPiece()

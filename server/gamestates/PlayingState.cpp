@@ -32,7 +32,8 @@ void PlayingState::move(const Position& origin, const Position& dest)
     if(enPassant) 
     {
         Piece* pAlt = _game->getEnPassantPiece();
-
+        
+        m->set(pAlt->getPos(),nullptr);
         pAlt->die();
         _currentPieces--;
         _moveCounter = 0; 
@@ -41,7 +42,6 @@ void PlayingState::move(const Position& origin, const Position& dest)
         m->set(origin, nullptr);
         p->setPos(dest);
     }
-
     
     else if(p->validateMove(dest)==true)
     {
@@ -59,17 +59,32 @@ void PlayingState::move(const Position& origin, const Position& dest)
 
         m->set(dest, p);
         m->set(origin, nullptr);
+
+        try
+        {
         //CAN THROW "PAWN_PROMOTION_EXCEPTION"
-        p->setPos(dest);
+            p->setPos(dest);
+        }
+        catch( PawnPromotionException& e)
+        { 
+            _game->setState(new WaitingForPromotionState(this,_game,e.getPawn()));
+
+            checkVictory();
+            checkDraw();
+            checkFiftyMove();
+
+            throw e;
+        }
     }
     else 
     {
         throw InvalidMoveException();
     }
-
+    
     checkVictory();
     checkDraw();
     checkFiftyMove();
+    _game->tickTurn();
 }
 
 #include <iostream>

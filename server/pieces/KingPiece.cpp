@@ -19,6 +19,31 @@ std::list<Position> KingPiece::getValidMoves()
         }
     }
 
+    if(!_hasMoved)
+    {
+        std::list<RookPiece>& rooks = _game->getRook(_white);
+        int howManyMoved = 0;
+        for(RookPiece& p : rooks)
+        {
+            if(!p.hasMoved())
+            {
+                Position& rPos = p.getPos();
+                int dx =_myPos.x - rPos.x < 0 ? -1 : 1;
+                int x = _myPos.x + dx;
+                int y = _myPos.y;
+
+                while(x!=rPos.x)
+                {
+                    if(_game->getCell( Position(x,y) ) != nullptr)
+                        break;
+                }
+                if(x==rPos.x)
+                {
+                    valid.push_front( Position(x+dx*2,y) );
+                }
+            }
+        }
+    }
 /*
     if(!_hasMoved)
     {

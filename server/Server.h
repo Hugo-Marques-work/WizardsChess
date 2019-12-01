@@ -5,6 +5,8 @@
 #include "Game.h"
 #include "Player.h"
 #include "messages/MessageVisitor.h"
+#include <list>
+#include <map>
 
 class Server : public MessageVisitor
 {

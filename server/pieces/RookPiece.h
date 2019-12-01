@@ -16,6 +16,7 @@ public:
     void setPos(const Position& pos) override 
     { Piece::setPos(pos); _hasMoved = true; } 
 
+    bool hasMoved() { return _hasMoved; }
     void debugPrint() override { std::cout << "R"; }
 };
 
