@@ -10,7 +10,7 @@ private:
     std::string _user, _pass;
 public:
     RegMessage (const std::string& user, const std::string& pass);
-    void accept (MessageVisitor* visitor);
+    std::string accept (MessageVisitor* visitor);
     
     const std::string& user() { return _user; }
     const std::string& pass() { return _pass; }

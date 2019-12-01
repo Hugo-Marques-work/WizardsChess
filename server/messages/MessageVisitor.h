@@ -1,6 +1,7 @@
 #ifndef MESSAGEVISITOR_H
 #define MESSAGEVISITOR_H
 
+#include <string>
 #include "RegMessage.h"
 #include "ListGamesMessage.h"
 #include "GameMoveMessage.h"
@@ -8,17 +9,19 @@
 #include "GameDropMessage.h"
 #include "GameLastTurnMessage.h"
 #include "GameLastMoveMessage.h"
+#include "PawnPromotionMessage.h"
 
 class MessageVisitor
 {
 public:
-    virtual void visitReg (RegMessage* message) = 0;
-    virtual void visitListGames (ListGamesMessage* message) = 0;
-    virtual void visitGameMove (GameMoveMessage* message) = 0;
-    virtual void visitGameStatus (GameStatusMessage* message) = 0;
-    virtual void visitGameDrop (GameDropMessage* message) = 0;
-    virtual void visitGameLastTurn (GameLastTurnMessage* message) = 0;
-    virtual void visitGameLastMove (GameLastMoveMessage* message) = 0;
+    virtual std::string visitReg (RegMessage* message) = 0;
+    virtual std::string visitListGames (ListGamesMessage* message) = 0;
+    virtual std::string visitGameMove (GameMoveMessage* message) = 0;
+    virtual std::string visitGameStatus (GameStatusMessage* message) = 0;
+    virtual std::string visitGameDrop (GameDropMessage* message) = 0;
+    virtual std::string visitGameLastTurn (GameLastTurnMessage* message) = 0;
+    virtual std::string visitGameLastMove (GameLastMoveMessage* message) = 0;
+    virtual std::string visitPawnPromotion (PawnPromotionMessage* message) = 0;
 };
 
 #endif

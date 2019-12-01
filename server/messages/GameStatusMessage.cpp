@@ -7,7 +7,7 @@ GameStatusMessage::GameStatusMessage(const std::string& user, const std::string&
 
 }
 
-void GameStatusMessage::accept (MessageVisitor* visitor) 
+std::string GameStatusMessage::accept (MessageVisitor* visitor) 
 {
-    visitor->visitGameStatus(this);
+    return visitor->visitGameStatus(this);
 }

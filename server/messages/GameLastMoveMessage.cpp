@@ -7,7 +7,7 @@ GameLastMoveMessage::GameLastMoveMessage(const std::string& user, const std::str
     
 }
 
-void GameLastMoveMessage::accept (MessageVisitor* visitor) 
+std::string GameLastMoveMessage::accept (MessageVisitor* visitor) 
 {
-    visitor->visitGameLastMove(this);
+    return visitor->visitGameLastMove(this);
 }

@@ -7,7 +7,7 @@ ListGamesMessage::ListGamesMessage(const std::string& user, const std::string& p
 
 }
 
-void ListGamesMessage::accept (MessageVisitor* visitor) 
+std::string ListGamesMessage::accept (MessageVisitor* visitor) 
 {
-    visitor->visitListGames(this);
+    return visitor->visitListGames(this);
 }

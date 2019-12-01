@@ -10,7 +10,7 @@ GameMoveMessage::GameMoveMessage (const std::string& user, const std::string& pa
     
 }
 
-void GameMoveMessage::accept (MessageVisitor* visitor) 
+std::string GameMoveMessage::accept (MessageVisitor* visitor) 
 {
-    visitor->visitGameMove(this);
+    return visitor->visitGameMove(this);
 }

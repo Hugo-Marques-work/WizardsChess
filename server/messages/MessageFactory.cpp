@@ -44,6 +44,9 @@ Message* MessageFactory::parse (const char* string)
     
     else if (command == "GAME_LAST_MOVE_R")
         return parseGameLastMove(parser);
+    
+    else if (command == "PAWN_PROMOTION_R")
+        return parsePawnPromotion(parser);
 
     else
         throw WrongInputException("Command not found.");
@@ -189,4 +192,25 @@ Message* MessageFactory::parseGameLastMove(Parser& parser)
     }
     
     return new GameLastMoveMessage (user, pass, gameId);
+}
+
+Message* MessageFactory::parsePawnPromotion(Parser& parser) 
+{
+    std::string user, pass, pieceType;
+    int gameId;
+    
+    try 
+    {
+        user = parser.readString();
+        pass = parser.readString();
+        gameId = parser.readInteger();
+        pieceType = parser.readString();
+    }
+    
+    catch ( ParserException& e )
+    {
+        throw WrongInputException(e.what());
+    }
+    
+    return new PawnPromotionMessage (user, pass, gameId, pieceType);
 }

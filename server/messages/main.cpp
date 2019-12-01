@@ -8,31 +8,38 @@
 
 class PrintMessage : public MessageVisitor {
 public:
-    void visitReg (RegMessage* message) {
+    std::string visitReg (RegMessage* message) {
         std::cout << message->user() << message->pass() << std::endl;
+        return "";
     }
-    void visitListGames (ListGamesMessage* message) {
+    std::string visitListGames (ListGamesMessage* message) {
         std::cout << message->user() << message->pass() << message->gameId() << std::endl;
+        return "";
     }
-    void visitGameMove (GameMoveMessage* message) {
+    std::string visitGameMove (GameMoveMessage* message) {
         std::cout << message->user() << message->pass() << message->gameId() 
                   << message->x1()
                   << message->y1()
                   << message->x2()
                   << message->y2()
                   << std::endl;
+        return "";
     }
-    void visitGameStatus (GameStatusMessage* message) {
+    std::string visitGameStatus (GameStatusMessage* message) {
         std::cout << message->user() << message->pass() << message->gameId() << std::endl;
+        return "";
     }
-    void visitGameDrop (GameDropMessage* message) {
+    std::string visitGameDrop (GameDropMessage* message) {
         std::cout << message->user() << message->pass() << message->gameId() << std::endl;
+        return "";
     }
-    void visitGameLastTurn (GameLastTurnMessage* message) {
+    std::string visitGameLastTurn (GameLastTurnMessage* message) {
         std::cout << message->user() << message->pass() << message->gameId() << std::endl;
+        return "";
     }
-    void visitGameLastMove (GameLastMoveMessage* message) {
+    std::string visitGameLastMove (GameLastMoveMessage* message) {
         std::cout << message->user() << message->pass() << message->gameId() << std::endl;
+        return "";
     }
 };
 

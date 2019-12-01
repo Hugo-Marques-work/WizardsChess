@@ -14,7 +14,7 @@ public:
                      int gameId, 
                      int x1, int y1, 
                      int x2, int y2);
-    void accept (MessageVisitor* visitor);
+    std::string accept (MessageVisitor* visitor);
     
     const std::string& user() { return _user; }
     const std::string& pass() { return _pass; }
