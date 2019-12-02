@@ -19,6 +19,13 @@ std::list<Position> KingPiece::getValidMoves()
         }
     }
 
+    return valid;
+}
+
+std::list<Position> KingPiece::getValidCastling()
+{
+    Piece* piece;
+    std::list<Position> valid;
     if(!_hasMoved)
     {
         std::list<RookPiece>& rooks = _game->getRook(_white);
@@ -36,6 +43,7 @@ std::list<Position> KingPiece::getValidMoves()
                 {
                     if(_game->getCell( Position(x,y) ) != nullptr)
                         break;
+                    x+=dx;
                 }
                 if(x==rPos.x)
                 {
@@ -44,23 +52,25 @@ std::list<Position> KingPiece::getValidMoves()
             }
         }
     }
-/*
-    if(!_hasMoved)
-    {
-        std::array<RookPiece,2>& rooks = _game->getRook(_white);
-        if(! rooks[0].hasMoved() )
-        {
-            int x = -1;
-            int y = 0;
-            while(_myPos.x + x != rooks[0].getPos().x)
-            {
-                if(_game->getCell( Position(_myPos.x+x, _myPos.y+y)) != nullptr) break;
-            }
-            if(_myPos.x + x == rooks[0].getPos().x)
-            {
-                
-            }
-        }
-    }*/
     return valid;
+} 
+
+bool KingPiece::validateCastling(const Position& dst)
+{
+    for(Position& pos : getValidMoves() )
+    {
+        if(pos.x == dst.x && pos.y == dst.y) 
+            return true;
+    }
+    return false;
+}
+
+Piece* KingPiece::getCastlingRook(const Position& dst)
+{        
+    if(validateCastling(dst)==false) return nullptr;
+    if(dst.x == _myPos.x + 2)
+    //FIXME
+        return _game->getCell(Position(7,_myPos.y)); 
+    else
+        return _game->getCell(Position(0,_myPos.y));
 }

@@ -29,6 +29,8 @@ void PlayingState::move(const Position& origin, const Position& dest)
             enPassant = true;
     }
 
+    KingPiece& pieceKing = p->isWhite() == true ? _game->getKing(true) :
+        _game->getKing(false);
     if(enPassant) 
     {
         Piece* pAlt = _game->getEnPassantPiece();
@@ -75,6 +77,24 @@ void PlayingState::move(const Position& origin, const Position& dest)
 
             throw e;
         }
+    }
+    else if(p->getPos()==pieceKing.getPos() && pieceKing.validateCastling(dest))
+    {
+        Piece* rook = pieceKing.getCastlingRook(dest);
+        if(rook==nullptr) throw "ErrorWithCastling";
+
+        m->set(dest, p);
+        Position& rookOrigin = rook->getPos();
+        Position rookDest(dest.x+1,dest.y);
+        if(p->getPos().x < rookOrigin.x)
+            rookDest.x = dest.x-1;
+
+        m->set(rookDest,rook);
+        m->set(rookOrigin,nullptr);
+        m->set(origin, nullptr);
+
+        p->setPos(dest);
+        rook->setPos(rookDest);
     }
     else 
     {

@@ -2,7 +2,7 @@
 
 bool Piece::validateMove(Position dst)
 {
-    for(Position pos : getValidMoves() )
+    for(Position& pos : getValidMoves() )
     {
         if(pos.x == dst.x && pos.y == dst.y) 
             return true;

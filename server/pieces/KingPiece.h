@@ -13,6 +13,10 @@ public:
     using Piece::Piece;
        
     std::list<Position> getValidMoves() override; 
+    std::list<Position> getValidCastling(); 
+
+    bool validateCastling(const Position& dst);
+    Piece* getCastlingRook(const Position& dest);
 
     void setPos(const Position& pos) override 
     { Piece::setPos(pos); _hasMoved = true; } 
