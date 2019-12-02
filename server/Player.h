@@ -3,7 +3,7 @@
 
 #include <string>
 #include <map>
-#include "Game.h";
+#include "Game.h"
 
 class Player 
 {

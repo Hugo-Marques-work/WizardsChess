@@ -3,8 +3,6 @@
 
 #include "gamestates/GameState.h"
 #include "ChessMatrix.h"
-
-
 #include "pieces/Piece.h"
 #include "pieces/PawnPiece.h"
 #include "pieces/QueenPiece.h"
@@ -12,14 +10,9 @@
 #include "pieces/KingPiece.h"
 #include "pieces/RookPiece.h"
 #include "pieces/BishopPiece.h"
- 
-/*class Piece;
-class BishopPiece;
-class PawnPiece;
-class KingPiece;
-class QueenPiece;
-class RookPiece;
-class KnightPiece;*/
+
+class Player;
+
 class Game
 {
 private:
@@ -29,6 +22,7 @@ private:
     bool _whiteTurn;
     ChessMatrix _chessMatrix;
     GameState* _state;
+    Player *_playerW, *_playerB;
 
     KingPiece _kingW, _kingB;
     std::list<QueenPiece> _queenW, _queenB;
@@ -40,9 +34,14 @@ private:
     
     std::list<std::list<Piece*> > _drawCondition;
 public:
-    Game(int gameId);
+    Game(int gameId, Player* playerW, Player* playerB);
     void move(const Position& origin, const Position& dest);
-
+    
+    Player* playerW () {return _playerW;}
+    Player* playerB () {return _playerB;}
+    
+    int gameId () {return _gameId;}
+    
     void promote(Piece* p)
     {
         //Inserting the piece must be done by the messages otherwise

@@ -6,6 +6,7 @@
 #include "GameDropMessage.h"
 #include "GameLastMoveMessage.h"
 #include "GameLastTurnMessage.h"
+#include "PawnPromotionMessage.h"
 #include "../exceptions/WrongInputException.h"
 #include "../exceptions/ParserException.h"
 

@@ -5,10 +5,10 @@
 #include "exceptions/InvalidMoveException.h"
 #include "exceptions/NoSuchPieceException.h"
 #include "exceptions/NotYourTurnException.h"
-Game::Game (int gameId) 
+Game::Game (int gameId, Player* playerW, Player* playerB): 
+    _gameId (gameId), _playerW(playerW), _playerB(playerB)
 {
-    _gameId = gameId;
-    _whiteTurn = false; //FIXME Quem e o primeiro?
+    _whiteTurn = false;
 
     for(int x = 0; x < MAX_X; x++)
     {

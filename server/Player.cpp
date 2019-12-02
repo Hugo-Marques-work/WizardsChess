@@ -13,5 +13,5 @@ bool Player::validatePassword (const std::string& guess)
 
 void Player::addGame (Game* game) 
 {
-    _games.insert(game->gameId(), game);
+    _games.insert(std::make_pair(game->gameId(), game));
 }
