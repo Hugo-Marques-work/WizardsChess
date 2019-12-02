@@ -23,7 +23,7 @@ std::list<Position> KingPiece::getValidMoves()
 }
 
 std::list<Position> KingPiece::getValidCastling()
-{
+{ 
     Piece* piece;
     std::list<Position> valid;
     if(!_hasMoved)
@@ -35,7 +35,7 @@ std::list<Position> KingPiece::getValidCastling()
             if(!p.hasMoved())
             {
                 Position& rPos = p.getPos();
-                int dx =_myPos.x - rPos.x < 0 ? -1 : 1;
+                int dx =_myPos.x - rPos.x < 0 ? 1 : -1;
                 int x = _myPos.x + dx;
                 int y = _myPos.y;
 
@@ -47,7 +47,7 @@ std::list<Position> KingPiece::getValidCastling()
                 }
                 if(x==rPos.x)
                 {
-                    valid.push_front( Position(x+dx*2,y) );
+                    valid.push_front( Position(_myPos.x+dx*2,y) );
                 }
             }
         }
@@ -57,7 +57,7 @@ std::list<Position> KingPiece::getValidCastling()
 
 bool KingPiece::validateCastling(const Position& dst)
 {
-    for(Position& pos : getValidMoves() )
+    for(Position& pos : getValidCastling() )
     {
         if(pos.x == dst.x && pos.y == dst.y) 
             return true;

@@ -48,16 +48,11 @@ std::list<Position> PawnPiece::getValidMoves()
             valid.push_front(Position(_myPos.x-1, _myPos.y+yToAdd));
     }catch(std::out_of_range &e){;}
     
-    for (Position& pos : valid)
-    {
-        std::cout << pos.x << " " << pos.y << std::endl;
-    }
     return valid;
 }
 
 void PawnPiece::setPos(const Position& pos)
 {
-    std::cout <<"changing pos" << std::endl;
     if(!_hasMoved)
     {
         Position lastPos = _myPos;

@@ -15,11 +15,12 @@ private:
     int _currentPieces = 32;
     const int MAX_COUNTER = 50;
     int _moveCounter = 0;
-    void checkVictory();
-    void checkDraw();
+    bool checkVictory();
+    bool checkDraw();
     bool checkStalemate();
     bool checkSpecialCase();
     bool checkFiftyMove();
+    bool validateCheck(bool white);
 public:
     void accept (GameStateVisitor* visitor) override;
     

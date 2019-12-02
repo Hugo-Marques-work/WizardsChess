@@ -101,15 +101,18 @@ void PlayingState::move(const Position& origin, const Position& dest)
         throw InvalidMoveException();
     }
     
-    checkVictory();
-    checkDraw();
+    if( checkVictory() == true ) return;
+    if( checkDraw() == true) return;
     checkFiftyMove();
+    
+    std::cout << "Check:(W) " << validateCheck(true) <<std::endl;
+    std::cout << "Check:(B) " << validateCheck(false) <<std::endl;
     _game->tickTurn();
 }
 
 #include <iostream>
  
-void PlayingState::checkVictory()
+bool PlayingState::checkVictory()
 {
     KingPiece& kW = _game->getKing(true);
     KingPiece& kB = _game->getKing(false);
@@ -125,12 +128,14 @@ void PlayingState::checkVictory()
         std::cout << "win" << std::endl;
         
         delete this;
+        return true;
     }
+    return false;
     /*
     FIXME IF ENEMY KING IS CHECKED AND CAN'T MOVE AND SOMEONE CAN'T DE_CHECK KING, THEN WIN*/
 }
 
-void PlayingState::checkDraw()
+bool PlayingState::checkDraw()
 {
     if( checkStalemate() || checkSpecialCase() )
     {
@@ -138,7 +143,9 @@ void PlayingState::checkDraw()
         std::cout << "draw" << std::endl;
 
         delete this; 
+        return true;
     }
+    return false;
 }
 
 bool PlayingState::checkStalemate()
@@ -225,6 +232,22 @@ bool PlayingState::checkSpecialCase()
     return false;
 }
 
+bool PlayingState::validateCheck(bool white)
+{
+    Position& kPos = _game->getKing(white).getPos();
+
+    for(QueenPiece& p : _game->getQueen(!white))
+        if(p.validateMove(kPos)) return true;
+    for(PawnPiece& p : _game->getPawn(!white))
+        if(p.validateMove(kPos)) return true;
+    for(KnightPiece& p : _game->getKnight(!white))
+        if(p.validateMove(kPos)) return true;
+    for(BishopPiece& p : _game->getBishop(!white))
+        if(p.validateMove(kPos)) return true;
+    for(RookPiece& p : _game->getRook(!white))
+        if(p.validateMove(kPos)) return true;
+
+}
 bool PlayingState::checkFiftyMove()
 {
     //FIXME
@@ -244,4 +267,11 @@ bool PlayingState::checkFiftyMove()
 
     Misc - Pawn Promotion!
     EXCEPTION!!!
+
+    3 6 3 4
+    2 1 2 2
+    4 7 0 3
+    2 2 2 3
+
+    0 3 3 0 
 */

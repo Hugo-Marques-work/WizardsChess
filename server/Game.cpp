@@ -185,7 +185,7 @@ void Game::printMatrix()
 //Removing this will remove the text simulation
 int main()
 {
-    Game game(0); 
+    Game game(0,nullptr,nullptr); 
     game.printMatrix();
     /*ChessMatrix* m = game->getMatrix();
     m->printMatrix();*/
@@ -222,3 +222,12 @@ int main()
     }
     return 0;
 }
+/*
+1 7 0 5
+0 1 0 2
+0 6 0 5
+1 6 1 5
+0 2 0 3
+2 7 1 6
+0 3 0 4
+*/
