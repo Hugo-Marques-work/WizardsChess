@@ -16,6 +16,7 @@ private:
     Message* parseGameLastMove(Parser& parser);
     Message* parseGameLastTurn(Parser& parser);
     Message* parsePawnPromotion(Parser& parser);
+    Message* parseNewGame(Parser& parser);
 public:
     //null terminated string
     Message* parse (const char* string);

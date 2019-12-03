@@ -15,3 +15,13 @@ void Player::addGame (Game* game)
 {
     _games.insert(std::make_pair(game->gameId(), game));
 }
+
+Game* Player::searchGame (int gameId) 
+{
+    std::map<int, Game*>::iterator it;
+    
+    if ((it = _games.find(gameId)) != _games.end())
+        return it->second;
+    else
+        return nullptr;
+}

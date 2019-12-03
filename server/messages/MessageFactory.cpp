@@ -7,6 +7,7 @@
 #include "GameLastMoveMessage.h"
 #include "GameLastTurnMessage.h"
 #include "PawnPromotionMessage.h"
+#include "NewGameMessage.h"
 #include "../exceptions/WrongInputException.h"
 #include "../exceptions/ParserException.h"
 
@@ -48,6 +49,9 @@ Message* MessageFactory::parse (const char* string)
     
     else if (command == "PAWN_PROMOTION_R")
         return parsePawnPromotion(parser);
+    
+    else if (command == "NEW_GAME_R")
+        return parseNewGame(parser);
 
     else
         throw WrongInputException("Command not found.");
@@ -80,7 +84,6 @@ Message* MessageFactory::parseListGames (Parser& parser)
     {
         user = parser.readString();
         pass = parser.readString();
-        gameId = parser.readInteger();
     }
     
     catch ( ParserException& e )
@@ -88,7 +91,7 @@ Message* MessageFactory::parseListGames (Parser& parser)
         throw WrongInputException(e.what());
     }
     
-    return new ListGamesMessage (user, pass, gameId);
+    return new ListGamesMessage (user, pass);
 }
 
 Message* MessageFactory::parseGameMove (Parser& parser)
@@ -214,4 +217,22 @@ Message* MessageFactory::parsePawnPromotion(Parser& parser)
     }
     
     return new PawnPromotionMessage (user, pass, gameId, pieceType);
+}
+
+Message* MessageFactory::parseNewGame(Parser& parser)
+{
+    std::string user1, user2;
+    
+    try
+    {
+        user1 = parser.readString();
+        user2 = parser.readString();
+    }
+    
+    catch ( ParserException& e )
+    {
+        throw WrongInputException(e.what());
+    }
+    
+    return new NewGameMessage (user1, user2);
 }

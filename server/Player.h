@@ -18,6 +18,7 @@ public:
     const std::map <int, Game*> & games () {return _games;}
     bool validatePassword (const std::string& guess);
     void addGame (Game* game);
+    Game* searchGame (int gameId);
 };
 
 #endif

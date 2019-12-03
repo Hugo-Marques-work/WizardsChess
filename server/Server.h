@@ -13,6 +13,7 @@ class Server : public MessageVisitor
 private:
     std::map<int, Game*> _games;
     std::map<std::string, Player*> _players;
+    int _nextGameId;
 public:
     Server ();
     ~Server ();
@@ -24,6 +25,8 @@ public:
     std::string visitGameLastTurn (GameLastTurnMessage* message);
     std::string visitGameLastMove (GameLastMoveMessage* message);
     std::string visitPawnPromotion (PawnPromotionMessage* message);
+    std::string visitNewGame (NewGameMessage* message);
+    Player* searchPlayer (const std::string& user);
 };
 
 #endif

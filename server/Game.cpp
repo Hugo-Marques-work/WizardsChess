@@ -181,14 +181,14 @@ void Game::printMatrix()
     _chessMatrix.printMatrix();
 }
 #include <iostream>
-
+/*
 //Removing this will remove the text simulation
 int main()
 {
     Game game(0,nullptr,nullptr); 
     game.printMatrix();
-    /*ChessMatrix* m = game->getMatrix();
-    m->printMatrix();*/
+    //ChessMatrix* m = game->getMatrix();
+    m->printMatrix();//
     int xOld,xNew,yOld,yNew;
     bool promote = false;
     while(true)
@@ -221,7 +221,7 @@ int main()
         game.printMatrix(); 
     }
     return 0;
-}
+}*/
 /*
 1 7 0 5
 0 1 0 2
