@@ -176,10 +176,25 @@ void Game::removePawn(PawnPiece* p)
         }
     }
 }
+
 void Game::printMatrix()
 {
     _chessMatrix.printMatrix();
 }
+
+void Game::drop (bool white)
+{
+    if (white)
+    {
+        _playerB->gameDropped(_gameId);
+        //TODO change state, player* goes to DropState
+    }
+    else
+    {
+        _playerW->gameDropped(_gameId);
+    }
+}
+
 #include <iostream>
 /*
 //Removing this will remove the text simulation

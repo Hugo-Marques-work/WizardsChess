@@ -113,7 +113,6 @@ public:
 
     void removePawn(PawnPiece* p);
  
-
     std::list<BishopPiece>& insertBishop(bool white,BishopPiece& p)
     {
         if(white) {_bishopW.push_front(p);} else {_bishopB.push_front(p);}
@@ -135,6 +134,8 @@ public:
         if(white) { _queenW.push_front(p);} else { _queenB.push_front(p);}
     }
     //can't insert a king
+    
+    void drop (bool white);
 
     void printMatrix();
 };

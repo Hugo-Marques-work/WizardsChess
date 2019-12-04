@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "NoSuchGameException.h"
 
 Player::Player (const std::string& userId, const std::string& password)
 {
@@ -24,4 +25,16 @@ Game* Player::searchGame (int gameId)
         return it->second;
     else
         return nullptr;
+}
+
+void Player::dropGame (int gameId) 
+{
+    Game* game = searchGame(gameId);
+    
+    if (game != nullptr) 
+    {
+        game->
+    }
+    else
+        throw NoSuchGameException();
 }

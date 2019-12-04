@@ -2,6 +2,7 @@
 #include "messages/MessageFactory.h"
 #include "messages/Message.h"
 #include "Server.h"
+#include "exceptions/WrongInputException.h"
 
 int main () {
     MessageFactory factory;
@@ -15,7 +16,8 @@ int main () {
             message = factory.parse(buffer);
             std::cout << message->accept(&server) << std::endl;
             delete message;
-        } catch (std::exception e) {
+            
+        } catch (WrongInputException& e) {
             std::cout << "ERR " << e.what() << std::endl;
         }
     }

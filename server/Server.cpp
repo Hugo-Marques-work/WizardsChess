@@ -36,15 +36,17 @@ std::string Server::visitListGames (ListGamesMessage* message)
     {
         if (player->validatePassword(message->pass()))
         {
-            std::string result ("LIST_GAMES_A");
+            std::string result ("LIST_GAMES_A ");
+            
+            result += std::to_string(player->games().count());
             
             for (std::pair <int, Game*> pair : player->games())
             {
                 Game* game = pair.second;
                 if (game->playerW() == player)
-                    result += " " + std::to_string(game->gameId()) + " " + game->playerB()->user();
+                    result += " " + std::to_string(game->gameId()) + " " + game->playerB()->user() + " W";
                 else
-                    result += " " + std::to_string(game->gameId()) + " " + game->playerW()->user();
+                    result += " " + std::to_string(game->gameId()) + " " + game->playerW()->user() + " B";
             }
             
             return result;
@@ -85,7 +87,7 @@ std::string Server::visitGameMove (GameMoveMessage* message)
             return "GAME_MOVE_A ERR_PASSWORD";
     }
     else 
-        return "LIST_GAMES_A USER_NOT_FOUND";
+        return "GAME_MOVE_A USER_NOT_FOUND";
 }
 
 std::string Server::visitGameStatus (GameStatusMessage* message)
@@ -95,7 +97,28 @@ std::string Server::visitGameStatus (GameStatusMessage* message)
 
 std::string Server::visitGameDrop (GameDropMessage* message)
 {
+    Player* player;
     
+    if ((player = searchPlayer(message->user())) != nullptr)
+    {
+        if (player->validatePassword(message->pass()))
+        {   
+            try
+            {
+                player->drop(message->gameId());
+            }
+            catch (...)
+            {
+                return "GAME_DROP_A ERR";
+            }
+            
+            return "GAME_DROP_A OK";
+        }
+        else
+            return "GAME_DROP_A ERR_PASSWORD";
+    }
+    else 
+        return "GAME_DROP_A USER_NOT_FOUND";
 }
 
 std::string Server::visitGameLastTurn (GameLastTurnMessage* message)
@@ -131,12 +154,18 @@ std::string Server::visitNewGame (NewGameMessage* message)
     player2->addGame (game);
     
     _nextGameId++;
+    
+    return "NEW_GAME_A OK";
 }
 
 Server::~Server () 
 {
-    std::map<std::string, Player*>::iterator it;
+    std::map<std::string, Player*>::iterator it1;
+    std::map<std::string, Game*>::iterator it2;
     
-    for (it = _players.begin(); it != _players.end(); it++) 
-        delete it->second;
+    for (it1 = _players.begin(); it1 != _players.end(); it1++) 
+        delete it1->second;
+    
+    for (it2 = _players.begin(); it2 != _players.end(); it2++) 
+        delete it2->second;
 }
