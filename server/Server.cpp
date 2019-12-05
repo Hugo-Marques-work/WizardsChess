@@ -161,11 +161,11 @@ std::string Server::visitNewGame (NewGameMessage* message)
 Server::~Server () 
 {
     std::map<std::string, Player*>::iterator it1;
-    std::map<std::string, Game*>::iterator it2;
+    std::map<int, Game*>::iterator it2;
     
     for (it1 = _players.begin(); it1 != _players.end(); it1++) 
         delete it1->second;
     
-    for (it2 = _players.begin(); it2 != _players.end(); it2++) 
+    for (it2 = _games.begin(); it2 != _games.end(); it2++) 
         delete it2->second;
 }

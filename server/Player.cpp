@@ -1,5 +1,5 @@
 #include "Player.h"
-#include "NoSuchGameException.h"
+#include "exceptions/NoSuchGameException.h"
 
 Player::Player (const std::string& userId, const std::string& password)
 {
@@ -33,7 +33,6 @@ void Player::dropGame (int gameId)
     
     if (game != nullptr) 
     {
-        game->
     }
     else
         throw NoSuchGameException();

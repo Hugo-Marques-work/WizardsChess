@@ -5,6 +5,7 @@
 #include "exceptions/InvalidMoveException.h"
 #include "exceptions/NoSuchPieceException.h"
 #include "exceptions/NotYourTurnException.h"
+#include "Player.h"
 Game::Game (int gameId, Player* playerW, Player* playerB): 
     _gameId (gameId), _playerW(playerW), _playerB(playerB)
 {
@@ -186,12 +187,12 @@ void Game::drop (bool white)
 {
     if (white)
     {
-        _playerB->gameDropped(_gameId);
+        //_playerB->gameDropped(_gameId);
         //TODO change state, player* goes to DropState
     }
     else
     {
-        _playerW->gameDropped(_gameId);
+        //_playerW->gameDropped(_gameId);
     }
 }
 
