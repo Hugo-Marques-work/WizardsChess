@@ -38,7 +38,7 @@ std::string Server::visitListGames (ListGamesMessage* message)
         {
             std::string result ("LIST_GAMES_A ");
             
-            result += std::to_string(player->games().count());
+            result += std::to_string(player->games().size());
             
             for (std::pair <int, Game*> pair : player->games())
             {
@@ -138,6 +138,8 @@ std::string Server::visitPawnPromotion (PawnPromotionMessage* message)
 
 std::string Server::visitNewGame (NewGameMessage* message)
 {
+    /*poor solution*/
+    
     Player *player1, *player2;
     
     player1 = searchPlayer(message->user1());
