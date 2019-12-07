@@ -79,6 +79,7 @@ public:
 
     void setState(GameState* state) { _state = state; }
 
+    //FIXME DRAW CONDITIONS HAS BEEN DEPRECATED
     void createDrawConditions();
 
     std::list<std::list<Piece*> > getDrawConditions()
