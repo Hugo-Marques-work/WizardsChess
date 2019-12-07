@@ -29,8 +29,7 @@ void PlayingState::move(const Position& origin, const Position& dest)
             enPassant = true;
     }
 
-    KingPiece& pieceKing = p->isWhite() == true ? _game->getKing(true) :
-        _game->getKing(false);
+    KingPiece& pieceKing = _game->getKing(p->isWhite());
     if(enPassant) 
     {
         Piece* pAlt = _game->getEnPassantPiece();

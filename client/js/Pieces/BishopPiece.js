@@ -19,7 +19,7 @@ class BishopPiece extends Piece {
                 while(pieceInArea == false) {
                     try {
                         pieceInArea = this.pushIfAvailable(valid, new Position(
-                            this.myPos.x + tempX, this.myPos.y + tempY), undefined);
+                            this.pos.x + tempX, this.pos.y + tempY), undefined);
                     
                     } catch( err ) { break; }
                 } 

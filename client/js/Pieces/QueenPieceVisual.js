@@ -4,4 +4,8 @@ class QueenPieceVisual extends THREE.Object3D {
 
         
     }
+    
+    update(deltaTime) {
+        //FIXME
+    }
 }

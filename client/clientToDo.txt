@@ -1,0 +1,3 @@
+Important -> Take all GETS off pieces game and board
+
+ADD Updates on all pieces ( pawn piece has one )

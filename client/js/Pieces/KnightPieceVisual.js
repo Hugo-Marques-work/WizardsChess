@@ -4,4 +4,8 @@ class KnightPieceVisual extends THREE.Object3D {
 
         
     }
+    
+    update(deltaTime) {
+        //FIXME
+    }
 }

@@ -10,7 +10,7 @@ class Piece {
         else {
             this.id = id;
             this.white = white;
-            this.myPos = pos;
+            this.pos = pos;
             this.game = g;
             this.forward = forward;
         }
@@ -36,7 +36,7 @@ class Piece {
     {
         this.id = id;
         this.white = white;
-        this.myPos = pos;
+        this.pos = pos;
         this.game = g;
         this.forward = forward;
     }
@@ -47,7 +47,7 @@ class Piece {
         if( enemyInArea === undefined ) {
             let piece = this.game.getCell( pos );
 
-            if( piece != null && piece.isWhite() != this.white) {
+            if( piece != null && piece.white != this.white) {
                 valid.push(piece);
             }
             
@@ -57,7 +57,7 @@ class Piece {
         if( enemyInArea ) {
             let piece = this.game.getCell( pos );
             
-            if( piece != null && piece.isWhite() != this.white) {
+            if( piece != null && piece.white != this.white) {
                 valid.push( pos );
             }
         }
@@ -71,13 +71,7 @@ class Piece {
         }
     }
 
-    isWhite() { return this.white; }
-
-    getId() { return this.id; }
-
-    getPos() { return this.myPos; }
-
-    setPos(pos) { this.myPos = pos; }
+    setPos(pos) { this.pos = pos; }
 
     die() { this.alive = false; }
 

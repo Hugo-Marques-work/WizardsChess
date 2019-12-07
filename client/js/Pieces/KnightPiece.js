@@ -22,7 +22,7 @@ class KnightPiece extends Piece {
 
                 try {
                     this.pushIfAvailable(valid, new Position(
-                        this.myPos.x + x, this.myPos.y + y), undefined);
+                        this.pos.x + x, this.pos.y + y), undefined);
                 
                 } catch( err ) { continue; }
             }

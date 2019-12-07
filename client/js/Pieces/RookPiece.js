@@ -18,7 +18,7 @@ class RookPiece extends Piece {
             while(pieceInArea == false) {
                 try {
                     pieceInArea = this.pushIfAvailable(valid, new Position(
-                        this.myPos.x + tempX, this.myPos.y), undefined);
+                        this.pos.x + tempX, this.pos.y), undefined);
                     
                     tempX+=x;
                 } catch( err ) { break; }
@@ -31,7 +31,7 @@ class RookPiece extends Piece {
             while(pieceInArea == false) {
                 try {
                     pieceInArea = this.pushIfAvailable(valid, new Position(
-                        this.myPos.x, this.myPos.y + tempY), undefined);
+                        this.pos.x, this.pos.y + tempY), undefined);
                     
                     tempY+=y;
                 } catch( err ) { break; }
