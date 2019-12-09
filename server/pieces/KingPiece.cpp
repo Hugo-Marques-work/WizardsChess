@@ -29,7 +29,6 @@ std::list<Position> KingPiece::getValidCastling()
     if(!_hasMoved)
     {
         std::list<RookPiece>& rooks = _game->getRook(_white);
-        int howManyMoved = 0;
         for(RookPiece& p : rooks)
         {
             if(!p.hasMoved())
