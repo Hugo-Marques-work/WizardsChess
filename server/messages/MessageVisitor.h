@@ -7,7 +7,7 @@
 #include "GameMoveMessage.h"
 #include "GameStatusMessage.h"
 #include "GameDropMessage.h"
-#include "GameLastTurnMessage.h"
+#include "GameTurnMessage.h"
 #include "GameLastMoveMessage.h"
 #include "PawnPromotionMessage.h"
 #include "NewGameMessage.h"
@@ -20,7 +20,7 @@ public:
     virtual std::string visitGameMove (GameMoveMessage* message) = 0;
     virtual std::string visitGameStatus (GameStatusMessage* message) = 0;
     virtual std::string visitGameDrop (GameDropMessage* message) = 0;
-    virtual std::string visitGameLastTurn (GameLastTurnMessage* message) = 0;
+    virtual std::string visitGameTurn (GameTurnMessage* message) = 0;
     virtual std::string visitGameLastMove (GameLastMoveMessage* message) = 0;
     virtual std::string visitPawnPromotion (PawnPromotionMessage* message) = 0;
     virtual std::string visitNewGame (NewGameMessage* message) = 0;

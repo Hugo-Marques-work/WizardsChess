@@ -5,9 +5,11 @@
 #include "exceptions/InvalidMoveException.h"
 #include "exceptions/NoSuchPieceException.h"
 #include "exceptions/NotYourTurnException.h"
+#include "exceptions/FirstTurnException.h"
 #include "Player.h"
+
 Game::Game (int gameId, Player* playerW, Player* playerB): 
-    _gameId (gameId), _playerW(playerW), _playerB(playerB)
+    _gameId (gameId), _playerW(playerW), _playerB(playerB), _lastMove(nullptr)
 {
     _whiteTurn = false;
 
@@ -183,17 +185,19 @@ void Game::printMatrix()
     _chessMatrix.printMatrix();
 }
 
-void Game::drop (bool white)
+Move Game::lastMove ()
 {
-    if (white)
-    {
-        //_playerB->gameDropped(_gameId);
-        //TODO change state, player* goes to DropState
-    }
+    if (_lastMove == nullptr) 
+        throw FirstTurnException ();
     else
-    {
-        //_playerW->gameDropped(_gameId);
-    }
+        return *_lastMove;
+}
+void Game::setLastMove (const Move& move)
+{
+    if (_lastMove != nullptr)
+        delete _lastMove;
+    
+    _lastMove = new Move (move.origin, move.destination);
 }
 
 #include <iostream>
@@ -247,3 +251,4 @@ int main()
 2 7 1 6
 0 3 0 4
 */
+

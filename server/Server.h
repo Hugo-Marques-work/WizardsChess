@@ -22,7 +22,7 @@ public:
     std::string visitGameMove (GameMoveMessage* message);
     std::string visitGameStatus (GameStatusMessage* message);
     std::string visitGameDrop (GameDropMessage* message);
-    std::string visitGameLastTurn (GameLastTurnMessage* message);
+    std::string visitGameTurn (GameTurnMessage* message);
     std::string visitGameLastMove (GameLastMoveMessage* message);
     std::string visitPawnPromotion (PawnPromotionMessage* message);
     std::string visitNewGame (NewGameMessage* message);

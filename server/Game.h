@@ -10,6 +10,7 @@
 #include "pieces/KingPiece.h"
 #include "pieces/RookPiece.h"
 #include "pieces/BishopPiece.h"
+#include "Move.h"
 
 class Player;
 
@@ -18,12 +19,13 @@ class Game
 private:
     const int MAX_X = 8;
     const int MAX_Y = 8;
+    Move* _lastMove;
     int _gameId;
     bool _whiteTurn;
     ChessMatrix _chessMatrix;
     GameState* _state;
     Player *_playerW, *_playerB;
-
+    
     KingPiece _kingW, _kingB;
     std::list<QueenPiece> _queenW, _queenB;
     
@@ -134,9 +136,9 @@ public:
         if(white) { _queenW.push_front(p);} else { _queenB.push_front(p);}
     }
     //can't insert a king
-    
-    void drop (bool white);
 
+    Move lastMove ();
+    void setLastMove (const Move& move);
     void printMatrix();
 };
 

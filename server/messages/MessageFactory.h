@@ -14,7 +14,7 @@ private:
     Message* parseGameStatus (Parser& parser);
     Message* parseGameDrop (Parser& parser);
     Message* parseGameLastMove(Parser& parser);
-    Message* parseGameLastTurn(Parser& parser);
+    Message* parseGameTurn(Parser& parser);
     Message* parsePawnPromotion(Parser& parser);
     Message* parseNewGame(Parser& parser);
 public:

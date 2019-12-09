@@ -1,4 +1,6 @@
 #include "Server.h"
+#include "exceptions/FirstTurnException.h"
+#include "Move.h"
 
 Server::Server () : _nextGameId (1)
 {    
@@ -78,7 +80,7 @@ std::string Server::visitGameMove (GameMoveMessage* message)
             }
             catch (...)
             {
-                return "GAME_MOVE_A ERR_MOVE";
+                return "GAME_MOVE_A ERR_LOGIC";
             }
             
             return "GAME_MOVE_A OK";
@@ -105,9 +107,15 @@ std::string Server::visitGameDrop (GameDropMessage* message)
         {   
             try
             {
-                player->drop(message->gameId());
+                Game* game = player->searchGame(message->gameId());
+                
+                if (game != nullptr) 
+                {
+                    //game->
+                }
+                
             }
-            catch (...)
+            catch (...) /*TODO check exceptions*/
             {
                 return "GAME_DROP_A ERR";
             }
@@ -118,17 +126,67 @@ std::string Server::visitGameDrop (GameDropMessage* message)
             return "GAME_DROP_A ERR_PASSWORD";
     }
     else 
-        return "GAME_DROP_A USER_NOT_FOUND";
+        return "GAME_DROP_A ERR_USER_NOT_FOUND";
 }
 
-std::string Server::visitGameLastTurn (GameLastTurnMessage* message)
+std::string Server::visitGameTurn (GameTurnMessage* message)
 {
+    Player* player;
     
+    if ((player = searchPlayer(message->user())) != nullptr)
+    {
+        if (player->validatePassword(message->pass()))
+        {   
+            Game* game = player->searchGame(message->gameId());
+            if (game != nullptr) 
+                return game->getTurn () ? "GAME_TURN_A W" :
+                                          "GAME_TURN_A B";
+            else
+                return "GAME_TURN_A ERR_GAME_NOT_FOUND";
+        }
+        else
+            return "GAME_TURN_A ERR_PASSWORD";
+    }
+    else 
+        return "GAME_TURN_A ERR_USER_NOT_FOUND";
 }
 
 std::string Server::visitGameLastMove (GameLastMoveMessage* message)
 {
+    Player* player;
     
+    if ((player = searchPlayer(message->user())) != nullptr)
+    {
+        if (player->validatePassword(message->pass()))
+        {   
+            Game* game = player->searchGame(message->gameId());
+            if (game != nullptr) 
+            {
+                try
+                {
+                    Move move = game->lastMove();
+                    return "GAME_LAST_MOVE_A " + std::to_string(move.origin.x) + " "
+                                               + std::to_string(move.origin.y) + " "
+                                               + std::to_string(move.destination.x) + " "
+                                               + std::to_string(move.destination.y);
+                }
+                catch (FirstTurnException& e)
+                {
+                    return "GAME_LAST_MOVE_A ERR_FIRST_TURN";
+                }                   
+            }
+            else
+            {
+                return "GAME_LAST_MOVE_A ERR_GAME_NOT_FOUND";
+            }
+            
+            return "GAME_LAST_MOVE_A OK";
+        }
+        else
+            return "GAME_LAST_MOVE_A ERR_PASSWORD";
+    }
+    else 
+        return "GAME_LAST_MOVE_A USER_NOT_FOUND";
 }
 
 std::string Server::visitPawnPromotion (PawnPromotionMessage* message) 

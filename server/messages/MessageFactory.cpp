@@ -5,7 +5,7 @@
 #include "GameStatusMessage.h"
 #include "GameDropMessage.h"
 #include "GameLastMoveMessage.h"
-#include "GameLastTurnMessage.h"
+#include "GameTurnMessage.h"
 #include "PawnPromotionMessage.h"
 #include "NewGameMessage.h"
 #include "../exceptions/WrongInputException.h"
@@ -41,8 +41,8 @@ Message* MessageFactory::parse (const char* string)
     else if (command == "GAME_DROP_R")
         return parseGameDrop(parser);
     
-    else if (command == "GAME_LAST_TURN_R")
-        return parseGameLastTurn(parser);
+    else if (command == "GAME_TURN_R")
+        return parseGameTurn(parser);
     
     else if (command == "GAME_LAST_MOVE_R")
         return parseGameLastMove(parser);
@@ -158,7 +158,7 @@ Message* MessageFactory::parseGameDrop (Parser& parser)
     return new GameDropMessage (user, pass, gameId);
 }
 
-Message* MessageFactory::parseGameLastTurn(Parser& parser) 
+Message* MessageFactory::parseGameTurn(Parser& parser) 
 {
     std::string user, pass;
     int gameId;
@@ -175,7 +175,7 @@ Message* MessageFactory::parseGameLastTurn(Parser& parser)
         throw WrongInputException(e.what());
     }
     
-    return new GameLastTurnMessage (user, pass, gameId);
+    return new GameTurnMessage (user, pass, gameId);
 }
 
 Message* MessageFactory::parseGameLastMove(Parser& parser) 

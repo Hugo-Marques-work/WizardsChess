@@ -1,16 +1,16 @@
-#ifndef GAMELASTTURNMESSAGE_H
-#define GAMELASTTURNMESSAGE_H
+#ifndef GAMETURNMESSAGE_H
+#define GAMETURNMESSAGE_H
 
 #include "Message.h"
 #include <string>
 
-class GameLastTurnMessage : public Message
+class GameTurnMessage : public Message
 {
 private:
     std::string _user, _pass;
     int _gameId;
 public:
-    GameLastTurnMessage(const std::string& user, const std::string& pass, int gameId);
+    GameTurnMessage(const std::string& user, const std::string& pass, int gameId);
     std::string accept (MessageVisitor* visitor);
     
     const std::string& user() { return _user; }

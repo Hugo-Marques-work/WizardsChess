@@ -27,13 +27,22 @@ Game* Player::searchGame (int gameId)
         return nullptr;
 }
 
-void Player::dropGame (int gameId) 
+std::list<int> Player::listGamesDropped ()
 {
-    Game* game = searchGame(gameId);
-    
-    if (game != nullptr) 
-    {
-    }
-    else
-        throw NoSuchGameException();
+    std::list<int> list = _gamesDropped;
+    _gamesDropped.clear();
+    return list;
+}
+
+void Player::gameDropped (int gameId) 
+{
+    _games.erase (gameId);
+    _gamesDropped.push_front(gameId);
+    /*NoSuchGameException?*/
+}
+
+void Player::dropGame (int gameId)
+{
+    _games.erase (gameId);
+    /*NoSuchGameException?*/
 }
