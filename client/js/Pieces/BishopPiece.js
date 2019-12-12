@@ -1,7 +1,7 @@
 class BishopPiece extends Piece {
     constructor(id,white,pos,g,forward) {
         super(id,white,pos,g,forward);
-        this.visual = new BishopPieceVisual();
+        this.visual = new BishopPieceVisual(this);
 
     }
 
@@ -27,5 +27,9 @@ class BishopPiece extends Piece {
         }
 
         return valid;
+    }
+
+    update(deltaTime) {
+        this.visual.update(deltaTime);
     }
 }

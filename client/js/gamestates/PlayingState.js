@@ -72,14 +72,8 @@ class PlayingState extends GameState {
             try {
                 p.setPos(dest);
             } catch( e ) {
-                
-                this.game.state = new WaitingForPromotionState(this, _game, e.getPawn() );
-                //FIXME
-                /*
-                checkVictory();
-                checkDraw();ng(dest))
-                checkFiftyMove();
-                */
+                //PAWN PROMOTION EXCEPTION!!!
+                this.game.state = new WaitingForPromotionState(this, _game, e.pawn );
                 throw e;
             }
         }
@@ -95,10 +89,6 @@ class PlayingState extends GameState {
             if(p.getPos().x < rookOrigin.x) {
                 rookDest.x = dest.x-1;
             }
-
-            m.set(rookDest, rook);
-            m.set(rookOrigin, null);
-            m.set(origin, null);
 
             p.setPos(dest);
             rook.setPos(rookDest);
@@ -118,6 +108,46 @@ class PlayingState extends GameState {
         */
        
         this.game.tickTurn();
+    }
+
+    checkMove(origin, dest) {
+        let m = this.game.chessMatrix;
+        let p = m.get(origin);
+
+        if(p == null) {
+            throw new NoSuchPieceException();
+        }
+        if( p.white != this.game.getTurn() ) {
+            throw new NotYourTurnException();
+        }
+
+        this.moveCounter++;
+        
+        let enPassant = false;
+        for(let pos in this.game.getEnPassantOrigin() ) {
+            if( pos == origin && dest == this.game.getEnPassantDest() ) {
+                enPassant = true;
+            }
+        }
+
+        let pieceKing = this.game.getKing(p.white);
+
+        if(enPassant) {
+            return true;
+        }
+        else if(p.validateMove(dest) == true) {
+            return true;
+        }
+
+        else if(p.pos.equal(pieceKing.pos) && pieceKing.validateCastling(dest)) {
+            rook = pieceKing.getCastlingRook(dest);
+            if(rook == null) throw "ErrorWithCastling";
+
+            return true;
+        }
+        else {
+            throw new InvalidMoveException();
+        }
     }
 
     //FIXME

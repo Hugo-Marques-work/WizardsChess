@@ -59,8 +59,15 @@ class Board {
         return this.enPassantDest;
     }
 
+    //////////////////////////////////////VISUAL
+
+    getBoardVisualTiles() {
+        return this.visual.getTiles();
+    }
+    
     update(deltaTime) {
         //FIXME
+        this.visual.update(deltaTime);
         for(let i = 0; i < BOARD_MAX_Y; i++)
         {
             for(let k = 0; k < BOARD_MAX_X; k++)

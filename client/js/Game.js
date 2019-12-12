@@ -11,12 +11,22 @@ class Game {
         this.knightW = []; this.kingB = [];
         this.bishopW = []; this.bishopB = [];
 
-        this.state = currentState;
-        //state ? 
+        if(currentState == undefined) {
+            this.state = new PlayingState(this);
+        }
+        else {
+            this.state = currentState;
+        }
+
+        this.meWhite= true//FIXME
     }
 
     //IDEA FOR IMPORTING AN EXISTING GAME FROM THE SERVER
     //fullBoardImport()
+
+    checkMove(origin,dest) {
+        return this.state.checkMove(origin, dest);
+    }
     move(origin, dest) {
         this.state.move(origin,dest);
     }
@@ -101,28 +111,64 @@ class Game {
         }
     }
  
-    insertBishop(white, p)
-    {
+    insertBishop(white, p) {
         if(white) {this.bishopW.push(p);} else {this.bishopB.push(p);}
     } 
-    insertKnight(white, p)
-    {
+    insertKnight(white, p) {
         if(white) { this.knightW.push(p);} else { this.knightB.push(p);}
     }
-    insertRook(white, p)
-    {
+    insertRook(white, p) {
         if(white) { this.rookW.push(p);} else { this.rookB.push(p);}
     }
-    insertPawn(white, p)
-    {
+    insertPawn(white, p) {
         if(white) { this.pawnW.push(p);} else { this.pawnB.push(p);}
     }
-    insertQueen(white, p)
-    {
+    insertQueen(white, p) {
         if(white) { this.queenW.push(p);} else { this.queenB.push(p);}
     }
 
+    /////////////////////////////////VISUAL
 
+    getVisualPieces() {
+        var visual = [];
+        for(var piece in this.pawnB)
+            visual.push(piece.visual);
+        for(var piece in this.pawnW)
+            visual.push(piece.visual);
+
+        for(var piece in this.queenB)
+            visual.push(piece.visual);
+        for(var piece in this.queenW)
+            visual.push(piece.visual);
+
+        for(var piece in this.knightB)
+            visual.push(piece.visual);
+        for(var piece in this.knightW)
+            visual.push(piece.visual);
+
+        for(var piece in this.bishopB)
+            visual.push(piece.visual);
+        for(var piece in this.bishopW)
+            visual.push(piece.visual);
+
+        for(var piece in this.rookB)
+            visual.push(piece.visual);
+        for(var piece in this.rookW)
+            visual.push(piece.visual);
+        
+        visual.push(this.kingB.visual);
+        visual.push(this.kingW.visual);
+        
+        return visual;
+    }
+
+    getBoardVisualTiles() {
+        this.chessMatrix.getBoardVisualTiles();
+    }
+
+    update(deltaTime) {
+        this.chessMatrix.update();
+    }
     //DROP FIXME
     // drop(white) { }
     
