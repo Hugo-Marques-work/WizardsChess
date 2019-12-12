@@ -28,6 +28,8 @@ public:
     {
         throw InvalidActionException();
     }
+    
+    bool drop (int gameId);
 }; 
 
 #endif

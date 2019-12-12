@@ -27,6 +27,7 @@ public:
     std::string visitPawnPromotion (PawnPromotionMessage* message);
     std::string visitNewGame (NewGameMessage* message);
     Player* searchPlayer (const std::string& user);
+    void removeGame (int gameId);
 };
 
 #endif

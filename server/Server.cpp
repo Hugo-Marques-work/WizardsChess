@@ -105,21 +105,23 @@ std::string Server::visitGameDrop (GameDropMessage* message)
     {
         if (player->validatePassword(message->pass()))
         {   
-            try
+            
+            Game* game = player->searchGame(message->gameId());
+            
+            if (game != nullptr) 
             {
-                Game* game = player->searchGame(message->gameId());
-                
-                if (game != nullptr) 
+                if (game->drop (player->user())) 
                 {
-                    //game->
+                    game->playerB()->removeGame(game->gameId());
+                    game->playerW()->removeGame(game->gameId());
+                    _games.erase (game->gameId());
+                    delete game;
                 }
-                
-            }
-            catch (...) /*TODO check exceptions*/
-            {
-                return "GAME_DROP_A ERR";
             }
             
+            else 
+                return "GAME_DROP_A ERR_GAME_NOT_FOUND";
+        
             return "GAME_DROP_A OK";
         }
         else

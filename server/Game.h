@@ -141,6 +141,9 @@ public:
     Move lastMove ();
     void setLastMove (const Move& move);
     void printMatrix();
+    
+    //true if the game can be deleted
+    bool drop (int gameId);
 };
 
 #endif

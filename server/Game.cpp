@@ -200,6 +200,11 @@ void Game::setLastMove (const Move& move)
     _lastMove = new Move (move.origin, move.destination);
 }
 
+bool Game::drop (int gameId)
+{
+    _state->drop(gameId);
+}
+
 #include <iostream>
 /*
 //Removing this will remove the text simulation

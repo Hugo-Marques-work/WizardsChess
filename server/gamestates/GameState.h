@@ -10,7 +10,6 @@
 #include "../exceptions/ImpossibleBoardStateException.h"
 #include "../exceptions/PawnPromotionException.h"
 
-//#include "../Game.h"
 class Game;
 
 class GameState 
@@ -27,7 +26,8 @@ public:
     virtual void move(const Position& origin,
          const Position& dest) noexcept(false) = 0;
     virtual void promote(Piece* p) 
-    { throw InvalidActionException(); }
+    { throw InvalidActionException(); }//FIXME why not = 0...?
+    virtual bool drop (int gameId) = 0;
 };
  
 #endif

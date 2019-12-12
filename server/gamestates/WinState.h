@@ -14,6 +14,8 @@ public:
     
     void move(const Position& origin,
         const Position& dest) noexcept(false) override;
+        
+    bool drop (int gameId);
 };
 
 #endif

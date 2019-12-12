@@ -13,3 +13,11 @@ void WaitingForPromotionState::promote(Piece* p)
 
     delete this;
 }
+
+bool WaitingForPromotionState::drop (int gameId)
+{
+    _game->setState(new DroppedState (_game, gameId));
+    
+    delete _playingState;
+    delete this;
+}

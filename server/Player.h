@@ -11,7 +11,6 @@ class Player
 private:
     std::string _userId, _password;
     std::map<int, Game*> _games;
-    std::list<int> _gamesDropped; 
 public:
     Player (const std::string& userId, const std::string& password);
     
@@ -20,10 +19,8 @@ public:
     const std::map <int, Game*> & games () {return _games;}
     bool validatePassword (const std::string& guess);
     void addGame (Game* game);
-    void gameDropped (int gameId);
-    void dropGame (int gameId);
+    void removeGame (int gameId);
     Game* searchGame (int gameId);
-    std::list<int> listGamesDropped ();
 };
 
 #endif
