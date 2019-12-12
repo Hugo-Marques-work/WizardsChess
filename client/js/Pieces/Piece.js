@@ -24,8 +24,11 @@ class Piece {
     }
 
     validateMove(dest) {
-        for(let pos in this.getValidMoves)
+        var moves = this.getValidMoves();
+        console.log(moves);
+        for(let i in moves)
         {
+            let pos = moves[i];
             if(pos.x = dest.x && pos.y == dest.y)
                 return true;
         }
@@ -44,6 +47,9 @@ class Piece {
     //if enemyInArea is undefined returns true if there's a piece on 
     // the destination
     pushIfAvailable(valid, pos, enemyInArea) {
+        if(pos.x>=BOARD_MAX_X || pos.x < 0 ||
+            pos.y >= BOARD_MAX_Y || pos.y < 0)
+            return true;
         if( enemyInArea === undefined ) {
             let piece = this.game.getCell( pos );
 
@@ -77,6 +83,11 @@ class Piece {
 
     getAlive() { return this.alive; }
 
+
+    //////////////////////////////////////VISUAL
+    translatePosIntoVisual() {
+        return this.game.translatePosIntoVisual(this.pos);
+    }
     update() { 
         //VIRTUAL    
     }

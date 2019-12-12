@@ -6,7 +6,7 @@ class ServerCommunicator {
 
     //Add websockets
     move() {
-        
+        gameBridge.executeMove();
     }
     
     drop() {

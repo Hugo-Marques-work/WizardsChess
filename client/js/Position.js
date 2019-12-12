@@ -9,4 +9,8 @@ class Position {
             this.y = y;
         }
     }
+
+    equal(pos) {
+        return (this.x == pos.x && this.y == pos.y);
+    }
 }

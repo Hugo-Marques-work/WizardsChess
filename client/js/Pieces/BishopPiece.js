@@ -26,9 +26,11 @@ class BishopPiece extends Piece {
             }
         }
 
+        console.log(valid);
         return valid;
     }
 
+    setPos(pos) { super.setPos(pos); this.visual.changePos(); }
     update(deltaTime) {
         this.visual.update(deltaTime);
     }

@@ -28,14 +28,15 @@ class PlayingState extends GameState {
         if(p == null) {
             throw new NoSuchPieceException();
         }
-        if( p.white != this.game.getTurn() ) {
+        if( p.white != this.game.whiteTurn ) {
             throw new NotYourTurnException();
         }
 
         this.moveCounter++;
         
         let enPassant = false;
-        for(let pos in this.game.getEnPassantOrigin() ) {
+        for(let i in this.game.getEnPassantOrigin() ) {
+            var pos = this.game.getEnPassantOrigin()[i];
             if( pos == origin && dest == this.game.getEnPassantDest() ) {
                 enPassant = true;
             }
@@ -117,14 +118,18 @@ class PlayingState extends GameState {
         if(p == null) {
             throw new NoSuchPieceException();
         }
-        if( p.white != this.game.getTurn() ) {
+
+        console.log(p.white);
+        console.log(this.game.whiteTurn);
+        if( p.white != this.game.whiteTurn ) {
             throw new NotYourTurnException();
         }
 
         this.moveCounter++;
         
         let enPassant = false;
-        for(let pos in this.game.getEnPassantOrigin() ) {
+        for(let i in this.game.getEnPassantOrigin() ) {
+            var pos = this.game.getEnPassantOrigin()[i];
             if( pos == origin && dest == this.game.getEnPassantDest() ) {
                 enPassant = true;
             }

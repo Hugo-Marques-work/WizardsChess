@@ -60,11 +60,14 @@ class Board {
     }
 
     //////////////////////////////////////VISUAL
-
+    
+    translatePosIntoVisual(position) {
+        return this.visual.translatePosIntoVisual(position);
+    }
     getBoardVisualTiles() {
         return this.visual.getTiles();
     }
-    
+
     update(deltaTime) {
         //FIXME
         this.visual.update(deltaTime);

@@ -27,10 +27,11 @@ class KingPiece extends Piece {
         if(this.hasMoved) return [];
 
         let valid = [];
-        rooks = this.game.getRook(this.white);
+        var rooks = this.game.getRook(this.white);
 
-        for(let rook in rooks) {
-            if(rook.hasMoved()) continue;
+        for(let i in rooks) {
+            var rook = rooks[i];
+            if(rook.hasMoved) continue;
 
             let rPos = rook.pos;
             let dx = this.pos.x - rPos.x < 0 ? 1 : -1;
@@ -54,7 +55,9 @@ class KingPiece extends Piece {
     }
 
     validateCastling(dest) {
-        for(let pos in this.getValidCastling() ) {
+        var rooks = this.getValidCastling();
+        for(let i in rooks ) {
+            let pos = rooks[i];
             if(pos.x == dest.x && pos.y == dest.y) {
                 return true;
             }

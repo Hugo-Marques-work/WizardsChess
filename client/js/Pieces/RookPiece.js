@@ -14,6 +14,7 @@ class RookPiece extends Piece {
 
         for( let x = -1; x <= 1; x+=2 ) {
             tempX = x;
+            pieceInArea = false;
 
             while(pieceInArea == false) {
                 try {
@@ -27,6 +28,7 @@ class RookPiece extends Piece {
 
         for( let y = -1; y <= 1; y+=2 ) {
             tempY = y;
+            pieceInArea = false;
 
             while(pieceInArea == false) {
                 try {

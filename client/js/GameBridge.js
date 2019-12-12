@@ -6,7 +6,7 @@ class GameBridge {
 
         this.rayCaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
-        this.move = { from : null, to : null };
+        this.move = { from : null, toPos : null };
         this.waitingForResponse = false;
         this.serverCommunicator = serverCommunicator;
         this.state = new MyTurnState(this);
@@ -19,9 +19,9 @@ class GameBridge {
         window.addEventListener("keydown",this);
         window.addEventListener("keyup",this);
         window.addEventListener("resize",this);
-        window.addEventListener("onmousedown",this);
-        window.addEventListener("onmousemove",this);
-        window.addEventListener("onmouseup",this);
+        window.addEventListener("mousedown",this);
+        window.addEventListener("mousemove",this,false);
+        window.addEventListener("mouseup",this);
 
         this.timer = new Date();
     }
@@ -36,6 +36,11 @@ class GameBridge {
         this.scene = new THREE.Scene();
         this.game = new Game(/*FIXME*/);
         this.scene.add(this.game.chessMatrix.visual);
+        var visualPieces = this.game.getVisualPieces();
+        for(var piece in visualPieces) {
+            this.scene.add(visualPieces[piece]);
+        }
+        this.scene.add(new THREE.AxisHelper(10));
     }
 
     createCamera() {
@@ -70,6 +75,7 @@ class GameBridge {
 
         } catch ( exception ) {
 
+            console.log(exception);
             //We can display a message according to the exception that makes the move impossible
             this.move.from = null;
             this.move.toPos = null;
@@ -78,6 +84,7 @@ class GameBridge {
 
     executeMove() {
         //can be state not much point tho
+        debugger;
         this.game.move(this.move.from.getBoardPos(), this.move.toPos);
         this.move.from = null;
         this.move.toPos = null;
@@ -105,17 +112,22 @@ class GameBridge {
     }
 
     onMouseMovement(e) {
-        this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-        this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        e.preventDefault();
+        this.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
+        this.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
     }
 
     onMouseDown(e) {
-        this.raycaster.setFromCamera( this.mouse, this.camera );
+        e.preventDefault();
+        console.log("MouseDown");
+        this.rayCaster.setFromCamera( this.mouse, this.camera );
 
         // calculate objects intersecting the picking ray
-        var intersectsPiece =  raycaster.intersectObjects( this.game.getVisualPieces() );
+        var intersectsPiece =  this.rayCaster.intersectObjects( this.game.getVisualPieces(), true );
         
-        var intersectsTile = raycaster.intersectObjects( this.game.getBoardVisualTiles() );
+        console.log(intersectsPiece);
+        var intersectsTile = this.rayCaster.intersectObjects( this.game.getBoardVisualTiles(), true);
+        console.log(intersectsTile);
 
         this.mouseDown = true;
         this.intersects = { pieces: intersectsPiece, tiles: intersectsTile };
