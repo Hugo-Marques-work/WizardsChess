@@ -1,10 +1,14 @@
 class KingPieceVisual extends THREE.Object3D {
-    constructor() {
+    constructor(logic) {
         super();
 
-        
+        this.logic = logic;
     }
     
+    getBoardPos() {
+        return this.logic.pos;
+    }
+
     update(deltaTime) {
         //FIXME
     }

@@ -13,4 +13,8 @@ class GameState {
     promote(piece) {
         throw new InvalidActionException();
     }
+
+    checkMove(origin, dest) {
+
+    }
 }

@@ -1,7 +1,7 @@
 class KingPiece extends Piece {
     constructor(id,white,pos,g,forward) {
         super(id,white,pos,g,forward);
-        this.visual = new KingPieceVisual();
+        this.visual = new KingPieceVisual(this);
 
         this.hasMoved = false;
     }
@@ -82,4 +82,8 @@ class KingPiece extends Piece {
     }
 
     hasMoved() { return this.hasMoved; }
+
+    update(deltaTime) {
+        this.visual.update(deltaTime);
+    }
 }

@@ -1,7 +1,7 @@
 class QueenPiece extends Piece {
     constructor(id,white,pos,g,forward) {
         super(id,white,pos,g,forward);
-        this.visual = new QueenPieceVisual();
+        this.visual = new QueenPieceVisual(this);
 
     }
 
@@ -29,5 +29,9 @@ class QueenPiece extends Piece {
         }
 
         return valid;
+    }
+
+    update(deltaTime) {
+        this.visual.update(deltaTime);
     }
 }

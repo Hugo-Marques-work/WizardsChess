@@ -1,7 +1,7 @@
 class KnightPiece extends Piece {
     constructor(id,white,pos,g,forward) {
         super(id,white,pos,g,forward);
-        this.visual = new KnightPieceVisual();
+        this.visual = new KnightPieceVisual(this);
 
     }
 
@@ -29,5 +29,9 @@ class KnightPiece extends Piece {
         }
 
         return valid;
+    }
+
+    update(deltaTime) {
+        this.visual.update(deltaTime);
     }
 }

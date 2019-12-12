@@ -11,15 +11,53 @@
             }
         </style>
         <script src="js/three.js"></script>
-        <script src="js/render.js"></script>
+        <script src="js/ServerCommunicator.js"></script>
+        <script src="js/Position.js"></script>
+        <script src="js/GameBridge.js"></script>
+        <script src="js/Game.js"></script>
+        <script src="js/BoardVisual.js"></script>
+        <script src="js/Board.js"></script>       
+
+        <script src="js/Pieces/Piece.js"></script>
+        <script src="js/Pieces/BishopPiece.js"></script>
+        <script src="js/Pieces/BishopPieceVisual.js"></script>
+        <script src="js/Pieces/KingPiece.js"></script>
+        <script src="js/Pieces/KingPieceVisual.js"></script>
+        <script src="js/Pieces/KnightPiece.js"></script>
+        <script src="js/Pieces/KnightPieceVisual.js"></script>
+        <script src="js/Pieces/RookPiece.js"></script>
+        <script src="js/Pieces/RookPieceVisual.js"></script>
+        <script src="js/Pieces/QueenPiece.js"></script>
+        <script src="js/Pieces/QueenPieceVisual.js"></script>
+        <script src="js/Pieces/PawnPiece.js"></script>
+        <script src="js/Pieces/PawnPieceVisual.js"></script>
+
+        <script src="js/gamestates/GameState.js"></script>
+        <script src="js/gamestates/PlayingState.js"></script>
+        <script src="js/gamestates/WaitingForPromotionState.js"></script>
+
+        <script src="js/gameBridgeStates/GameBridgeState.js"></script>
+        <script src="js/gameBridgeStates/MyTurnState.js"></script>
+        <script src="js/gameBridgeStates/OtherTurnState.js"></script>
+        <script src="js/gameBridgeStates/PromotionState.js"></script>
+
+        <script src="js/exceptions/InvalidActionException.js"></script>
+        <script src="js/exceptions/InvalidMoveException.js"></script>
+        <script src="js/exceptions/PawnPromotionException.js"></script>
+        <script src="js/exceptions/NoSuchPieceException.js"></script>
+        <script src="js/exceptions/NotYourTurnException.js"></script>
+        
         <!-- 
         <script src=""></script> 
         -->
     </head>
-    <body>      
-        <script>
-            init();
+    <body>    
+          <script>
+            
+            var sCom = new ServerCommunicator();
+            var gameBridge = new GameBridge(sCom);
             loop();
+
         </script>
     </body>
 </html>

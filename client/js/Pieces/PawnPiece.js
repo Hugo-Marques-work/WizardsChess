@@ -1,7 +1,7 @@
 class PawnPiece extends Piece{
     constructor(id,white,pos,g,forward) {
         super(id,white,pos,g,forward);
-        this.visual = new PawnPieceVisual();
+        this.visual = new PawnPieceVisual(this);
 
         this.MIN_POS_Y = 0;
         this.MAX_POS_Y = 7;

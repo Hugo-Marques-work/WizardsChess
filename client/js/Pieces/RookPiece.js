@@ -1,7 +1,7 @@
 class RookPiece extends Piece {
     constructor(id,white,pos,g,forward) {
         super(id,white,pos,g,forward);
-        this.visual = new RookPieceVisual();
+        this.visual = new RookPieceVisual(this);
 
         this.hasMoved = false;
     }
@@ -47,4 +47,8 @@ class RookPiece extends Piece {
     }
 
     hasMoved() { return this.hasMoved; }
+
+    update(deltaTime) {
+        this.visual.update(deltaTime);
+    }
 }
