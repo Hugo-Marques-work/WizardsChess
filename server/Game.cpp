@@ -20,13 +20,17 @@ Game::Game (int gameId, Player* playerW, Player* playerB):
             _chessMatrix.set(Position(x,y), nullptr);
         }
     }
-    printMatrix();
     
     boardCreation();
-
+    printMatrix();
     createDrawConditions(); 
 
     _state = new PlayingState(this);
+}
+
+Game::~Game ()
+{
+    delete _state;
 }
 
 void Game::createDrawConditions()
@@ -200,9 +204,9 @@ void Game::setLastMove (const Move& move)
     _lastMove = new Move (move.origin, move.destination);
 }
 
-bool Game::drop (int gameId)
+bool Game::drop (const std::string& userId)
 {
-    _state->drop(gameId);
+    _state->drop(userId);
 }
 
 #include <iostream>

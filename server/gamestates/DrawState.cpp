@@ -1,11 +1,41 @@
+#include "../Game.h"
+#include "../Player.h"
+#include "../exceptions/NoSuchGameException.h"
+#include "../exceptions/InvalidActionException.h"
 #include "DrawState.h"
+#include "DropState.h"
 
-void DrawState::accept (GameStateVisitor* visitor) 
+std::string DrawState::accept (GameStateVisitor* visitor) 
 {
-    visitor->visitDraw(this);
+    return visitor->visitDraw(this);
 }
 
 void DrawState::move(const Position& origin, const Position& dest) 
 {
     throw InvalidActionException();
+}
+
+bool DrawState::drop (const std::string& userId)
+{
+    bool white;
+    
+    if (_game->playerW()->user() == userId)
+        white = true;
+    
+    else if (_game->playerB()->user() == userId)
+        white = false;
+    
+    else 
+        throw NoSuchGameException ();
+        
+    _game->setState(new DropState (_game, white));
+    
+    delete this;
+    
+    return false;
+}
+
+void DrawState::promote(Piece* p) 
+{
+    throw InvalidActionException(); 
 }

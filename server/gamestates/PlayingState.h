@@ -1,11 +1,9 @@
 #ifndef PLAYINGSTATE_H
 #define PLAYINGSTATE_H
 
+#include <string>
+
 #include "GameState.h"
-#include "DrawState.h"
-#include "WinState.h"
-#include "DropState.h"
-#include "WaitingForPromotionState.h"
 
 class PlayingState : public GameState 
 {
@@ -15,6 +13,7 @@ private:
     int _currentPieces = 32;
     const int MAX_COUNTER = 50;
     int _moveCounter = 0;
+    
     bool checkVictory();
     bool checkDraw();
     bool checkStalemate();
@@ -22,10 +21,14 @@ private:
     bool checkFiftyMove();
     bool validateCheck(bool white);
 public:
-    void accept (GameStateVisitor* visitor) override;
+    std::string accept (GameStateVisitor* visitor) override;
     
     void move(const Position& origin,
         const Position& dest) noexcept(false) override;
+        
+    bool drop (const std::string& userId);
+    
+    void promote(Piece* p);
 }; 
 
 #endif

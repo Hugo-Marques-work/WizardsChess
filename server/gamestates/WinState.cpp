@@ -1,8 +1,13 @@
+#include "../Game.h"
+#include "../Player.h"
+#include "DropState.h"
 #include "WinState.h"
+#include "../exceptions/NoSuchGameException.h"
+#include "../exceptions/InvalidActionException.h"
 
-void WinState::accept (GameStateVisitor* visitor) 
+std::string WinState::accept (GameStateVisitor* visitor) 
 {
-    visitor->visitWin(this);
+    return visitor->visitWin(this);
 }
 
 void WinState::move(const Position& origin, const Position& dest) 
@@ -10,8 +15,27 @@ void WinState::move(const Position& origin, const Position& dest)
     throw InvalidActionException();
 }
 
-bool WinState::drop (int gameId)
+bool WinState::drop (const std::string& userId)
 {
-    _game->setState(new DroppedState (_game, gameId));
+    bool white;
+    
+    if (_game->playerW()->user() == userId)
+        white = true;
+    
+    else if (_game->playerB()->user() == userId)
+        white = false;
+    
+    else 
+        throw NoSuchGameException ();
+        
+    _game->setState(new DropState (_game, white));
+    
     delete this;
+    
+    return false;
+}
+
+void WinState::promote(Piece* p) 
+{
+    throw InvalidActionException(); 
 }

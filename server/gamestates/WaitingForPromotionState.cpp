@@ -1,5 +1,9 @@
 #include "WaitingForPromotionState.h"
+#include "DropState.h"
 #include "../Game.h"
+#include "../Player.h"
+#include "../exceptions/NoSuchGameException.h"
+#include "../exceptions/InvalidActionException.h"
 
 void WaitingForPromotionState::promote(Piece* p)
 {
@@ -14,10 +18,23 @@ void WaitingForPromotionState::promote(Piece* p)
     delete this;
 }
 
-bool WaitingForPromotionState::drop (int gameId)
+bool WaitingForPromotionState::drop (const std::string& userId)
 {
-    _game->setState(new DroppedState (_game, gameId));
+    bool white;
+    
+    if (_game->playerW()->user() == userId)
+        white = true;
+    
+    else if (_game->playerB()->user() == userId)
+        white = false;
+    
+    else 
+        throw NoSuchGameException ();
+        
+    _game->setState(new DropState (_game, white));
     
     delete _playingState;
     delete this;
+    
+    return false;
 }

@@ -13,13 +13,15 @@ std::list<Position> KnightPiece::getValidMoves()
         else if(x == -1 || x == 1) minY = -2;
         for(int y = minY; y <= 2; y+=2)
         {
-            if(y==0) continue;
+            if(y==0) 
+                continue;
             try
             {
                 piece = _game->getCell( Position(_myPos.x+x, _myPos.y+y) ); 
                 if( piece == nullptr || (piece!=nullptr && piece->isWhite() != _white))
                     valid.push_front( Position(_myPos.x+x, _myPos.y+y) );
-            }catch(std::out_of_range &e)
+            }
+            catch(std::out_of_range &e)
             {
                 continue;
             }

@@ -37,6 +37,7 @@ private:
     std::list<std::list<Piece*> > _drawCondition;
 public:
     Game(int gameId, Player* playerW, Player* playerB);
+    ~Game();
     void move(const Position& origin, const Position& dest);
     
     Player* playerW () {return _playerW;}
@@ -80,6 +81,7 @@ public:
     { return _chessMatrix.getEnPassantPiece(); }
 
     void setState(GameState* state) { _state = state; }
+    GameState* getState () {return _state;}
 
     //FIXME DRAW CONDITIONS HAS BEEN DEPRECATED
     void createDrawConditions();
@@ -143,7 +145,7 @@ public:
     void printMatrix();
     
     //true if the game can be deleted
-    bool drop (int gameId);
+    bool drop (const std::string& userId);
 };
 
 #endif

@@ -26,18 +26,12 @@ public:
         
     Piece(int id, bool white, Position pos, Game* g, bool forward): 
         _id(id), _white(white), _myPos(pos), _game(g), _forward(forward) {}
-    //list or array or forward_list
+    
     virtual std::list<Position> getValidMoves() = 0;
 
     bool validateMove(Position dst);
 
     inline bool isWhite() { return _white; }
-
-    //inline void setWhite(bool white) { _white = white; }
-
-    //void setMatrix(ChessMatrix* m) { _matrix = m; }
-
-    //void setForward(bool forward) { _forward = forward; }
 
     void set(int id, bool white, Position pos, Game* m, bool forward)
     {

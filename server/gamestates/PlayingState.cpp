@@ -1,9 +1,16 @@
 #include "PlayingState.h"
+#include "DropState.h"
+#include "../Player.h"
 #include "../Game.h"
+#include "../exceptions/NoSuchGameException.h"
+#include "../exceptions/InvalidActionException.h"
+#include "WaitingForPromotionState.h"
+#include "WinState.h"
+#include "DrawState.h"
 
-void PlayingState::accept (GameStateVisitor* visitor) 
+std::string PlayingState::accept (GameStateVisitor* visitor) 
 {
-    visitor->visitPlaying(this);
+    return visitor->visitPlaying(this);
 }
 
 void PlayingState::move(const Position& origin, const Position& dest) 
@@ -11,23 +18,19 @@ void PlayingState::move(const Position& origin, const Position& dest)
     ChessMatrix* m = _game->getMatrix();
     Piece* p = m->get(origin);
 
-    if(p == nullptr)
-    {
+    if (p == nullptr)
         throw NoSuchPieceException();
-    }
-    if( p->isWhite() != _game->getTurn() )
-    {
+    
+    if (p->isWhite() != _game->getTurn())
         throw NotYourTurnException();
-    }
 
     _moveCounter++;
 
     bool enPassant = false;
+    
     for(Position& pos : _game->getEnPassantOrigin())
-    {
         if(pos==origin && dest == (*_game->getEnPassantDest() )) 
             enPassant = true;
-    }
 
     KingPiece& pieceKing = _game->getKing(p->isWhite());
     if(enPassant) 
@@ -254,6 +257,31 @@ bool PlayingState::checkFiftyMove()
     Might be a new state or just a variable "canDraw", we can choose.*/
     if(_moveCounter > MAX_COUNTER) return true;
     return false;
+}
+
+bool PlayingState::drop (const std::string& userId)
+{
+    bool white;
+    
+    if (_game->playerW()->user() == userId)
+        white = true;
+    
+    else if (_game->playerB()->user() == userId)
+        white = false;
+    
+    else 
+        throw NoSuchGameException ();
+        
+    _game->setState(new DropState (_game, white));
+    
+    delete this;
+    
+    return false;
+}
+
+void PlayingState::promote(Piece* p) 
+{
+    throw InvalidActionException(); 
 }
 
 /*FIXME MISSING CASE:

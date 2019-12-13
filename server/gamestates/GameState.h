@@ -1,6 +1,8 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
+#include <string>
+
 #include "GameStateVisitor.h"
 #include "../Position.h"
 #include "../exceptions/InvalidActionException.h"
@@ -22,12 +24,14 @@ protected:
 public:
     GameState(Game* game): _game(game) {}
 
-    virtual void accept (GameStateVisitor* visitor) noexcept(false) = 0 ;
+    virtual std::string accept (GameStateVisitor* visitor) noexcept(false) = 0 ;
+    
     virtual void move(const Position& origin,
          const Position& dest) noexcept(false) = 0;
-    virtual void promote(Piece* p) 
-    { throw InvalidActionException(); }//FIXME why not = 0...?
-    virtual bool drop (int gameId) = 0;
+    
+    virtual void promote(Piece* p) = 0;
+    
+    virtual bool drop (const std::string& userId) = 0;
 };
  
 #endif

@@ -1,10 +1,9 @@
 #ifndef WAITING_FOR_PROMOTION_STATE
 #define WAITING_FOR_PROMOTION_STATE
 
+#include <string>
+
 #include "GameState.h"
-#include "DrawState.h"
-#include "WinState.h"
-#include "DropState.h"
 #include "PlayingState.h"
 
 class WaitingForPromotionState : public GameState 
@@ -16,9 +15,9 @@ public:
     WaitingForPromotionState(PlayingState* s,Game* game, PawnPiece* p): 
         _playingState(s), GameState(game), _pawn(p) {}
 
-    void accept (GameStateVisitor* visitor) override
+    std::string accept (GameStateVisitor* visitor) override
     {
-        visitor->visitWaiting(this);
+        return visitor->visitWaiting(this);
     }
  
     void promote(Piece* p) override;
@@ -29,7 +28,7 @@ public:
         throw InvalidActionException();
     }
     
-    bool drop (int gameId);
+    bool drop (const std::string& userId);
 }; 
 
 #endif
