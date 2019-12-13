@@ -10,7 +10,7 @@ class Game {
         }
         this.chessMatrix = new Board();
 
-        this.kingW = new KingPiece(); this.kingB = new KingPiece();
+        this.kingW = null; this.kingB = null;
         this.queenW = []; this.queenB = [];
         this.pawnW = []; this.pawnB = [];
         this.rookW = []; this.rookB = [];
@@ -97,8 +97,8 @@ class Game {
             }
             else if(x==3) {
 
-                this.kingW.set(kingId*2, true, posW, this, forward);
-                this.kingB.set(kingId*2+1, false, posB, this, !forward);
+                this.kingW = new KingPiece(kingId*2, true, posW, this, forward);
+                this.kingB = new KingPiece(kingId*2+1, false, posB, this, !forward);
 
                 this.chessMatrix.set(posB,this.kingB);
                 this.chessMatrix.set(posW,this.kingW);
@@ -143,7 +143,8 @@ class Game {
         let posList = [];
         let pos = piece.pos;
         if(!white) {
-            for(let p in this.pawnW) {
+            for(let i in this.pawnW) {
+                let p = this.pawnW[i];
                 if(p.pos.y == pos.y && (p.pos.x + 1 == pos.x ||
                     p.pos.x-1 == pos.x) ) {
                     
@@ -152,7 +153,8 @@ class Game {
             }
         }
         else {
-            for(let p in this.pawnB) {
+            for(let i in this.pawnB) {
+                let p = this.pawnB[i];
                 if(p.pos.y == pos.y && (p.pos.x + 1 == pos.x ||
                     p.pos.x-1 == pos.x) ) {
                     

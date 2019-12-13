@@ -1,6 +1,7 @@
 class PawnPiece extends Piece{
     constructor(id,white,pos,g,forward) {
-        super(id,white,pos,g,forward);
+        var actualPos = pos.clone();
+        super(id,white,actualPos,g,forward);
         this.visual = new PawnPieceVisual(this);
 
         this.MIN_POS_Y = 0;
@@ -13,7 +14,7 @@ class PawnPiece extends Piece{
         let yToAdd = this.forward ? 1 : -1;
         let valid =[];
         try {
-            this.pushIfAvailable( valid, Position(this.pos.x , 
+            this.pushIfAvailable( valid, new Position(this.pos.x , 
                 this.pos.y + yToAdd), false);
 
             if(this.hasMoved == false) {
@@ -36,7 +37,9 @@ class PawnPiece extends Piece{
                 this.pos.y + yToAdd), true);
 
         } catch(err) { ; }
-    
+
+        console.log("Pawn");
+
         return valid;
     }
 
@@ -65,6 +68,7 @@ class PawnPiece extends Piece{
         this.hasMoved = true;
 
         //FIXME (NEEDED?????)
+        this.visual.changePos();
         if(this.pos.y == this.MIN_POS_Y || 
             this.pos.y == this.MAX_POS_Y) {
             
@@ -74,5 +78,10 @@ class PawnPiece extends Piece{
 
     update(deltaTime) {
         this.visual.update(deltaTime);
+    }
+
+    die() {
+        super.die();
+        this.visual.die();
     }
 }

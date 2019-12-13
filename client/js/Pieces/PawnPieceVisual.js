@@ -3,13 +3,36 @@ class PawnPieceVisual extends THREE.Object3D {
         super();
 
         this.logic = logic;
+    
+        var geometry = new THREE.BoxGeometry(1,1,1);
+        
+        var matPhong = new THREE.MeshPhongMaterial({color: 0x241203});
+        
+        var mesh = new THREE.Mesh(geometry, matPhong);
+        
+        var v = this.logic.translatePosIntoVisual();
+        this.position.set(v.x,v.y,v.z);
+
+        //this.position.set(0,0.5,0);
+        console.log(this.position);
+        this.add(mesh);
+    }
+    
+    changePos() {
+        var v = this.logic.translatePosIntoVisual();
+        this.position.set(v.x,v.y,v.z);
     }
     
     getBoardPos() {
+        console.log(this.logic.pos);
         return this.logic.pos;
     }
 
     update(deltaTime) {
         //FIXME
+    }
+    
+    die() {
+        this.visible = false;
     }
 }

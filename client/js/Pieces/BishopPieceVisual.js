@@ -6,7 +6,7 @@ class BishopPieceVisual extends THREE.Object3D {
         
         var geometry = new THREE.BoxGeometry(1,1,1);
         
-        var matPhong = new THREE.MeshPhongMaterial({color: 0xff0000});
+        var matPhong = new THREE.MeshPhongMaterial({color: 0x32a852});
         
         var mesh = new THREE.Mesh(geometry, matPhong);
         
@@ -23,11 +23,16 @@ class BishopPieceVisual extends THREE.Object3D {
         this.position.set(v.x,v.y,v.z);
         console.log(this.position);
     }
+    
     getBoardPos() {
         return this.logic.pos;
     }
 
     update(deltaTime) {
         //FIXME
+    }
+
+    die() {
+        this.visible = false;
     }
 }

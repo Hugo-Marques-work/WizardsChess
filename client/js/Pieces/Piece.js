@@ -15,12 +15,13 @@ class Piece {
             this.forward = forward;
         }
 
+        console.log(this);
         this.alive = true;
     }
 
     getValidMoves() {
         //VIRTUAL
-        return null;
+        return "AHAHHAHA";
     }
 
     validateMove(dest) {
@@ -29,7 +30,7 @@ class Piece {
         for(let i in moves)
         {
             let pos = moves[i];
-            if(pos.x = dest.x && pos.y == dest.y)
+            if(pos.equal(dest))
                 return true;
         }
         return false;
@@ -53,9 +54,9 @@ class Piece {
         if( enemyInArea === undefined ) {
             let piece = this.game.getCell( pos );
 
-            if( piece != null && piece.white != this.white) {
-                valid.push(piece);
-            }
+            //if( piece != null && piece.white != this.white) {
+                valid.push( pos );
+            //}
             
             return piece != null;
         }
@@ -75,6 +76,7 @@ class Piece {
                 valid.push( pos );
             }
         }
+        return false;
     }
 
     setPos(pos) { this.pos = pos; }

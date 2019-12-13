@@ -2,6 +2,7 @@ class MyTurnState extends GameBridgeState {
 
     constructor(gameBridge) {
         super(gameBridge);
+        this.lastChosenPieceMat = null;
     }
     
     handleMouseClick() {
@@ -18,12 +19,13 @@ class MyTurnState extends GameBridgeState {
                 //if(this.bridge.intersects.pieces[0].white == this.bridge.game.meWhite) {
                     this.bridge.move.from = piece;
                     console.log(this.bridge.move);
-                    this.bridge.move.from.children[0].material.setValues( { color: 0xffff00});
+                    this.bridge.move.from.children[0].material.setValues( { transparent: true, opacity: 0.5});
                 //}
             }
             else {
                 this.bridge.move.toPos = piece.getBoardPos();
-                
+                this.bridge.move.from.children[0].material.setValues( { opacity: 1});
+
                 //Should handle a plethora of stuff! for example same color
                 //Need a connection between visual and logic
                 //if click on NON-POSSIBLE-MOVE then should be new from) TO THINK LATER ( IF I CLICK ON ANOTHER PIECE I MIGHT WANT TO CHOOSE IT)
@@ -51,7 +53,8 @@ class MyTurnState extends GameBridgeState {
             }
             else {
                 this.bridge.move.toPos = tile.getBoardPos();
-                
+                this.bridge.move.from.children[0].material.setValues( { opacity: 1});
+
                 console.log(this.bridge.move);
                 this.bridge.readyMove();
                 console.log(this.bridge.move);

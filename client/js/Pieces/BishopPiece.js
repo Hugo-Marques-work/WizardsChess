@@ -1,6 +1,7 @@
 class BishopPiece extends Piece {
     constructor(id,white,pos,g,forward) {
-        super(id,white,pos,g,forward);
+        var actualPos = pos.clone();
+        super(id,white,actualPos,g,forward);
         this.visual = new BishopPieceVisual(this);
 
     }
@@ -26,12 +27,21 @@ class BishopPiece extends Piece {
             }
         }
 
-        console.log(valid);
+        console.log("Bis");
         return valid;
     }
 
-    setPos(pos) { super.setPos(pos); this.visual.changePos(); }
+    setPos(pos) {
+        super.setPos(pos);
+        this.visual.changePos();
+    }
+    
     update(deltaTime) {
         this.visual.update(deltaTime);
+    }
+
+    die() {
+        super.die();
+        this.visual.die();
     }
 }

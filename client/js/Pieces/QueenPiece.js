@@ -1,6 +1,7 @@
 class QueenPiece extends Piece {
     constructor(id,white,pos,g,forward) {
-        super(id,white,pos,g,forward);
+        var actualPos = pos.clone();
+        super(id,white,actualPos,g,forward);
         this.visual = new QueenPieceVisual(this);
 
     }
@@ -27,11 +28,23 @@ class QueenPiece extends Piece {
                 } 
             }
         }
+        console.log("Quee");
 
         return valid;
     }
 
     update(deltaTime) {
         this.visual.update(deltaTime);
+    }
+
+
+    setPos(pos) {
+        super.setPos(pos);
+        this.visual.changePos();
+    }
+    
+    die() {
+        super.die();
+        this.visual.die();
     }
 }

@@ -62,6 +62,7 @@ class GameBridge {
             if(this.game.checkMove(this.move.from.getBoardPos(),
                 this.move.toPos)) {
                 
+                this.waitingForResponse = true;
                 this.serverCommunicator.move(this.move.from.getBoardPos(),
                     this.move.toPos);
             }
@@ -71,7 +72,6 @@ class GameBridge {
                 this.move.toPos = null;
             }
             
-            this.waitingForResponse = true;
 
         } catch ( exception ) {
 
@@ -84,7 +84,6 @@ class GameBridge {
 
     executeMove() {
         //can be state not much point tho
-        debugger;
         this.game.move(this.move.from.getBoardPos(), this.move.toPos);
         this.move.from = null;
         this.move.toPos = null;

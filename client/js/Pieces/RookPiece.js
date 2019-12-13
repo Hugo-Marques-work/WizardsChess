@@ -1,6 +1,7 @@
 class RookPiece extends Piece {
     constructor(id,white,pos,g,forward) {
-        super(id,white,pos,g,forward);
+        var actualPos = pos.clone();
+        super(id,white,actualPos,g,forward);
         this.visual = new RookPieceVisual(this);
 
         this.hasMoved = false;
@@ -39,12 +40,14 @@ class RookPiece extends Piece {
                 } catch( err ) { break; }
             } 
         }
+        console.log("Rook");
 
         return valid;
     }
 
     setPos(pos) {
         super.setPos(pos);
+        this.visual.changePos();
         this.hasMoved = true;
     }
 
@@ -52,5 +55,10 @@ class RookPiece extends Piece {
 
     update(deltaTime) {
         this.visual.update(deltaTime);
+    }
+    
+    die() {
+        super.die();
+        this.visual.die();
     }
 }

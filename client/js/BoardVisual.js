@@ -2,13 +2,13 @@ class BoardVisual extends THREE.Object3D {
     constructor () {
         super ();
 
-        this.globalIntensity = 0.3;
+        this.globalIntensity = 0.6;
         this.directionalLight = new THREE.DirectionalLight(0xffffff,this.globalIntensity);
         this.directionalLight.position.set(0,50,50);
         this.directionalLight.target.position.set(0,0,0);
         this.add(this.directionalLight);
         
-        this.pointIntensity = 0.8;
+        this.pointIntensity = 1;
 
         this.pointlight = new THREE.PointLight( 0xffffff,this.pointIntensity,100,10);
         this.pointlight.position.set(10,5,0);
@@ -62,14 +62,14 @@ class BoardVisual extends THREE.Object3D {
                 var matPhong = new THREE.MeshPhongMaterial({color: 0xffffff, map: whiteTexture, bumpMap:whiteBumpMap, specular:0x305284, shininess: 1});
 
                 var pos1 = new THREE.Mesh(geometry, matPhong);
-                var tile1 = new TileVisual(pos1, new Position());
+                var tile1 = new TileVisual(pos1, new Position(x/2, y/2));
 
                 this.tiles.push(tile1);
                 this.add(tile1);
                 tile1.position.set(-this.width/2 + x + 2, -0.5, -this.depth/2 + y + 2);
                 
                 var pos2 = new THREE.Mesh(geometry, matPhong);
-                var tile2 = new TileVisual(pos2, new Position());
+                var tile2 = new TileVisual(pos2, new Position(x/2 + 1, y/2 + 1));
 
                 this.tiles.push(tile2);
                 this.add(tile2);
@@ -90,14 +90,14 @@ class BoardVisual extends THREE.Object3D {
                 var matPhong = new THREE.MeshPhongMaterial({color:  0xffffff, map: blackTexture, bumpMap:blackBumpMap, specular:0xffffff, shininess: 1});
 
                 var pos1 = new THREE.Mesh(geometry, matPhong);
-                var tile1 = new TileVisual(pos1, new Position());
+                var tile1 = new TileVisual(pos1, new Position(x/2, y/2 + 1));
 
                 this.tiles.push(tile1);
                 this.add(tile1);
                 tile1.position.set(-this.width/2 + x + 2, -0.5, -this.depth/2 + y + 4);
 
                 var pos2 = new THREE.Mesh(geometry, matPhong);
-                var tile2 = new TileVisual(pos2, new Position());
+                var tile2 = new TileVisual(pos2, new Position(x/2 + 1, y/2));
 
                 this.tiles.push(tile2);
                 this.add(tile2);

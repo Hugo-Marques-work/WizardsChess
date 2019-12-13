@@ -13,4 +13,8 @@ class Position {
     equal(pos) {
         return (this.x == pos.x && this.y == pos.y);
     }
+
+    clone() {
+        return new Position(this.x, this.y);
+    }
 }

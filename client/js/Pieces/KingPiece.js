@@ -1,6 +1,7 @@
 class KingPiece extends Piece {
     constructor(id,white,pos,g,forward) {
-        super(id,white,pos,g,forward);
+        var actualPos = pos.clone();
+        super(id,white,actualPos,g,forward);
         this.visual = new KingPieceVisual(this);
 
         this.hasMoved = false;
@@ -20,6 +21,7 @@ class KingPiece extends Piece {
             }
         }
 
+        console.log("Kin");
         return valid;
     }
 
@@ -81,6 +83,7 @@ class KingPiece extends Piece {
 
     setPos(pos) {
         super.setPos(pos);
+        this.visual.changePos();
         this.hasMoved = true;
     }
 
@@ -88,5 +91,10 @@ class KingPiece extends Piece {
 
     update(deltaTime) {
         this.visual.update(deltaTime);
+    }
+
+    die() {
+        super.die();
+        this.visual.die();
     }
 }

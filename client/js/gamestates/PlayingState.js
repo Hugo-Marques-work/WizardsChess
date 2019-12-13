@@ -45,7 +45,7 @@ class PlayingState extends GameState {
         let pieceKing = this.game.getKing(p.white);
 
         if(enPassant) {
-            pAlt = this.game.getEnPassantPiece();
+            let pAlt = this.game.getEnPassantPiece();
             m.set(pAlt.pos, null);
             pAlt.die();
             this.currentPieces--;
@@ -56,8 +56,8 @@ class PlayingState extends GameState {
             p.setPos(dest);
         }
         else if(p.validateMove(dest) == true) {
-            destP = m.get(dest);
-            if(destP == null) {
+            let destP = m.get(dest);
+            if(destP != null) {
                 destP.die();
                 this.currentPieces--;
                 this.moveCounter = 0;
@@ -74,18 +74,18 @@ class PlayingState extends GameState {
                 p.setPos(dest);
             } catch( e ) {
                 //PAWN PROMOTION EXCEPTION!!!
-                this.game.state = new WaitingForPromotionState(this, _game, e.pawn );
+                this.game.state = new WaitingForPromotionState(this, this.game, e.pawn );
                 throw e;
             }
         }
 
         else if(p.pos.equal(pieceKing.pos) && pieceKing.validateCastling(dest)) {
-            rook = pieceKing.getCastlingRook(dest);
+            let rook = pieceKing.getCastlingRook(dest);
             if(rook == null) throw "ErrorWithCastling";
 
             m.set(dest,p);
-            rookOrigin = rook.pos;
-            rookDest = new Position(dest.x+1,dest.y);
+            let rookOrigin = rook.pos;
+            let rookDest = new Position(dest.x+1,dest.y);
 
             if(p.getPos().x < rookOrigin.x) {
                 rookDest.x = dest.x-1;
@@ -145,7 +145,7 @@ class PlayingState extends GameState {
         }
 
         else if(p.pos.equal(pieceKing.pos) && pieceKing.validateCastling(dest)) {
-            rook = pieceKing.getCastlingRook(dest);
+            let rook = pieceKing.getCastlingRook(dest);
             if(rook == null) throw "ErrorWithCastling";
 
             return true;

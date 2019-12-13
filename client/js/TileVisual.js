@@ -7,6 +7,7 @@ class TileVisual extends THREE.Object3D {
     }
 
     getBoardPos() {
+        console.log(this.boardPos);
         return this.boardPos;
     }
 }
