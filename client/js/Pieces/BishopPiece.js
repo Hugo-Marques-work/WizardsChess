@@ -14,14 +14,16 @@ class BishopPiece extends Piece {
 
         for( let x = -1; x <= 1; x+=2 ) {
             for( let y = -1; y <= 1; y+=2) {
+                pieceInArea = false;
                 tempX = x;
                 tempY = y;
-
                 while(pieceInArea == false) {
                     try {
                         pieceInArea = this.pushIfAvailable(valid, new Position(
                             this.pos.x + tempX, this.pos.y + tempY), undefined);
-                    
+                            
+                        tempX+=x;
+                        tempY+=y;
                     } catch( err ) { break; }
                 } 
             }

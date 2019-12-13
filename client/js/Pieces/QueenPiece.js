@@ -15,7 +15,7 @@ class QueenPiece extends Piece {
         for( let x = -1; x <= 1; x++ ) {
             for( let y = -1; y <= 1; y++) {
                 if(x == 0 && y == 0) continue;
-                
+                pieceInArea = false;
                 tempX = x;
                 tempY = y;
 
@@ -24,6 +24,8 @@ class QueenPiece extends Piece {
                         pieceInArea = this.pushIfAvailable(valid, new Position(
                             this.pos.x + tempX, this.pos.y + tempY), undefined);
                     
+                        tempX+=x;
+                        tempY+=y;
                     } catch( err ) { break; }
                 } 
             }

@@ -15,7 +15,7 @@ class KingPiece extends Piece {
                 if(x == 0 && y == 0) continue;
                 try {
                     pieceInArea = this.pushIfAvailable(valid, new Position(
-                        this.pos.x + tempX, this.pos.y + tempY), undefined);
+                        this.pos.x + x, this.pos.y + y), undefined);
                 
                 } catch( err ) { continue; }
             }
