@@ -77,7 +77,7 @@ class KingPiece extends Piece {
             return this.game.getCell( new Position(MAX_X ,this.pos.y));
         }
         else {
-            return this.game.getCell( new Position(MIN_X, this,pos.y));
+            return this.game.getCell( new Position(MIN_X, this.pos.y));
         }
     }
 

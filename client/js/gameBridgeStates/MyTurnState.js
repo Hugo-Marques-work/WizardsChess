@@ -45,10 +45,16 @@ class MyTurnState extends GameBridgeState {
                 this.bridge.move.from = this.bridge.game.getCell(boardPos);
 
                 if(this.bridge.move.from != null) {
-                    if(this.bridge.move.from.white != this.bridge.game.meWhite) {
+                    /*if(this.bridge.move.from.white != this.bridge.game.meWhite) {
                         
                         this.bridge.move.from = null;
                     }
+                    else {*/
+                        console.log(this.bridge.move.from);
+                        this.bridge.move.from = this.bridge.move.from.visual;
+                        this.bridge.move.from.children[0].material.setValues( { transparent: true, opacity: 0.5});
+
+                    //}
                 }
             }
             else {

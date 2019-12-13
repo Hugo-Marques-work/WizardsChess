@@ -37,7 +37,7 @@ class PlayingState extends GameState {
         let enPassant = false;
         for(let i in this.game.getEnPassantOrigin() ) {
             var pos = this.game.getEnPassantOrigin()[i];
-            if( pos == origin && dest == this.game.getEnPassantDest() ) {
+            if( pos.equal(origin) && dest.equal(this.game.getEnPassantDest() ) ) {
                 enPassant = true;
             }
         }
@@ -87,12 +87,20 @@ class PlayingState extends GameState {
             let rookOrigin = rook.pos;
             let rookDest = new Position(dest.x+1,dest.y);
 
-            if(p.getPos().x < rookOrigin.x) {
+            if(p.pos.x < rookOrigin.x) {
                 rookDest.x = dest.x-1;
             }
 
+            m.set(rookDest,rook);
+            m.set(rookOrigin,null);
+            m.set(origin,null); 
+
             p.setPos(dest);
             rook.setPos(rookDest);
+            console.log("King");
+            console.log(p);
+            console.log("Rook");
+            console.log(rook);
         }
         else {
             throw new InvalidMoveException();
@@ -119,8 +127,6 @@ class PlayingState extends GameState {
             throw new NoSuchPieceException();
         }
 
-        console.log(p.white);
-        console.log(this.game.whiteTurn);
         if( p.white != this.game.whiteTurn ) {
             throw new NotYourTurnException();
         }
@@ -130,7 +136,7 @@ class PlayingState extends GameState {
         let enPassant = false;
         for(let i in this.game.getEnPassantOrigin() ) {
             var pos = this.game.getEnPassantOrigin()[i];
-            if( pos == origin && dest == this.game.getEnPassantDest() ) {
+            if( pos.equal(origin) && dest.equal(this.game.getEnPassantDest() ) ) {
                 enPassant = true;
             }
         }

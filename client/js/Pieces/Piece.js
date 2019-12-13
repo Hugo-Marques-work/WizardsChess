@@ -55,6 +55,8 @@ class Piece {
             let piece = this.game.getCell( pos );
 
             //if( piece != null && piece.white != this.white) {
+            //if(piece == null || piece.white != this.white)
+            if(piece == null || (piece != null && piece.white != this.white))
                 valid.push( pos );
             //}
             
