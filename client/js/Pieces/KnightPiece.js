@@ -1,6 +1,7 @@
 class KnightPiece extends Piece {
     constructor(id,white,pos,g,forward) {
-        super(id,white,pos,g,forward);
+        var actualPos = pos.clone();
+        super(id,white,actualPos,g,forward);
         this.visual = new KnightPieceVisual(this);
 
     }
@@ -28,10 +29,21 @@ class KnightPiece extends Piece {
             }
         }
 
+        console.log("Knight");
         return valid;
     }
 
     update(deltaTime) {
         this.visual.update(deltaTime);
+    }
+
+    setPos(pos) {
+        super.setPos(pos);
+        this.visual.changePos();
+    }
+
+    die() {
+        super.die();
+        this.visual.die();
     }
 }

@@ -1,6 +1,6 @@
 class WaitingForPromotionState extends GameState {
     constructor(playingState, game, pawn) {
-        this.game = game;
+        super(game);
         this.playingState = playingState;
         this.pawn = pawn;
     }

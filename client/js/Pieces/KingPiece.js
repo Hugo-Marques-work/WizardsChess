@@ -1,6 +1,7 @@
 class KingPiece extends Piece {
     constructor(id,white,pos,g,forward) {
-        super(id,white,pos,g,forward);
+        var actualPos = pos.clone();
+        super(id,white,actualPos,g,forward);
         this.visual = new KingPieceVisual(this);
 
         this.hasMoved = false;
@@ -14,12 +15,13 @@ class KingPiece extends Piece {
                 if(x == 0 && y == 0) continue;
                 try {
                     pieceInArea = this.pushIfAvailable(valid, new Position(
-                        this.pos.x + tempX, this.pos.y + tempY), undefined);
+                        this.pos.x + x, this.pos.y + y), undefined);
                 
                 } catch( err ) { continue; }
             }
         }
 
+        console.log("Kin");
         return valid;
     }
 
@@ -27,10 +29,11 @@ class KingPiece extends Piece {
         if(this.hasMoved) return [];
 
         let valid = [];
-        rooks = this.game.getRook(this.white);
+        var rooks = this.game.getRook(this.white);
 
-        for(let rook in rooks) {
-            if(rook.hasMoved()) continue;
+        for(let i in rooks) {
+            var rook = rooks[i];
+            if(rook.hasMoved) continue;
 
             let rPos = rook.pos;
             let dx = this.pos.x - rPos.x < 0 ? 1 : -1;
@@ -54,7 +57,9 @@ class KingPiece extends Piece {
     }
 
     validateCastling(dest) {
-        for(let pos in this.getValidCastling() ) {
+        var rooks = this.getValidCastling();
+        for(let i in rooks ) {
+            let pos = rooks[i];
             if(pos.x == dest.x && pos.y == dest.y) {
                 return true;
             }
@@ -72,12 +77,13 @@ class KingPiece extends Piece {
             return this.game.getCell( new Position(MAX_X ,this.pos.y));
         }
         else {
-            return this.game.getCell( new Position(MIN_X, this,pos.y));
+            return this.game.getCell( new Position(MIN_X, this.pos.y));
         }
     }
 
     setPos(pos) {
         super.setPos(pos);
+        this.visual.changePos();
         this.hasMoved = true;
     }
 
@@ -85,5 +91,10 @@ class KingPiece extends Piece {
 
     update(deltaTime) {
         this.visual.update(deltaTime);
+    }
+
+    die() {
+        super.die();
+        this.visual.die();
     }
 }

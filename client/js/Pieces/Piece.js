@@ -15,18 +15,22 @@ class Piece {
             this.forward = forward;
         }
 
+        console.log(this);
         this.alive = true;
     }
 
     getValidMoves() {
         //VIRTUAL
-        return null;
+        return "AHAHHAHA";
     }
 
     validateMove(dest) {
-        for(let pos in this.getValidMoves)
+        var moves = this.getValidMoves();
+        console.log(moves);
+        for(let i in moves)
         {
-            if(pos.x = dest.x && pos.y == dest.y)
+            let pos = moves[i];
+            if(pos.equal(dest))
                 return true;
         }
         return false;
@@ -44,12 +48,17 @@ class Piece {
     //if enemyInArea is undefined returns true if there's a piece on 
     // the destination
     pushIfAvailable(valid, pos, enemyInArea) {
+        if(pos.x>=BOARD_MAX_X || pos.x < 0 ||
+            pos.y >= BOARD_MAX_Y || pos.y < 0)
+            return true;
         if( enemyInArea === undefined ) {
             let piece = this.game.getCell( pos );
 
-            if( piece != null && piece.white != this.white) {
-                valid.push(piece);
-            }
+            //if( piece != null && piece.white != this.white) {
+            //if(piece == null || piece.white != this.white)
+            if(piece == null || (piece != null && piece.white != this.white))
+                valid.push( pos );
+            //}
             
             return piece != null;
         }
@@ -69,6 +78,7 @@ class Piece {
                 valid.push( pos );
             }
         }
+        return false;
     }
 
     setPos(pos) { this.pos = pos; }
@@ -77,6 +87,11 @@ class Piece {
 
     getAlive() { return this.alive; }
 
+
+    //////////////////////////////////////VISUAL
+    translatePosIntoVisual() {
+        return this.game.translatePosIntoVisual(this.pos);
+    }
     update() { 
         //VIRTUAL    
     }
