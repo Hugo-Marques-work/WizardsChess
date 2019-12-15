@@ -9,7 +9,7 @@ std::string DropState::accept (GameStateVisitor* visitor)
     return visitor->visitDrop(this);
 }
 
-void DropState::move(const Position& origin, const Position& dest) 
+void DropState::move(const Position& origin, const Position& dest, const std::string& userId) 
 {
     throw InvalidActionException();
 }

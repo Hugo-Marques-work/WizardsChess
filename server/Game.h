@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "PawnPromotionStrategy.h"
 #include "gamestates/GameState.h"
 #include "ChessMatrix.h"
 #include "pieces/Piece.h"
@@ -38,14 +39,15 @@ private:
 public:
     Game(int gameId, Player* playerW, Player* playerB);
     ~Game();
-    void move(const Position& origin, const Position& dest);
+    void move(const Position& origin, const Position& dest,
+            const std::string& userId);
     
     Player* playerW () {return _playerW;}
     Player* playerB () {return _playerB;}
     
     int gameId () {return _gameId;}
     
-    void promote(Piece* p)
+    void promote(PawnPromotionStrategy* strategy)
     {
         //Inserting the piece must be done by the messages otherwise
         // it needs 6 different methods or a instanceof
@@ -55,6 +57,7 @@ public:
     ChessMatrix* getMatrix () { return &_chessMatrix; }
 
     bool getTurn() { return _whiteTurn; }
+    const std::string& getTurnUser ();
 
     void boardCreation();
  

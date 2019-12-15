@@ -124,9 +124,10 @@ void Game::boardCreation()
     }
 }
 
-void Game::move(const Position& origin, const Position& dest) 
+void Game::move(const Position& origin, const Position& dest,
+            const std::string& userId) 
 {
-    _state->move(origin,dest);
+    _state->move(origin, dest, userId);
 }
  
 void Game::fillEnPassant(const Position& lastPos,Piece* piece)
@@ -207,6 +208,11 @@ void Game::setLastMove (const Move& move)
 bool Game::drop (const std::string& userId)
 {
     _state->drop(userId);
+}
+
+const std::string& Game::getTurnUser () 
+{
+    return _whiteTurn ? _playerW->user() : _playerB->user();
 }
 
 #include <iostream>

@@ -1,0 +1,5 @@
+class MessageVisitor {
+    visitReg (reg) {
+        
+    }
+}

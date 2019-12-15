@@ -10,7 +10,7 @@ std::string DrawState::accept (GameStateVisitor* visitor)
     return visitor->visitDraw(this);
 }
 
-void DrawState::move(const Position& origin, const Position& dest) 
+void DrawState::move(const Position& origin, const Position& dest, const std::string& userId) 
 {
     throw InvalidActionException();
 }

@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "PawnPromotionStrategy.h"
 #include "GameState.h"
 
 class DropState : public GameState 
@@ -14,11 +15,11 @@ public:
     std::string accept (GameStateVisitor* visitor) override;
 
     void move(const Position& origin,
-        const Position& dest) noexcept(false) override;
+        const Position& dest, const std::string& userId) noexcept(false) override;
         
     bool drop (const std::string& userId);
     
-    void promote(Piece* p);
+    void promote(PawnPromotionStrategy* strategy);
 };
 
 #endif

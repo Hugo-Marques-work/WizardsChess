@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "PawnPromotionStrategy.h"
 #include "GameStateVisitor.h"
 #include "../Position.h"
 #include "../exceptions/InvalidActionException.h"
@@ -27,9 +28,9 @@ public:
     virtual std::string accept (GameStateVisitor* visitor) noexcept(false) = 0 ;
     
     virtual void move(const Position& origin,
-         const Position& dest) noexcept(false) = 0;
+         const Position& dest, const std::string& userId) noexcept(false) = 0;
     
-    virtual void promote(Piece* p) = 0;
+    virtual void promote(PawnPromotionStrategy* strategy) = 0;
     
     virtual bool drop (const std::string& userId) = 0;
 };

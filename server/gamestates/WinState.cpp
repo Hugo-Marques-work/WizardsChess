@@ -10,7 +10,7 @@ std::string WinState::accept (GameStateVisitor* visitor)
     return visitor->visitWin(this);
 }
 
-void WinState::move(const Position& origin, const Position& dest) 
+void WinState::move(const Position& origin, const Position& dest, const std::string& userId) 
 {
     throw InvalidActionException();
 }

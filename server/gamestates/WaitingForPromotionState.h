@@ -5,6 +5,7 @@
 
 #include "GameState.h"
 #include "PlayingState.h"
+#include "PawnPromotionStrategy.h"
 
 class WaitingForPromotionState : public GameState 
 {
@@ -20,10 +21,10 @@ public:
         return visitor->visitWaiting(this);
     }
  
-    void promote(Piece* p) override;
+    void promote(PawnPromotionStrategy* strategy) override;
 
     void move(const Position& origin,
-        const Position& dest) noexcept(false) override
+        const Position& dest, const std::string& userId) noexcept(false) override
     {
         throw InvalidActionException();
     }

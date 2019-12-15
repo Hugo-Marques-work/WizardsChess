@@ -25,4 +25,4 @@ clean:
 	make clean -C pieces
 	make clean -C gamestates
 	make clean -C messages
-	rm *.o
+	rm *.o main

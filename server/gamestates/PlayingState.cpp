@@ -4,6 +4,7 @@
 #include "../Game.h"
 #include "../exceptions/NoSuchGameException.h"
 #include "../exceptions/InvalidActionException.h"
+#include "../exceptions/PieceNotYoursException.h"
 #include "WaitingForPromotionState.h"
 #include "WinState.h"
 #include "DrawState.h"
@@ -13,7 +14,8 @@ std::string PlayingState::accept (GameStateVisitor* visitor)
     return visitor->visitPlaying(this);
 }
 
-void PlayingState::move(const Position& origin, const Position& dest) 
+void PlayingState::move(const Position& origin, const Position& dest,
+            const std::string& userId) 
 {
     ChessMatrix* m = _game->getMatrix();
     Piece* p = m->get(origin);
@@ -22,6 +24,9 @@ void PlayingState::move(const Position& origin, const Position& dest)
         throw NoSuchPieceException();
     
     if (p->isWhite() != _game->getTurn())
+        throw PieceNotYoursException();
+    
+    if (userId != _game->getTurnUser()) 
         throw NotYourTurnException();
 
     _moveCounter++;

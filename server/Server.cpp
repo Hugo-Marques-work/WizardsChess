@@ -1,7 +1,11 @@
 #include "Server.h"
 #include "exceptions/FirstTurnException.h"
+#include "exceptions/NotYourTurnException.h"
+#include "exceptions/NoSuchPieceException.h"
+#include "exceptions/PieceNotYoursException.h"
 #include "Move.h"
 #include "CheckGameVisitor.h"
+#include "PawnPromotionStrategy.h"
 
 Server::Server () : _nextGameId (1)
 {    
@@ -38,7 +42,7 @@ std::string Server::visitListGames (ListGamesMessage* message)
     {
         if (player->validatePassword(message->pass()))
         {
-            std::string result ("LIST_GAMES_A ");
+            std::string result ("LIST_GAMES_A OK ");
             
             result += std::to_string(player->games().size());
             
@@ -77,13 +81,25 @@ std::string Server::visitGameMove (GameMoveMessage* message)
             try 
             {
                 game->move (Position (message->x1(), message->y1()), 
-                            Position(message->x2(), message->y2()));
+                            Position (message->x2(), message->y2()), player->user());
                 
                 return "GAME_MOVE_A OK";
             }
-            catch (...)
+            catch (NoSuchPieceException& e)
             {
-                return "GAME_MOVE_A ERR LOGIC";
+                return "GAME_MOVE_A ERR NO_SUCH_PIECE";
+            }
+            catch (NotYourTurnException& e)
+            {
+                return "GAME_MOVE_A ERR NOT_YOUR_TURN";
+            }
+            catch (PieceNotYoursException& e)
+            {
+                return "GAME_MOVE_A ERR PIECE_NOT_YOURS";
+            }
+            catch (PawnPromotionException& e) 
+            {
+                return "GAME_MOVE_A MORE PAWN_PROMOTION";
             }
         }
         else
@@ -107,7 +123,7 @@ std::string Server::visitGameStatus (GameStatusMessage* message)
             if (game == nullptr)
                 return "GAME_STATUS_A ERR GAME_NOT_FOUND";
             
-            return "GAME_STATUS_A " + game->getState()->accept(&visitor);
+            return "GAME_STATUS_A OK " + game->getState()->accept(&visitor);
         }
         else
             return "GAME_STATUS_A ERR PASSWORD";
@@ -162,8 +178,8 @@ std::string Server::visitGameTurn (GameTurnMessage* message)
         {   
             Game* game = player->searchGame(message->gameId());
             if (game != nullptr) 
-                return game->getTurn () ? "GAME_TURN_A W" :
-                                          "GAME_TURN_A B";
+                return game->getTurn () ? "GAME_TURN_A OK W" :
+                                          "GAME_TURN_A OK B";
             else
                 return "GAME_TURN_A ERR GAME_NOT_FOUND";
         }
@@ -188,10 +204,11 @@ std::string Server::visitGameLastMove (GameLastMoveMessage* message)
                 try
                 {
                     Move move = game->lastMove();
-                    return "GAME_LAST_MOVE_A " + std::to_string(move.origin.x) + " "
-                                               + std::to_string(move.origin.y) + " "
-                                               + std::to_string(move.destination.x) + " "
-                                               + std::to_string(move.destination.y);
+                    return "GAME_LAST_MOVE_A OK " 
+                            + std::to_string(move.origin.x) + " "
+                            + std::to_string(move.origin.y) + " "
+                            + std::to_string(move.destination.x) + " "
+                            + std::to_string(move.destination.y);
                 }
                 catch (FirstTurnException& e)
                 {
@@ -221,15 +238,34 @@ std::string Server::visitPawnPromotion (PawnPromotionMessage* message)
             {
                 try
                 {
-                    Move move = game->lastMove();
-                    return "PAWN_PROMOTION_A " + std::to_string(move.origin.x) + " "
-                                               + std::to_string(move.origin.y) + " "
-                                               + std::to_string(move.destination.x) + " "
-                                               + std::to_string(move.destination.y);
+                    /*message has pieceType because Message is only
+                     syntatic representation*/
+                    
+                    PawnPromotionStrategy *strategy;
+                    
+                    if (message->pieceType() == "QUEEN")
+                        strategy = new PromoteToQueen;
+                    
+                    else if (message->pieceType() == "KNIGTH")
+                        strategy = new PromoteToKnight;
+                    
+                    else if (message->pieceType() == "ROOK")
+                        strategy = new PromoteToRook;
+                    
+                    else if (message->pieceType() == "QUEEN")
+                        strategy = new PromoteToBishop;
+                    
+                    else
+                        return "PAWN_PROMOTION_A ERR PIECE_TYPE"
+                    
+                    game->promote (strategy);
+                    
+                    delete strategy;
+                    return "PAWN_PROMOTION_A OK";
                 }
-                catch (FirstTurnException& e)
+                catch (InvalidActionException& e)
                 {
-                    return "PAWN_PROMOTION_A ERR FIRST_TURN";
+                    return "PAWN_PROMOTION_A ERR INVALID_ACTION";
                 }                   
             }
             else
