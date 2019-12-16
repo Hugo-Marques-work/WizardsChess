@@ -284,7 +284,7 @@ bool PlayingState::drop (const std::string& userId)
     return false;
 }
 
-void PlayingState::promote(Piece* p) 
+void PlayingState::promote(PawnPromotionStrategy* strategy) 
 {
     throw InvalidActionException(); 
 }

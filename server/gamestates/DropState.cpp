@@ -23,7 +23,7 @@ bool DropState::drop (const std::string& userId)
     return false;
 }
 
-void DropState::promote(Piece* p) 
+void DropState::promote(PawnPromotionStrategy* strategy) 
 {
     throw InvalidActionException(); 
 }

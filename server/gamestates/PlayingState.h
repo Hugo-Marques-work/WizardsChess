@@ -4,7 +4,6 @@
 #include <string>
 
 #include "GameState.h"
-#include "PawnPromotionStrategy.h"
 
 class PlayingState : public GameState 
 {

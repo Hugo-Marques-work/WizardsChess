@@ -35,7 +35,7 @@ bool WinState::drop (const std::string& userId)
     return false;
 }
 
-void WinState::promote(Piece* p) 
+void WinState::promote(PawnPromotionStrategy* strategy) 
 {
     throw InvalidActionException(); 
 }

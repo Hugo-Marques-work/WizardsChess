@@ -35,7 +35,8 @@ private:
     std::list<KnightPiece> _knightW, _knightB;
     std::list<BishopPiece> _bishopW, _bishopB;
     
-    std::list<std::list<Piece*> > _drawCondition;
+    std::list<Piece*> _promoted;
+    std::list<std::list<Piece*>> _drawCondition;
 public:
     Game(int gameId, Player* playerW, Player* playerB);
     ~Game();
@@ -51,7 +52,7 @@ public:
     {
         //Inserting the piece must be done by the messages otherwise
         // it needs 6 different methods or a instanceof
-        _state->promote(p);
+        _state->promote(strategy);
     }
 
     ChessMatrix* getMatrix () { return &_chessMatrix; }

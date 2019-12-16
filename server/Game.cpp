@@ -30,6 +30,9 @@ Game::Game (int gameId, Player* playerW, Player* playerB):
 
 Game::~Game ()
 {
+    for (Piece* piece: _promoted)
+        delete piece;
+    
     delete _state;
 }
 

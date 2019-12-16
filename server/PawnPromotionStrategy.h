@@ -2,10 +2,10 @@
 #define PAWNPROMOTIONSTRATEGY_H
 
 #include "pieces/Piece.h"
-#include "pieces/Queen.h"
-#include "pieces/Knight.h"
-#include "pieces/Bishop.h"
-#include "pieces/Rook.h"
+#include "pieces/QueenPiece.h"
+#include "pieces/KnightPiece.h"
+#include "pieces/BishopPiece.h"
+#include "pieces/RookPiece.h"
 
 class PawnPromotionStrategy 
 {
@@ -15,22 +15,22 @@ public:
 
 class PromoteToQueen : public PawnPromotionStrategy
 {
-    Piece* createPiece () {return new Queen();}
+    Piece* createPiece () {return new QueenPiece();}
 };
 
 class PromoteToKnight : public PawnPromotionStrategy
 {
-    Piece* createPiece () {return new Knight();}
+    Piece* createPiece () {return new KnightPiece();}
 };
 
 class PromoteToRook : public PawnPromotionStrategy
 {
-    Piece* createPiece () {return new Rook();}
+    Piece* createPiece () {return new RookPiece();}
 };
 
 class PromoteToBishop : public PawnPromotionStrategy
 {
-    Piece* createPiece () {return new Bishop();}
+    Piece* createPiece () {return new BishopPiece();}
 };
 
 #endif

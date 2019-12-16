@@ -5,7 +5,6 @@
 
 #include "GameState.h"
 #include "PlayingState.h"
-#include "PawnPromotionStrategy.h"
 
 class WaitingForPromotionState : public GameState 
 {

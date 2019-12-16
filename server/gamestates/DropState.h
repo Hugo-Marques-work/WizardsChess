@@ -3,7 +3,6 @@
 
 #include <string>
 
-#include "PawnPromotionStrategy.h"
 #include "GameState.h"
 
 class DropState : public GameState 

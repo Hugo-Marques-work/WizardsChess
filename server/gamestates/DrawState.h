@@ -2,7 +2,7 @@
 #define DRAWSTATE_H
 
 #include <string>
-#include "PawnPromotionStrategy.h"
+
 #include "GameState.h"
 
 class DrawState : public GameState 

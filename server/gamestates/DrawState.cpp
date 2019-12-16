@@ -35,7 +35,7 @@ bool DrawState::drop (const std::string& userId)
     return false;
 }
 
-void DrawState::promote(Piece* p) 
+void DrawState::promote(PawnPromotionStrategy* strategy) 
 {
     throw InvalidActionException(); 
 }

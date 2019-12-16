@@ -5,15 +5,17 @@
 #include "../exceptions/NoSuchGameException.h"
 #include "../exceptions/InvalidActionException.h"
 
-void WaitingForPromotionState::promote(Piece* p)
+void WaitingForPromotionState::promote(PawnPromotionStrategy* strategy)
 {
-    p->set(_pawn->getId(),_pawn->isWhite(),_pawn->getPos(),
+    Piece* newPiece = strategy->createPiece();
+    
+    newPiece->set(_pawn->getId(),_pawn->isWhite(),_pawn->getPos(),
         _game,_pawn->getForward());
 
     _game->setState(_playingState);
     _game->tickTurn();
 
-    _game->getMatrix()->set(p->getPos() ,p);
+    _game->getMatrix()->set(newPiece->getPos() ,newPiece);
 
     delete this;
 }

@@ -4,9 +4,6 @@
 #include <list>
 #include <utility>
 
-
-/*#include "../Game.h"
-#include "../ChessMatrix.h"*/
 class ChessMatrix;
 class Game;
 
@@ -28,6 +25,7 @@ public:
         _id(id), _white(white), _myPos(pos), _game(g), _forward(forward) {}
     
     virtual std::list<Position> getValidMoves() = 0;
+    virtual ~Piece() {}
 
     bool validateMove(Position dst);
 

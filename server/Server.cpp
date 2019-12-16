@@ -256,7 +256,7 @@ std::string Server::visitPawnPromotion (PawnPromotionMessage* message)
                         strategy = new PromoteToBishop;
                     
                     else
-                        return "PAWN_PROMOTION_A ERR PIECE_TYPE"
+                        return "PAWN_PROMOTION_A ERR PIECE_TYPE";
                     
                     game->promote (strategy);
                     
@@ -289,6 +289,11 @@ std::string Server::visitNewGame (NewGameMessage* message)
     
     if (player1 == nullptr || player2 == nullptr)
         return "NEW_GAME_A USER_NOT_FOUND";
+    
+    //FIXME the players must be different
+    
+    if (player1->user() == player2->user())
+        return "NEW_GAME_A SAME_USER";
     
     Game* game = new Game (_nextGameId, player1, player2);
     

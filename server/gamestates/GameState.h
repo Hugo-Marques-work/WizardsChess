@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "PawnPromotionStrategy.h"
+#include "../PawnPromotionStrategy.h"
 #include "GameStateVisitor.h"
 #include "../Position.h"
 #include "../exceptions/InvalidActionException.h"
