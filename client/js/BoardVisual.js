@@ -27,8 +27,8 @@ class BoardVisual extends THREE.Object3D {
     }
 
     translatePosIntoVisual(position) {
-        return new THREE.Vector3(this.posSize * position.x - this.posSize * BOARD_MAX_X/2,
-            this.posHeight/2, this.posSize * position.y - this.posSize * BOARD_MAX_X/2)
+        return new THREE.Vector3(this.posSize * position.x - this.posSize * BOARD_MAX_X/2 + this.posSize/2,
+            0, this.posSize * position.y - this.posSize * BOARD_MAX_X/2 + this.posSize/2);
     }
     createBase() {
         

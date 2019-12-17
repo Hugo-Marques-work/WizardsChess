@@ -34,6 +34,7 @@ class GameBridge {
 
     createScene() {
         this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color()
         this.game = new Game(/*FIXME*/);
         this.scene.add(this.game.chessMatrix.visual);
         var visualPieces = this.game.getVisualPieces();
@@ -46,7 +47,10 @@ class GameBridge {
     createCamera() {
         var fov1 = 15;
         this.camera = new THREE.PerspectiveCamera( fov1, window.innerWidth / window.innerHeight, 1, 1000 );
-        this.camera.position.set(50, 50, 50);
+        //var fov1 = 10;
+        //this.camera = new THREE.OrthographicCamera( - fov1 * window.innerWidth / window.innerHeight, 
+        //    fov1 * window.innerWidth / window.innerHeight, fov1, -fov1, -100, 100);
+        this.camera.position.set(0, 50, 50 );
         this.camera.lookAt(this.scene.position);
     }
 
