@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++17
+CFLAGS = -std=c++17 -g
 CCOMPILE = -c 
 
 all: DrawState.o GameState.o PlayingState.o WinState.o \

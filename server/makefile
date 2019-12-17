@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++17
+CFLAGS = -std=c++17 -g
 CCOMPILE = -c 
 
 all: CheckGameVisitor.o Game.o main.o Server.o ChessMatrix.o Player.o

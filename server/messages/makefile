@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++17
+CFLAGS = -std=c++17 -g
 CCOMPILE = -c 
 
 all: GameDropMessage.o ListGamesMessage.o Parser.o GameLastMoveMessage.o\

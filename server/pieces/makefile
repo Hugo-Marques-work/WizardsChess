@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++17
+CFLAGS = -std=c++17 -g
 CCOMPILE = -c 
 
 all: BishopPiece.o KnightPiece.o Piece.o RookPiece.o KingPiece.o PawnPiece.o QueenPiece.o
