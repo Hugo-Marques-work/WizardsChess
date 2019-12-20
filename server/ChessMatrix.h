@@ -9,7 +9,10 @@
 #include <iostream>
 
 #include "exceptions/NoSuchPieceException.h"
-//class Piece;
+
+//FIXME implementações... em .h
+//FIXME iostream
+//FIXME throw out_of_range
 
 class ChessMatrix
 {

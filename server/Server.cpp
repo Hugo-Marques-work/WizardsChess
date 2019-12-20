@@ -101,6 +101,10 @@ std::string Server::visitGameMove (GameMoveMessage* message)
             {
                 return "GAME_MOVE_A MORE PAWN_PROMOTION";
             }
+            catch (InvalidMoveException& e)
+            {
+                return "GAME_MOVE_A ERR INVALID_MOVE";
+            }
         }
         else
             return "GAME_MOVE_A ERR PASSWORD";
@@ -252,7 +256,7 @@ std::string Server::visitPawnPromotion (PawnPromotionMessage* message)
                     else if (message->pieceType() == "ROOK")
                         strategy = new PromoteToRook;
                     
-                    else if (message->pieceType() == "QUEEN")
+                    else if (message->pieceType() == "BISHOP")
                         strategy = new PromoteToBishop;
                     
                     else
@@ -288,12 +292,10 @@ std::string Server::visitNewGame (NewGameMessage* message)
     player2 = searchPlayer(message->user2());
     
     if (player1 == nullptr || player2 == nullptr)
-        return "NEW_GAME_A USER_NOT_FOUND";
-    
-    //FIXME the players must be different
+        return "NEW_GAME_A ERR USER_NOT_FOUND";
     
     if (player1->user() == player2->user())
-        return "NEW_GAME_A SAME_USER";
+        return "NEW_GAME_A ERR SAME_USER";
     
     Game* game = new Game (_nextGameId, player1, player2);
     

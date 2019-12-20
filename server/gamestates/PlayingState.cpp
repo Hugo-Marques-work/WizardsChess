@@ -20,14 +20,14 @@ void PlayingState::move(const Position& origin, const Position& dest,
     ChessMatrix* m = _game->getMatrix();
     Piece* p = m->get(origin);
 
+    if (userId != _game->getTurnUser()) 
+        throw NotYourTurnException();
+    
     if (p == nullptr)
         throw NoSuchPieceException();
     
     if (p->isWhite() != _game->getTurn())
         throw PieceNotYoursException();
-    
-    if (userId != _game->getTurnUser()) 
-        throw NotYourTurnException();
 
     _moveCounter++;
 

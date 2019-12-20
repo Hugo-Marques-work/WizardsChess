@@ -1,4 +1,4 @@
-class Parser {
+class Lexer {
     constructor (string) {
         this.string = string;
         this.index = 0;
@@ -10,7 +10,7 @@ class Parser {
         this.skipSpaces();
         
         if (this.index == length) 
-            throw new ParserEofException ();
+            throw new LexerEofException ();
         
         begin = this.index;
         
@@ -24,7 +24,7 @@ class Parser {
         var number = Number (this.readString());
         
         if (isNaN(number) || !Number.isInteger(number))
-            throw new ParserConversionException ();
+            throw new LexerConversionException ();
         
         else
             return number;

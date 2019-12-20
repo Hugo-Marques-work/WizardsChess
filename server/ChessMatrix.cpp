@@ -41,6 +41,20 @@ void ChessMatrix::printMatrix()
         }
         std::cout << endl;
     }
+    //Text Simulation
+    for(int y = -1; y < MAX_Y; y++)
+    {
+        if(y!=-1)std::cout << y << ":";
+        else std::cout << " " << ":";
+        for(int x = 0; x < MAX_X; x++)
+        { 
+            if(y==-1) std::cout << x;
+            else if(_pieces.at(x).at(y)==nullptr) std::cout << "-";
+            else std::cout << _pieces.at(x).at(y)->isWhite();
+            std::cout << " ";
+        }
+        std::cout << endl;
+    }
     /* POSSIBLE MOVEMENTS:
     for(int y = 0; y < MAX_Y; y++)
     {
