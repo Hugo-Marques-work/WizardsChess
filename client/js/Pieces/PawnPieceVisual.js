@@ -14,7 +14,6 @@ class PawnPieceVisual extends THREE.Object3D {
         this.position.set(v.x,v.y,v.z);
 
         //this.position.set(0,0.5,0);
-        console.log(this.position);
         this.add(mesh);
     }
     
@@ -24,7 +23,6 @@ class PawnPieceVisual extends THREE.Object3D {
     }
     
     getBoardPos() {
-        console.log(this.logic.pos);
         return this.logic.pos;
     }
 

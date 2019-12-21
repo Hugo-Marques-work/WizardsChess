@@ -111,6 +111,7 @@ class GameTurnAnswer extends Answer {
     constructor (turn) {
         super();
         this.turn = turn;
+        this.white = turn === "W";
     }
 }
 
@@ -118,6 +119,19 @@ class GameMoveAnswer extends Answer {
     constructor (info) {
         super();
         this.info = info;
+
+        if(this.info === "NEXT"/*FIXME MESSAGE*/)
+            this.isNext = true;
+        else 
+            this.isNext = false;
+    }
+
+    isPromote() {
+        return !this.isNext;
+    }
+
+    isNext() {
+        return this.isNext;
     }
 }
 

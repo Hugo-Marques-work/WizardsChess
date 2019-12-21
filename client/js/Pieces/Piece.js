@@ -15,7 +15,6 @@ class Piece {
             this.forward = forward;
         }
 
-        console.log(this);
         this.alive = true;
     }
 
@@ -26,7 +25,6 @@ class Piece {
 
     validateMove(dest) {
         var moves = this.getValidMoves();
-        console.log(moves);
         for(let i in moves)
         {
             let pos = moves[i];

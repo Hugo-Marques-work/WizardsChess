@@ -14,7 +14,6 @@ class QueenPieceVisual extends THREE.Object3D {
         this.position.set(v.x,v.y,v.z);
 
         //this.position.set(0,0.5,0);
-        console.log(this.position);
         this.add(mesh);
     }
     

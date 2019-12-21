@@ -75,7 +75,9 @@ class PlayingState extends GameState {
             } catch( e ) {
                 //PAWN PROMOTION EXCEPTION!!!
                 this.game.state = new WaitingForPromotionState(this, this.game, e.pawn );
-                throw e;
+                
+                //CHANGED FROM SERVER. FIXME
+                //throw e;
             }
         }
 

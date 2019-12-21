@@ -1,7 +1,7 @@
 class Game {
     constructor(gameId, whiteTurn, currentState) {
         this.gameId = gameId;
-        if(this.whiteTurnFirst == undefined) {
+        if(this.whiteTurn == undefined) {
 
             this.whiteTurn = true;
         }
@@ -129,7 +129,9 @@ class Game {
 
     //FIXME PROMOTE DO I CREATE THE METHOD PROMOTE OR DO WE JUST SET THE POSITIONS
     //FROM THE REQUEST
-    promote(piece) {}
+    promote(piece) {
+        
+    }
 
     getCell(pos) { return this.chessMatrix.get(pos); }
 

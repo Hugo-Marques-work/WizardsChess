@@ -38,8 +38,6 @@ class PawnPiece extends Piece{
 
         } catch(err) { ; }
 
-        console.log("Pawn");
-
         return valid;
     }
 

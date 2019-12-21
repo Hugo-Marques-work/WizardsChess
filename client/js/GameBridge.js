@@ -1,21 +1,30 @@
 class GameBridge {
-    constructor(serverCommunicator) {
+    constructor(serverCommunicator, newGame, gameId, white, otherUser) {
+        //Here to possibly use on the interface
+        this.gameId = gameId;
+        this.otherUser = otherUser;
+
         this.createRenderer();
         this.createScene();
         this.createCamera();
 
+        this.serverCommunicator = serverCommunicator;
+        this.imWhite = white;
+        this.createGame(newGame);
+
         this.rayCaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
+
         this.move = { from : null, toPos : null };
         this.waitingForResponse = false;
-        this.serverCommunicator = serverCommunicator;
-        this.state = new MyTurnState(this);
-        /*window.addEventListener("keydown",this.onKeyDown);
-        window.addEventListener("keyup",this.onKeyUp);
-        window.addEventListener("resize",this.onResize);
-        window.addEventListener("onmousedown",this.onMouseDown);
-        window.addEventListener("onmousemove",this.onMouseMovement);
-        window.addEventListener("onmouseup",this.onMouseUp);*/
+
+        if(this.imWhite) {
+            this.state = new MyTurnState(this);
+        }
+        else {
+            this.state = new OtherTurnState(this);
+        }
+        
         window.addEventListener("keydown",this);
         window.addEventListener("keyup",this);
         window.addEventListener("resize",this);
@@ -35,13 +44,22 @@ class GameBridge {
     createScene() {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color()
-        this.game = new Game(/*FIXME*/);
-        this.scene.add(this.game.chessMatrix.visual);
-        var visualPieces = this.game.getVisualPieces();
-        for(var piece in visualPieces) {
-            this.scene.add(visualPieces[piece]);
-        }
         this.scene.add(new THREE.AxisHelper(10));
+    }
+
+    createGame(newGame) {
+        if(newGame) {
+
+            this.game = new Game(this.serverCommunicator.gameId);
+
+            this.scene.add(this.game.chessMatrix.visual);
+            var visualPieces = this.game.getVisualPieces();
+
+            for(var piece in visualPieces) {
+                this.scene.add(visualPieces[piece]);
+            }
+
+        }
     }
 
     createCamera() {
@@ -66,9 +84,11 @@ class GameBridge {
             if(this.game.checkMove(this.move.from.getBoardPos(),
                 this.move.toPos)) {
                 
+                    debugger;
                 this.waitingForResponse = true;
-                this.serverCommunicator.move(this.move.from.getBoardPos(),
-                    this.move.toPos);
+                this.serverCommunicator.move(this.move.from.getBoardPos().x,
+                    this.move.from.getBoardPos().y, this.move.toPos.x, 
+                    this.move.toPos.y);
             }
             else {
                 //Actually impossible
@@ -79,7 +99,10 @@ class GameBridge {
 
         } catch ( exception ) {
 
+            //DEBUG FIXME
+            alert(exception);
             console.log(exception);
+
             //We can display a message according to the exception that makes the move impossible
             this.move.from = null;
             this.move.toPos = null;
@@ -92,6 +115,20 @@ class GameBridge {
         this.move.from = null;
         this.move.toPos = null;
         this.waitingForResponse = false;
+        this.setOtherTurn();
+    }
+
+    readyPromote() {
+        this.game.move(this.move.from.getBoardPos(), this.move.toPos);
+        this.state = new PromotionState(this,this.state);
+        this.move.from = null;
+        this.move.toPos = null;
+        this.waitingForResponse = false;
+    }
+
+    executePromote(piece) {
+        this.game.promote(piece);
+        this.setOtherTurn();
     }
 
     readyDraw() {
@@ -100,6 +137,19 @@ class GameBridge {
 
     readyDrop() {
         this.serverCommunicator.drop();
+    }
+
+    setOtherTurn() {
+        this.state = new OtherTurnState(this);
+        this.serverCommunicator.setOtherTurn();
+    }
+
+    setMyTurn() {
+        this.state = new MyTurnState(this);
+    }
+
+    getWhite() {
+        return this.imWhite;
     }
 
     update() {
@@ -128,9 +178,7 @@ class GameBridge {
         // calculate objects intersecting the picking ray
         var intersectsPiece =  this.rayCaster.intersectObjects( this.game.getVisualPieces(), true );
         
-        console.log(intersectsPiece);
         var intersectsTile = this.rayCaster.intersectObjects( this.game.getBoardVisualTiles(), true);
-        console.log(intersectsTile);
 
         this.mouseDown = true;
         this.intersects = { pieces: intersectsPiece, tiles: intersectsTile };
