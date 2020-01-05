@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++17 -g -pthread -i extras/asio/asio-1.12.2/include/ -i extras/websocketpp/
+CFLAGS = -std=c++17 -g -pthread -I extras/asio/asio-1.12.2/include/ -I extras/websocketpp/
 CCOMPILE = -c 
 
 all: CheckGameVisitor.o Game.o main.o Server.o ChessMatrix.o Player.o
