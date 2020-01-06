@@ -9,6 +9,7 @@ class GameBridge {
         this.createCamera();
 
         this.serverCommunicator = serverCommunicator;
+        this.changeTurn = {change: false, myTurn: true};
         this.imWhite = white;
         this.createGame(newGame);
 
@@ -84,7 +85,6 @@ class GameBridge {
             if(this.game.checkMove(this.move.from.getBoardPos(),
                 this.move.toPos)) {
                 
-                    debugger;
                 this.waitingForResponse = true;
                 this.serverCommunicator.move(this.move.from.getBoardPos().x,
                     this.move.from.getBoardPos().y, this.move.toPos.x, 
@@ -115,7 +115,7 @@ class GameBridge {
         this.move.from = null;
         this.move.toPos = null;
         this.waitingForResponse = false;
-        this.setOtherTurn();
+        this.readyOtherTurn();
     }
 
     readyPromote() {
@@ -128,7 +128,7 @@ class GameBridge {
 
     executePromote(piece) {
         this.game.promote(piece);
-        this.setOtherTurn();
+        this.readyOtherTurn();
     }
 
     readyDraw() {
@@ -139,12 +139,36 @@ class GameBridge {
         this.serverCommunicator.drop();
     }
 
+    readyOtherTurn() {
+        this.changeTurn.change = true;
+        this.changeTurn.myTurn = false;
+    }
+
+    readyMyTurn() {
+        this.changeTurn.change = true;
+        this.changeTurn.myTurn = true;
+    }
+
+    checkChangeTurn() {
+        if(this.changeTurn.change) {
+            this.changeTurn.change = false;
+
+            if(this.changeTurn.myTurn) {
+                this.setMyTurn();
+            }
+            else {
+                this.setOtherTurn();
+            }
+        }
+    }
+
     setOtherTurn() {
         this.state = new OtherTurnState(this);
         this.serverCommunicator.setOtherTurn();
     }
 
     setMyTurn() {
+        //FIXME Haven't changed everything with this cuz it doesn't need communication with server. Overview it
         this.state = new MyTurnState(this);
     }
 
@@ -154,6 +178,8 @@ class GameBridge {
 
     update() {
         var deltaTime = new Date() - this.timer;
+
+        this.checkChangeTurn();
 
         if(this.mouseDown) {
             this.state.handleMouseClick();

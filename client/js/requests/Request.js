@@ -23,7 +23,7 @@ function requestGameLastMove (gameId) {
 }
 
 function requestGameMove (gameId, x1, y1, x2, y2) {
-    return "GAME_MOVE_R " + gameId + " " 
+    return "GAME_MOVE_R " /*+ gameId*/ + " " 
                 + x1 + " " + y1 + " " + x2 + " " + y2;
 }
 
