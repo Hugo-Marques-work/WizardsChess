@@ -4,6 +4,7 @@
 #include "Message.h"
 #include "Parser.h"
 
+#include <string>
 
 class MessageFactory
 {
@@ -19,7 +20,7 @@ private:
     Message* parseNewGame(Parser& parser);
 public:
     //null terminated string
-    Message* parse (const char* string);
+    Message* parse (const std::string& string);
 };
 
 #endif 

@@ -6,7 +6,7 @@ RegMessage::RegMessage (const std::string& user, const std::string& pass): _user
 
 }
 
-std::string RegMessage::accept (MessageVisitor* visitor) 
+std::string RegMessage::accept (MessageVisitor* visitor, Session* session) 
 {
-    return visitor->visitReg(this);
+    return visitor->visitReg(this, session);
 }

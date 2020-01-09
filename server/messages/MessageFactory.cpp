@@ -11,7 +11,7 @@
 #include "../exceptions/WrongInputException.h"
 #include "../exceptions/ParserException.h"
 
-Message* MessageFactory::parse (const char* string)
+Message* MessageFactory::parse (const std::string& string)
 {
     Parser parser (string);
     std::string command;

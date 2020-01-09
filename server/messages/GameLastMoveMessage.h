@@ -11,7 +11,7 @@ private:
     int _gameId;
 public:
     GameLastMoveMessage(const std::string& user, const std::string& pass, int gameId);
-    std::string accept (MessageVisitor* visitor);
+    std::string accept (MessageVisitor* visitor, Session* session);
     
     const std::string& user() { return _user; }
     const std::string& pass() { return _pass; }

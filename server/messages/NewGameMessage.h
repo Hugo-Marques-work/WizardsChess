@@ -11,7 +11,7 @@ private:
 public:
     NewGameMessage (const std::string& user1, const std::string& user2);
     
-    std::string accept (MessageVisitor* visitor);
+    std::string accept (MessageVisitor* visitor, Session* session);
     
     const std::string& user1() { return _user1; }
     const std::string& user2() { return _user2; }

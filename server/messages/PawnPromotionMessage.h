@@ -3,7 +3,6 @@
 
 #include "Message.h"
 #include <string>
-#include "../pieces/Piece.h"
 
 class PawnPromotionMessage : public Message
 {
@@ -12,7 +11,7 @@ private:
     int _gameId;
 public:
     PawnPromotionMessage(const std::string& user, const std::string& pass, int gameId, const std::string& pieceType);
-    std::string accept (MessageVisitor* visitor);
+    std::string accept (MessageVisitor* visitor, Session* session);
     
     const std::string& user() { return _user; }
     const std::string& pass() { return _pass; }

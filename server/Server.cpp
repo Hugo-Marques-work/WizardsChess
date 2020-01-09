@@ -6,9 +6,86 @@
 #include "Move.h"
 #include "CheckGameVisitor.h"
 #include "PawnPromotionStrategy.h"
+#include <iostream>
 
 Server::Server () : _nextGameId (1)
-{    
+{
+    // Initialize Asio Transport
+    _server.init_asio();
+
+    // Register handler callbacks
+    _server.set_open_handler(std::bind(&Server::onOpen, this, std::placeholders::_1));
+    _server.set_close_handler(std::bind(&Server::onClose, this, std::placeholders::_1));
+    _server.set_message_handler(std::bind(&Server::onMessage, this, std::placeholders::_1, std::placeholders::_2));    
+}
+
+void Server::run (int port) 
+{
+    // listen on specified port
+    _server.listen(port);
+
+    // Start the server accept loop
+    _server.start_accept();
+    
+    try 
+    {
+        _server.run();
+    } 
+    catch (const std::exception & e) 
+    {
+        std::cout << e.what() << std::endl;
+        //FIXME throw WebSocketpp Error
+    }
+}
+
+void Server::onOpen(connection_hdl hdl)
+{
+    //FIXME apagar std::cout de debug
+    std::cout << "onOpen\n";
+    Session* session = new Session;
+     _sessions.insert(std::make_pair(hdl, session));
+}
+
+void Server::onClose(connection_hdl hdl)
+{
+    std::cout << "onClose\n";
+    std::map<connection_hdl, Session*>::iterator it;
+    
+    if ((it = _sessions.find(hdl)) != _sessions.end()) 
+    {
+         delete it->second; 
+         _sessions.erase(it);
+    }
+    
+    else
+    {
+        //FIXME throw error
+    }
+}
+
+void Server::onMessage(connection_hdl hdl, 
+                    websocketpp_server::message_ptr msg) 
+{
+    std::cout << "onMessage\n";
+    std::map<connection_hdl, Session*>::iterator it;
+    
+    if ((it = _sessions.find(hdl)) != _sessions.end()) 
+    {
+        Session* session = it->second;
+        Message* message = _factory.parse(msg->get_payload());
+        
+        
+        //server.send(hdl, msg->get_payload(), msg->get_opcode());
+
+        message->accept(this, session);
+        
+        delete message;
+    }
+    
+    else
+    {
+        //FIXME throw error
+    }
 }
 
 Player* Server::searchPlayer (const std::string& user)
@@ -21,7 +98,7 @@ Player* Server::searchPlayer (const std::string& user)
         return nullptr;
 }
 
-std::string Server::visitReg (RegMessage* message) 
+std::string Server::visitReg (RegMessage* message, Session* session) 
 {
     if (searchPlayer(message->user()) == nullptr)
     {
@@ -34,7 +111,7 @@ std::string Server::visitReg (RegMessage* message)
         return "REG_A ERR USER_USED";
 }
 
-std::string Server::visitListGames (ListGamesMessage* message)
+std::string Server::visitListGames (ListGamesMessage* message, Session* session)
 {
     Player* player;
     
@@ -64,7 +141,7 @@ std::string Server::visitListGames (ListGamesMessage* message)
         return "LIST_GAMES_A ERR USER_NOT_FOUND";
 }
 
-std::string Server::visitGameMove (GameMoveMessage* message)
+std::string Server::visitGameMove (GameMoveMessage* message, Session* session)
 {
     Player* player;
     Game* game;
@@ -113,7 +190,7 @@ std::string Server::visitGameMove (GameMoveMessage* message)
         return "GAME_MOVE_A ERR USER_NOT_FOUND";
 }
 
-std::string Server::visitGameStatus (GameStatusMessage* message)
+std::string Server::visitGameStatus (GameStatusMessage* message, Session* session)
 {
     Player* player;
     CheckGameVisitor visitor;
@@ -136,7 +213,7 @@ std::string Server::visitGameStatus (GameStatusMessage* message)
         return "GAME_STATUS_A ERR USER_NOT_FOUND";
 }
 
-std::string Server::visitGameDrop (GameDropMessage* message)
+std::string Server::visitGameDrop (GameDropMessage* message, Session* session)
 {
     Player* player;
     
@@ -172,7 +249,7 @@ std::string Server::visitGameDrop (GameDropMessage* message)
         return "GAME_DROP_A ERR USER_NOT_FOUND";
 }
 
-std::string Server::visitGameTurn (GameTurnMessage* message)
+std::string Server::visitGameTurn (GameTurnMessage* message, Session* session)
 {
     Player* player;
     
@@ -194,7 +271,7 @@ std::string Server::visitGameTurn (GameTurnMessage* message)
         return "GAME_TURN_A ERR USER_NOT_FOUND";
 }
 
-std::string Server::visitGameLastMove (GameLastMoveMessage* message)
+std::string Server::visitGameLastMove (GameLastMoveMessage* message, Session* session)
 {
     Player* player;
     
@@ -229,7 +306,7 @@ std::string Server::visitGameLastMove (GameLastMoveMessage* message)
         return "GAME_LAST_MOVE_A ERR USER_NOT_FOUND";
 }
 
-std::string Server::visitPawnPromotion (PawnPromotionMessage* message) 
+std::string Server::visitPawnPromotion (PawnPromotionMessage* message, Session* session) 
 {
     Player* player;
     
@@ -282,7 +359,7 @@ std::string Server::visitPawnPromotion (PawnPromotionMessage* message)
         return "PAWN_PROMOTION_A ERR USER_NOT_FOUND";
 }
 
-std::string Server::visitNewGame (NewGameMessage* message)
+std::string Server::visitNewGame (NewGameMessage* message, Session* session)
 {
     /*poor solution*/
     
@@ -313,10 +390,15 @@ Server::~Server ()
 {
     std::map<std::string, Player*>::iterator it1;
     std::map<int, Game*>::iterator it2;
+    std::map<connection_hdl, Session*>::iterator it3; 
     
     for (it1 = _players.begin(); it1 != _players.end(); it1++) 
         delete it1->second;
     
     for (it2 = _games.begin(); it2 != _games.end(); it2++) 
         delete it2->second;
+    
+    //FIXME terminar todas as ligacoes
+    for (it3 = _sessions.begin(); it3 != _sessions.end(); it3++) 
+        delete it3->second;
 }

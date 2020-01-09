@@ -7,7 +7,7 @@ NewGameMessage::NewGameMessage(const std::string& user1, const std::string& user
     
 }
 
-std::string NewGameMessage::accept (MessageVisitor* visitor) 
+std::string NewGameMessage::accept (MessageVisitor* visitor, Session* session) 
 {
-    return visitor->visitNewGame(this);
+    return visitor->visitNewGame(this, session);
 }

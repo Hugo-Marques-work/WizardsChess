@@ -8,7 +8,7 @@ GameDropMessage::GameDropMessage(const std::string& user, const std::string& pas
 }
 
 
-std::string GameDropMessage::accept (MessageVisitor* visitor) 
+std::string GameDropMessage::accept (MessageVisitor* visitor, Session* session) 
 {
-    return visitor->visitGameDrop(this);
+    return visitor->visitGameDrop(this, session);
 }

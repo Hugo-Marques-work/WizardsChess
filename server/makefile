@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++17 -g -pthread -I extras/asio/asio-1.12.2/include/ -I extras/websocketpp/
+CFLAGS = -std=c++17 -g -pthread -I extras/asio/asio-1.12.2/include/ -I extras/
 CCOMPILE = -c 
 
 all: CheckGameVisitor.o Game.o main.o Server.o ChessMatrix.o Player.o
@@ -20,7 +20,8 @@ ChessMatrix.o: ChessMatrix.cpp
 	$(CC) $(CFLAGS) $(CCOMPILE) ChessMatrix.cpp
 Player.o: Player.cpp
 	$(CC) $(CFLAGS) $(CCOMPILE) Player.cpp
-
+Session.o: Session.cpp
+	$(CC) $(CFLAGS) $(CCOMPILE) Session.cpp
 clean:
 	make clean -C pieces
 	make clean -C gamestates

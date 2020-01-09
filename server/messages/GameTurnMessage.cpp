@@ -7,7 +7,7 @@ GameTurnMessage::GameTurnMessage(const std::string& user, const std::string& pas
 
 }
 
-std::string GameTurnMessage::accept (MessageVisitor* visitor) 
+std::string GameTurnMessage::accept (MessageVisitor* visitor, Session* session) 
 {
-    return visitor->visitGameTurn(this);
+    return visitor->visitGameTurn(this, session);
 }

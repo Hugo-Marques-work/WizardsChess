@@ -4,21 +4,11 @@
 #include "Server.h"
 #include "exceptions/WrongInputException.h"
 
-int main () {
-    MessageFactory factory;
+int main () 
+{
     Server server;
-    Message *message;
     
-    while (!std::cin.eof()) {
-        char buffer [256];
-        std::cin.getline (buffer, 256);
-        try {
-            message = factory.parse(buffer);
-            std::cout << message->accept(&server) << std::endl;
-            delete message;
-            
-        } catch (WrongInputException& e) {
-            std::cout << "ERR " << e.what() << std::endl;
-        }
-    }
+    server.run(8000);
+       
+    return 0;
 }

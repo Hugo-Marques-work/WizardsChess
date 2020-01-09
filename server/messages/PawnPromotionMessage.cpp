@@ -8,7 +8,7 @@ PawnPromotionMessage::PawnPromotionMessage(const std::string& user,
     
 }
 
-std::string PawnPromotionMessage::accept (MessageVisitor* visitor) 
+std::string PawnPromotionMessage::accept (MessageVisitor* visitor, Session* session) 
 {
-    visitor->visitPawnPromotion (this);
+    visitor->visitPawnPromotion (this, session);
 }
