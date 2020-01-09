@@ -37,17 +37,18 @@ class PreGameHandler {
 
     showGameListScreen() {
         document.getElementById("GameListScreen").hidden = false;
-        preGameHandler.listGames([new GameInfo("11111","SuperDudeXXX","White")]);
+        //preGameHandler.listGames([new GameInfo("11111","SuperDudeXXX","White")]);
         //FIXME
         //FIXME
         sCom.listGames();
     }
 
-    listGames(games) {
+    listGames(games) { 
         var table = document.getElementById("GameListTable");
-        for(let i in games) {
-            let gameInfo = games[i];
-            let row = table.insertRow(i+1);
+        let listGameInfo = games.listGameInfo;
+        for(let i in listGameInfo) {
+            let gameInfo = listGameInfo[i];
+            let row = table.insertRow(/*i+*/1);
             let string = "gameId-" + gameInfo.gameId ;
             row.classList.add( string );
             row.setAttribute("onclick", "preGameHandler.joinGame("

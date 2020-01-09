@@ -1,17 +1,19 @@
 class ServerCommunicator {
     constructor() {
-        this.socket = new WebSocket("wss://javascript.info");        
-        this.socket.onopen = this.globalOnOpen(event);
-        this.socket.onclose = this.globalOnClose(event);
-        this.socket.onerror = this.globalOnError(event);
+        this.socket = new WebSocket("ws://10.0.2.15:8001");   
+
+        this.socket.onopen = this.globalOnOpen.bind(this);
+        this.socket.onclose = this.globalOnClose.bind(this);
+        this.socket.onerror = this.globalOnError.bind(this);
+        this.socket.onmessage= this.globalOnMessage.bind(this);
 
         this.gameId = null;
         this.username = null;
-        this.answerParser = new AnswerParser();
+        this.answerParser = new AnswerParser(); 
     }
 
     createAccount(username, password) {
-        this.socket.onmessage = this.loginOnMessage;
+        this.socket.onmessage = this.loginOnMessage.bind(this);;
 
         this.username = username;
 
@@ -31,7 +33,7 @@ class ServerCommunicator {
     }
 
     login(username, password) {
-        this.socket.onmessage = this.loginOnMessage;
+        this.socket.onmessage = this.loginOnMessage.bind(this);
 
         this.username = username;
 
@@ -51,7 +53,7 @@ class ServerCommunicator {
     }
 
     listGames() {
-        this.socket.onmessage = this.listGamesOnMessage;
+        this.socket.onmessage = this.listGamesOnMessage.bind(this);
 
         let request = requestListGames();
         this.socket.send(request);
@@ -61,7 +63,8 @@ class ServerCommunicator {
     listGamesOnMessage(event) {
         try {
             let games = this.answerParser.parseListGames(event.data);
-            preGameHandler.handleGameList(games);
+            console.log(games);
+            preGameHandler.listGames(games);
         } catch( error ) { 
             //DEBUG FIXME 
             alert(error.message);            
@@ -74,7 +77,7 @@ class ServerCommunicator {
     }
 
     move(x1,y1,x2,y2) {   
-        this.socket.onmessage= this.moveOnMessage;
+        this.socket.onmessage= this.moveOnMessage.bind(this);
 
         let request = requestGameMove(this.gameId,x1,y1,x2,y2);
         this.socket.send(request);
@@ -83,14 +86,15 @@ class ServerCommunicator {
     moveOnMessage(event) {
         try {
             let gameMoveAnswer = this.answerParser.parseGameMove(event.data);
-            if( gameMoveAnswer.isNext() ) {
+            if( gameMoveAnswer.isNext ) {
                 gameBridge.executeMove();
             }
-            else if( gameMoveAnswer.isPromote() ) {
+            else if( !gameMoveAnswer.isNext ) {
                 gameBridge.readyPromote();
             }
         } catch( error ) { 
             //DEBUG FIXME 
+            console.log(error);
             alert(error.message);            
             //MOVE IS NOT ACCEPTED BY SERVER BUT IS ACCEPTED BY CLIENT. CLIENT IS CORRUPTED!
             this.importFullGame();
@@ -98,7 +102,7 @@ class ServerCommunicator {
     }
 
     setOtherTurn() {
-        this.socket.onmessage= this.setOtherTurnOnMessage;
+        this.socket.onmessage= this.setOtherTurnOnMessage.bind(this);
 
         //this.socket.send(something?);
     }
@@ -119,8 +123,15 @@ class ServerCommunicator {
     }
 
     globalOnOpen(event) {
+        console.log(event);
         console.log("SOCKET HAS OPENED");
     }
+
+    globalOnMessage(event) {
+        console.log(event);
+        return false;
+    }
+
     globalOnClose(event) {
         alert("Connection has closed");
     }
@@ -139,7 +150,7 @@ class ServerCommunicator {
 
     createGame(white,otherUser) {
 
-        this.socket.onmessage = this.createGameOnMessage;
+        this.socket.onmessage = this.createGameOnMessage.bind(this);
 
         this.newGameInfo = {white: white, otherUser: otherUser};
 
@@ -156,16 +167,18 @@ class ServerCommunicator {
         try {
             let game = this.answerParser.parseNewGame(event.data);
             //game should return gameId FIXME
-            startChessGame(gameId,this.newGameInfo.white,this.newGameInfo.otherUser);
+            this.gameId = 0;
+            startChessGame(this.gameId,this.newGameInfo.white,this.newGameInfo.otherUser);
         } catch( error ) { 
             //DEBUG FIXME 
+            console.log(error.message);
             alert(error.message);            
             //Shouldn't happen
         }
     }
 
     joinGame(gameId) {
-        this.socket.onmessage = this.joinGameOnMessage;
+        this.socket.onmessage = this.joinGameOnMessage.bind(this);
 
         let request = requestGameStatus(gameId);
         this.socket.send(request);

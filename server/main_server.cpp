@@ -7,7 +7,7 @@
 #include <set>
 
 using websocketpp::connection_hdl;
-using websocketpp::lib::placeholders::_1;
+using websocketpp::lib::placeholders::_1; 
 using websocketpp::lib::placeholders::_2;
 using websocketpp::lib::bind;
 
@@ -29,7 +29,11 @@ void on_close(connection_hdl hdl) {
 
 void on_message(connection_hdl hdl, websocketpp::server<websocketpp::config::asio>::message_ptr msg) {
     std::cout << "on_message: received: " << msg->get_payload();
-    server.send(hdl, msg->get_payload(), msg->get_opcode());
+    //server.send(hdl, msg->get_payload(), msg->get_opcode());
+    std::string s;
+    std::getline(std::cin,s);
+    std::cout << s;
+    server.send(hdl,s,msg->get_opcode());
 }
 
 int main () {
@@ -55,3 +59,17 @@ int main () {
         std::cout << e.what() << std::endl;
     }
 }
+
+
+
+/*
+
+Exemplo:
+
+LOGIN_A OK
+LIST_GAMES_A OK 3 23 OLA W 45 ADEUS B 3333 OLDEUS B
+(client does new game)
+NEW_GAME_A OK
+(client moves)
+GAME_MOVE_A OK NEXT
+ */
