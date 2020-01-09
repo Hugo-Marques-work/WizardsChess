@@ -19,7 +19,6 @@ using websocketpp::lib::condition_variable;
 
 websocketpp::server<websocketpp::config::asio> server;
 
-
 void on_open(connection_hdl hdl) {
     std::cout << "on_open";
 }
