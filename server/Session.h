@@ -1,5 +1,5 @@
-#ifndef SESSION_H
-#define SESSION_H
+#ifndef MY_SESSION_H
+#define MY_SESSION_H
 
 #include <string>
 
