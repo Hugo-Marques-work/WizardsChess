@@ -7,16 +7,19 @@
 #include "CheckGameVisitor.h"
 #include "PawnPromotionStrategy.h"
 #include <iostream>
+#include <set>
 
+#include <asio/detail/reactive_socket_service.hpp>
 Server::Server () : _nextGameId (1)
 {
     // Initialize Asio Transport
     _server.init_asio();
 
-    // Register handler callbacks
-    _server.set_open_handler(std::bind(&Server::onOpen, this, std::placeholders::_1));
-    _server.set_close_handler(std::bind(&Server::onClose, this, std::placeholders::_1));
-    _server.set_message_handler(std::bind(&Server::onMessage, this, std::placeholders::_1, std::placeholders::_2));    
+    // Register handler callbacks       
+    //_server.set_open_handler(bind(&Server::on_Open,this,::_1));
+    _server.set_open_handler(bind(&Server::onOpen, this, ::_1));
+    _server.set_close_handler(bind(&Server::onClose, this, std::placeholders::_1));
+    _server.set_message_handler(bind(&Server::onMessage, this, std::placeholders::_1, std::placeholders::_2));    
 }
 
 void Server::run (int port) 
