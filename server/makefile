@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++17 -g -pthread -I extras/asio/asio-1.12.2/include/ -I extras/
+CFLAGS = -std=c++11 -D_WEBSOCKETPP_CPP11_STL_ -D_WEBSOCKETPP_NO_CPP11_REGEX -g -pthread -I extras/asio/asio-1.12.2/include/ -I extras/
 CCOMPILE = -c 
 
 all: CheckGameVisitor.o Game.o main.o Server.o ChessMatrix.o Player.o
