@@ -58,7 +58,7 @@ void Server::closeSession (int session)
     
     else
     {
-        //FIXME
+        throw InvalidSessionException();
     }
 }
 
