@@ -47,4 +47,4 @@ NewGameMessage.o: NewGameMessage.cpp
 	$(CC) $(CFLAGS) $(CCOMPILE) NewGameMessage.cpp
 
 clean:
-	rm *.o main
+	rm *.o

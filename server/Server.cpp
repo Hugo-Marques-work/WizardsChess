@@ -3,91 +3,62 @@
 #include "exceptions/NotYourTurnException.h"
 #include "exceptions/NoSuchPieceException.h"
 #include "exceptions/PieceNotYoursException.h"
+#include "exceptions/InvalidSessionException.h"
 #include "Move.h"
 #include "CheckGameVisitor.h"
 #include "PawnPromotionStrategy.h"
-#include <iostream>
-#include <set>
 
-#include <asio/detail/reactive_socket_service.hpp>
-Server::Server () : _nextGameId (1)
+Server::Server () : _nextGameId (1), _nextSession(1)
 {
-    // Initialize Asio Transport
-    _server.init_asio();
-
-    // Register handler callbacks       
-    //_server.set_open_handler(bind(&Server::on_Open,this,::_1));
-    _server.set_open_handler(bind(&Server::onOpen, this, ::_1));
-    _server.set_close_handler(bind(&Server::onClose, this, std::placeholders::_1));
-    _server.set_message_handler(bind(&Server::onMessage, this, std::placeholders::_1, std::placeholders::_2));    
+    
 }
 
-void Server::run (int port) 
-{
-    // listen on specified port
-    _server.listen(port);
 
-    // Start the server accept loop
-    _server.start_accept();
-    
-    try 
-    {
-        _server.run();
-    } 
-    catch (const std::exception & e) 
-    {
-        std::cout << e.what() << std::endl;
-        //FIXME throw WebSocketpp Error
-    }
-}
-
-void Server::onOpen(connection_hdl hdl)
+std::string Server::process(const std::string& msg, int session) 
 {
-    //FIXME apagar std::cout de debug
-    std::cout << "onOpen\n";
-    Session* session = new Session;
-     _sessions.insert(std::make_pair(hdl, session));
-}
-
-void Server::onClose(connection_hdl hdl)
-{
-    std::cout << "onClose\n";
-    std::map<connection_hdl, Session*>::iterator it;
+    std::map<int, Session*>::iterator it;
     
-    if ((it = _sessions.find(hdl)) != _sessions.end()) 
-    {
-         delete it->second; 
-         _sessions.erase(it);
-    }
-    
-    else
-    {
-        //FIXME throw error
-    }
-}
-
-void Server::onMessage(connection_hdl hdl, 
-                    websocketpp_server::message_ptr msg) 
-{
-    std::cout << "onMessage\n";
-    std::map<connection_hdl, Session*>::iterator it;
-    
-    if ((it = _sessions.find(hdl)) != _sessions.end()) 
+    if ((it = _sessions.find(session)) != _sessions.end()) 
     {
         Session* session = it->second;
-        Message* message = _factory.parse(msg->get_payload());
-        
-        
-        //server.send(hdl, msg->get_payload(), msg->get_opcode());
+        Message* message = _factory.parse(msg);
 
-        message->accept(this, session);
+        std::string answer = message->accept(this, session);
         
         delete message;
+        
+        return answer;
     }
     
     else
     {
-        //FIXME throw error
+        throw InvalidSessionException();
+    }
+}
+
+int Server::createSession () 
+{
+    Session* session = new Session();
+    _sessions.insert(std::make_pair(_nextSession, session));
+    
+    return _nextSession++;
+}
+
+void Server::closeSession (int session)
+{
+    std::map<int, Session*>::iterator it;
+    
+    if ((it = _sessions.find(session)) != _sessions.end()) 
+    {
+        Session* session = it->second;
+        delete session;
+        
+        _sessions.erase (it);
+    }
+    
+    else
+    {
+        //FIXME
     }
 }
 
@@ -393,7 +364,7 @@ Server::~Server ()
 {
     std::map<std::string, Player*>::iterator it1;
     std::map<int, Game*>::iterator it2;
-    std::map<connection_hdl, Session*>::iterator it3; 
+    std::map<int, Session*>::iterator it3; 
     
     for (it1 = _players.begin(); it1 != _players.end(); it1++) 
         delete it1->second;
