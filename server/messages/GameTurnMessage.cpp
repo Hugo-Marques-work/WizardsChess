@@ -1,8 +1,8 @@
 #include "GameTurnMessage.h"
 #include "MessageVisitor.h"
 
-GameTurnMessage::GameTurnMessage(const std::string& user, const std::string& pass, int gameId): 
-    _user(user), _pass(pass), _gameId(gameId) 
+GameTurnMessage::GameTurnMessage(int gameId): 
+    _gameId(gameId) 
 {
 
 }

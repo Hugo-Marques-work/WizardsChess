@@ -78,6 +78,10 @@ Player* Server::searchPlayer (const std::string& user)
 
 std::string Server::visitReg (RegMessage* message, Session* session) 
 {
+    
+    if (session->isLogged()) 
+        return "REG_A ERR LOGGED";
+    
     if (searchPlayer(message->user()) == nullptr)
     {
         Player* player = new Player (message->user(), message->pass());
@@ -93,27 +97,24 @@ std::string Server::visitListGames (ListGamesMessage* message, Session* session)
 {
     Player* player;
     
-    if ((player = searchPlayer(message->user())) != nullptr)
+    //FIXME FIXME apenas verificar na parte de login
+    
+    if ((player = searchPlayer(session->userName())) != nullptr)
     {
-        if (player->validatePassword(message->pass()))
+        std::string result ("LIST_GAMES_A OK ");
+        
+        result += std::to_string(player->games().size());
+        
+        for (std::pair <int, Game*> pair : player->games())
         {
-            std::string result ("LIST_GAMES_A OK ");
-            
-            result += std::to_string(player->games().size());
-            
-            for (std::pair <int, Game*> pair : player->games())
-            {
-                Game* game = pair.second;
-                if (game->playerW() == player)
-                    result += " " + std::to_string(game->gameId()) + " " + game->playerB()->user() + " W";
-                else
-                    result += " " + std::to_string(game->gameId()) + " " + game->playerW()->user() + " B";
-            }
-            
-            return result;
+            Game* game = pair.second;
+            if (game->playerW() == player)
+                result += " " + std::to_string(game->gameId()) + " " + game->playerB()->user() + " W";
+            else
+                result += " " + std::to_string(game->gameId()) + " " + game->playerW()->user() + " B";
         }
-        else
-            return "LIST_GAMES_A ERR PASSWORD";
+        
+        return result;
     }
     else 
         return "LIST_GAMES_A ERR USER_NOT_FOUND";
@@ -124,45 +125,40 @@ std::string Server::visitGameMove (GameMoveMessage* message, Session* session)
     Player* player;
     Game* game;
     
-    if ((player = searchPlayer(message->user())) != nullptr)
+    if ((player = searchPlayer(session->userName())) != nullptr)
     {
-        if (player->validatePassword(message->pass()))
-        {
-            game = player->searchGame (message->gameId());
+        game = player->searchGame (message->gameId());
 
-            if (game == nullptr)
-                return "GAME_MOVE_A ERR GAME_NOT_FOUND";
+        if (game == nullptr)
+            return "GAME_MOVE_A ERR GAME_NOT_FOUND";
+        
+        try 
+        {
+            game->move (Position (message->x1(), message->y1()), 
+                        Position (message->x2(), message->y2()), player->user());
             
-            try 
-            {
-                game->move (Position (message->x1(), message->y1()), 
-                            Position (message->x2(), message->y2()), player->user());
-                
-                return "GAME_MOVE_A OK";
-            }
-            catch (NoSuchPieceException& e)
-            {
-                return "GAME_MOVE_A ERR NO_SUCH_PIECE";
-            }
-            catch (NotYourTurnException& e)
-            {
-                return "GAME_MOVE_A ERR NOT_YOUR_TURN";
-            }
-            catch (PieceNotYoursException& e)
-            {
-                return "GAME_MOVE_A ERR PIECE_NOT_YOURS";
-            }
-            catch (PawnPromotionException& e) 
-            {
-                return "GAME_MOVE_A MORE PAWN_PROMOTION";
-            }
-            catch (InvalidMoveException& e)
-            {
-                return "GAME_MOVE_A ERR INVALID_MOVE";
-            }
+            return "GAME_MOVE_A OK";
         }
-        else
-            return "GAME_MOVE_A ERR PASSWORD";
+        catch (NoSuchPieceException& e)
+        {
+            return "GAME_MOVE_A ERR NO_SUCH_PIECE";
+        }
+        catch (NotYourTurnException& e)
+        {
+            return "GAME_MOVE_A ERR NOT_YOUR_TURN";
+        }
+        catch (PieceNotYoursException& e)
+        {
+            return "GAME_MOVE_A ERR PIECE_NOT_YOURS";
+        }
+        catch (PawnPromotionException& e) 
+        {
+            return "GAME_MOVE_A MORE PAWN_PROMOTION";
+        }
+        catch (InvalidMoveException& e)
+        {
+            return "GAME_MOVE_A ERR INVALID_MOVE";
+        }
     }
     else 
         return "GAME_MOVE_A ERR USER_NOT_FOUND";
@@ -173,19 +169,14 @@ std::string Server::visitGameStatus (GameStatusMessage* message, Session* sessio
     Player* player;
     CheckGameVisitor visitor;
     
-    if ((player = searchPlayer(message->user())) != nullptr)
+    if ((player = searchPlayer(session->userName())) != nullptr)
     {
-        if (player->validatePassword(message->pass()))
-        {
-            Game* game = player->searchGame (message->gameId());
+        Game* game = player->searchGame (message->gameId());
 
-            if (game == nullptr)
-                return "GAME_STATUS_A ERR GAME_NOT_FOUND";
-            
-            return "GAME_STATUS_A OK " + game->getState()->accept(&visitor);
-        }
-        else
-            return "GAME_STATUS_A ERR PASSWORD";
+        if (game == nullptr)
+            return "GAME_STATUS_A ERR GAME_NOT_FOUND";
+        
+        return "GAME_STATUS_A OK " + game->getState()->accept(&visitor);
     }
     else 
         return "GAME_STATUS_A ERR USER_NOT_FOUND";
@@ -195,33 +186,28 @@ std::string Server::visitGameDrop (GameDropMessage* message, Session* session)
 {
     Player* player;
     
-    if ((player = searchPlayer(message->user())) != nullptr)
-    {
-        if (player->validatePassword(message->pass()))
-        {   
-            Game* game = player->searchGame(message->gameId());
+    if ((player = searchPlayer(session->userName())) != nullptr)
+    {   
+        Game* game = player->searchGame(message->gameId());
+        
+        if (game != nullptr) 
+        {
+            player->removeGame(game->gameId());
             
-            if (game != nullptr) 
+            if (game->drop (player->user())) 
             {
-                player->removeGame(game->gameId());
-                
-                if (game->drop (player->user())) 
-                {
-                    Player* other = (game->playerB()->user() == player->user()) ?
-                                     game->playerW() : game->playerB ();
-                    other->removeGame(game->gameId());
-                    _games.erase (game->gameId());
-                    delete game;
-                }
-                
-                return "GAME_DROP_A OK";
+                Player* other = (game->playerB()->user() == player->user()) ?
+                                    game->playerW() : game->playerB ();
+                other->removeGame(game->gameId());
+                _games.erase (game->gameId());
+                delete game;
             }
             
-            else 
-                return "GAME_DROP_A ERR GAME_NOT_FOUND";
+            return "GAME_DROP_A OK";
         }
-        else
-            return "GAME_DROP_A ERR PASSWORD";
+        
+        else 
+            return "GAME_DROP_A ERR GAME_NOT_FOUND";
     }
     else 
         return "GAME_DROP_A ERR USER_NOT_FOUND";
@@ -231,19 +217,14 @@ std::string Server::visitGameTurn (GameTurnMessage* message, Session* session)
 {
     Player* player;
     
-    if ((player = searchPlayer(message->user())) != nullptr)
+    if ((player = searchPlayer(session->userName())) != nullptr)
     {
-        if (player->validatePassword(message->pass()))
-        {   
-            Game* game = player->searchGame(message->gameId());
-            if (game != nullptr) 
-                return game->getTurn () ? "GAME_TURN_A OK W" :
-                                          "GAME_TURN_A OK B";
-            else
-                return "GAME_TURN_A ERR GAME_NOT_FOUND";
-        }
+        Game* game = player->searchGame(message->gameId());
+        if (game != nullptr) 
+            return game->getTurn () ? "GAME_TURN_A OK W" :
+                                        "GAME_TURN_A OK B";
         else
-            return "GAME_TURN_A ERR PASSWORD";
+            return "GAME_TURN_A ERR GAME_NOT_FOUND";
     }
     else 
         return "GAME_TURN_A ERR USER_NOT_FOUND";
@@ -253,32 +234,27 @@ std::string Server::visitGameLastMove (GameLastMoveMessage* message, Session* se
 {
     Player* player;
     
-    if ((player = searchPlayer(message->user())) != nullptr)
+    if ((player = searchPlayer(session->userName())) != nullptr)
     {
-        if (player->validatePassword(message->pass()))
-        {   
-            Game* game = player->searchGame(message->gameId());
-            if (game != nullptr) 
+        Game* game = player->searchGame(message->gameId());
+        if (game != nullptr) 
+        {
+            try
             {
-                try
-                {
-                    Move move = game->lastMove();
-                    return "GAME_LAST_MOVE_A OK " 
-                            + std::to_string(move.origin.x) + " "
-                            + std::to_string(move.origin.y) + " "
-                            + std::to_string(move.destination.x) + " "
-                            + std::to_string(move.destination.y);
-                }
-                catch (FirstTurnException& e)
-                {
-                    return "GAME_LAST_MOVE_A ERR FIRST_TURN";
-                }                   
+                Move move = game->lastMove();
+                return "GAME_LAST_MOVE_A OK " 
+                        + std::to_string(move.origin.x) + " "
+                        + std::to_string(move.origin.y) + " "
+                        + std::to_string(move.destination.x) + " "
+                        + std::to_string(move.destination.y);
             }
-            else
-                return "GAME_LAST_MOVE_A ERR GAME_NOT_FOUND";
+            catch (FirstTurnException& e)
+            {
+                return "GAME_LAST_MOVE_A ERR FIRST_TURN";
+            }                   
         }
         else
-            return "GAME_LAST_MOVE_A ERR PASSWORD";
+            return "GAME_LAST_MOVE_A ERR GAME_NOT_FOUND";
     }
     else 
         return "GAME_LAST_MOVE_A ERR USER_NOT_FOUND";
@@ -288,66 +264,61 @@ std::string Server::visitPawnPromotion (PawnPromotionMessage* message, Session* 
 {
     Player* player;
     
-    if ((player = searchPlayer(message->user())) != nullptr)
+    if ((player = searchPlayer(session->userName())) != nullptr)
     {
-        if (player->validatePassword(message->pass()))
-        {   
-            Game* game = player->searchGame(message->gameId());
-            if (game != nullptr) 
+        Game* game = player->searchGame(message->gameId());
+        if (game != nullptr) 
+        {
+            try
             {
-                try
-                {
-                    /*message has pieceType because Message is only
-                     syntatic representation*/
-                    
-                    PawnPromotionStrategy *strategy;
-                    
-                    if (message->pieceType() == "QUEEN")
-                        strategy = new PromoteToQueen;
-                    
-                    else if (message->pieceType() == "KNIGTH")
-                        strategy = new PromoteToKnight;
-                    
-                    else if (message->pieceType() == "ROOK")
-                        strategy = new PromoteToRook;
-                    
-                    else if (message->pieceType() == "BISHOP")
-                        strategy = new PromoteToBishop;
-                    
-                    else
-                        return "PAWN_PROMOTION_A ERR PIECE_TYPE";
-                    
-                    game->promote (strategy);
-                    
-                    delete strategy;
-                    return "PAWN_PROMOTION_A OK";
-                }
-                catch (InvalidActionException& e)
-                {
-                    return "PAWN_PROMOTION_A ERR INVALID_ACTION";
-                }                   
+                PawnPromotionStrategy *strategy;
+                
+                if (message->pieceType() == "QUEEN")
+                    strategy = new PromoteToQueen;
+                
+                else if (message->pieceType() == "KNIGTH")
+                    strategy = new PromoteToKnight;
+                
+                else if (message->pieceType() == "ROOK")
+                    strategy = new PromoteToRook;
+                
+                else if (message->pieceType() == "BISHOP")
+                    strategy = new PromoteToBishop;
+                
+                else
+                    return "PAWN_PROMOTION_A ERR PIECE_TYPE";
+                
+                game->promote (strategy);
+                
+                delete strategy;
+                return "PAWN_PROMOTION_A OK";
             }
-            else
-                return "PAWN_PROMOTION_A ERR GAME_NOT_FOUND";
+            catch (InvalidActionException& e)
+            {
+                return "PAWN_PROMOTION_A ERR INVALID_ACTION";
+            }                   
         }
         else
-            return "PAWN_PROMOTION_A ERR PASSWORD";
+            return "PAWN_PROMOTION_A ERR GAME_NOT_FOUND";
     }
     else 
-        return "PAWN_PROMOTION_A ERR USER_NOT_FOUND";
+        return "PAWN_PROMOTION_A ERR USER_NOT_FOUND"; //FIXME se houver erro e' no login
 }
 
 std::string Server::visitNewGame (NewGameMessage* message, Session* session)
-{
-    /*poor solution*/
-    
+{   
     Player *player1, *player2;
     
-    player1 = searchPlayer(message->user1());
-    player2 = searchPlayer(message->user2());
+    player1 = searchPlayer(message->user());
+    player2 = searchPlayer(session->userName());
     
-    if (player1 == nullptr || player2 == nullptr)
+    if (player1 == nullptr)
         return "NEW_GAME_A ERR USER_NOT_FOUND";
+    
+    if (player2 == nullptr)
+    {
+        //FIXME
+    }
     
     if (player1->user() == player2->user())
         return "NEW_GAME_A ERR SAME_USER";
@@ -362,6 +333,46 @@ std::string Server::visitNewGame (NewGameMessage* message, Session* session)
     _nextGameId++;
     
     return "NEW_GAME_A OK";
+}
+
+std::string Server::visitLogin (LoginMessage* message, Session* session) 
+{
+    Player* player;
+    
+    if (session->isLogged())
+        return "LOGIN_A ERR ALREADY_LOGGED";
+    
+    if ((player = searchPlayer(message->user())) != nullptr)
+    {
+        if (player->validatePassword(message->pass()))
+        {
+            session->login (message->user());
+            return "LOGIN_A OK";
+        }
+        
+        else
+            return "LOGIN_A ERR PASS";
+    }
+    else 
+        return "LOGIN_A ERR USER";
+}
+
+std::string Server::visitImportGame (ImportGameMessage* message, Session* session)
+{
+    Game* game;
+    Player* player;
+    
+    player = searchPlayer(session->userName());
+    
+    if ((game = player->searchGame(message->gameId())) != nullptr)
+    {
+        return "IMPORT_GAME_A OK "; //TODO complete
+    }
+    
+    else 
+    {
+        return "IMPORT_GAME_A ERR GAME_NOT_FOUND";
+    }
 }
 
 Server::~Server () 

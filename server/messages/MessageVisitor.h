@@ -13,6 +13,8 @@
 #include "GameLastMoveMessage.h"
 #include "PawnPromotionMessage.h"
 #include "NewGameMessage.h"
+#include "LoginMessage.h"
+#include "ImportGameMessage.h"
 
 class MessageVisitor
 {
@@ -26,6 +28,8 @@ public:
     virtual std::string visitGameLastMove (GameLastMoveMessage* message, Session* session) = 0;
     virtual std::string visitPawnPromotion (PawnPromotionMessage* message, Session* session) = 0;
     virtual std::string visitNewGame (NewGameMessage* message, Session* session) = 0;
+    virtual std::string visitLogin (LoginMessage* message, Session* session) = 0;
+    virtual std::string visitImportGame (ImportGameMessage* message, Session* session) = 0;
 };
 
 #endif

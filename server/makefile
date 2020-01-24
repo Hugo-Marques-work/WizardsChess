@@ -1,6 +1,6 @@
 CC = g++
 BOOSTFLAGS = -I extras/boost_1_72_0/
-CFLAGS = -std=c++11 -g
+CFLAGS = -std=c++17 -g
 CCOMPILE = -c
 LINK = -pthread
 

@@ -5,7 +5,7 @@ CCOMPILE = -c
 all: GameDropMessage.o ListGamesMessage.o Parser.o GameLastMoveMessage.o\
 Message.o PawnPromotionMessage.o GameMoveMessage.o MessageFactory.o\
 RegMessage.o GameStatusMessage.o MessageVisitor.o GameTurnMessage.o\
-NewGameMessage.o
+NewGameMessage.o LoginMessage.o ImportGameMessage.o
 
 GameDropMessage.o: GameDropMessage.cpp
 	$(CC) $(CFLAGS) $(CCOMPILE) GameDropMessage.cpp
@@ -33,6 +33,9 @@ MessageFactory.o: MessageFactory.cpp
 
 RegMessage.o: RegMessage.cpp
 	$(CC) $(CFLAGS) $(CCOMPILE) RegMessage.cpp
+	
+LoginMessage.o: LoginMessage.cpp
+	$(CC) $(CFLAGS) $(CCOMPILE) LoginMessage.cpp
 
 GameStatusMessage.o: GameStatusMessage.cpp
 	$(CC) $(CFLAGS) $(CCOMPILE) GameStatusMessage.cpp
@@ -45,6 +48,9 @@ GameTurnMessage.o: GameTurnMessage.cpp
 
 NewGameMessage.o: NewGameMessage.cpp
 	$(CC) $(CFLAGS) $(CCOMPILE) NewGameMessage.cpp
+	
+ImportGameMessage.o: ImportGameMessage.cpp
+	$(CC) $(CFLAGS) $(CCOMPILE) ImportGameMessage.cpp
 
 clean:
 	rm *.o

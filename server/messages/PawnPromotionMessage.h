@@ -7,14 +7,12 @@
 class PawnPromotionMessage : public Message
 {
 private:
-    std::string _user, _pass, _pieceType;
+    std::string _pieceType;
     int _gameId;
 public:
-    PawnPromotionMessage(const std::string& user, const std::string& pass, int gameId, const std::string& pieceType);
+    PawnPromotionMessage(int gameId, const std::string& pieceType);
     std::string accept (MessageVisitor* visitor, Session* session);
     
-    const std::string& user() { return _user; }
-    const std::string& pass() { return _pass; }
     const std::string& pieceType () {return _pieceType;}
     int gameId() { return _gameId; }
 };

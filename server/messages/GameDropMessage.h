@@ -7,14 +7,11 @@
 class GameDropMessage : public Message
 {
 private:
-    std::string _user, _pass;
     int _gameId;
 public:
-    GameDropMessage(const std::string& user, const std::string& pass, int gameId);
+    GameDropMessage(int gameId);
     std::string accept (MessageVisitor* visitor, Session* session);
     
-    const std::string& user() { return _user; }
-    const std::string& pass() { return _pass; }
     int gameId() { return _gameId; }
 };
 

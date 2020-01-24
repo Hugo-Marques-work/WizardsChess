@@ -18,8 +18,9 @@ private:
     Message* parseGameTurn(Parser& parser);
     Message* parsePawnPromotion(Parser& parser);
     Message* parseNewGame(Parser& parser);
+    Message* parseLogin(Parser& parser);
+    Message* parseImportGame(Parser& parser);
 public:
-    //null terminated string
     Message* parse (const std::string& string);
 };
 

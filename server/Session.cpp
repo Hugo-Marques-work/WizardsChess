@@ -2,7 +2,7 @@
 
 Session::Session() 
 {
-    
+    _logged = false;
 }
 
 void Session::login (const std::string& userName)

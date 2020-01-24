@@ -56,7 +56,16 @@ doSession(tcp::socket& socket)
             try 
             {
                 mutex.lock();
-                answer = server.process(message, session);
+                try
+                {
+                    answer = server.process(message, session);
+                }
+                catch(std::exception const& e)
+                {
+                    std::cerr << "Error: " << e.what() << std::endl;
+                    answer = "ERR";
+                }
+                
                 mutex.unlock();
                 
                 std::cout << "[" << session << "] " << "Answer: " << answer << std::endl;
@@ -68,6 +77,7 @@ doSession(tcp::socket& socket)
                 ws.close (boost::beast::websocket::close_reason());
                 std::cout << "[" << session << "] " << "Error: " << e.what() << std::endl;
             }
+            
         }
         
         server.closeSession (session);

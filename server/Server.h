@@ -17,8 +17,7 @@ private:
     std::map<int, Game*> _games;
     std::map<std::string, Player*> _players;
     std::map<int, Session*> _sessions;
-    int _nextGameId;
-    int _nextSession;
+    int _nextGameId, _nextSession;
     MessageFactory _factory;
 public:
     Server ();
@@ -33,6 +32,8 @@ public:
     std::string visitGameLastMove (GameLastMoveMessage* message, Session* session);
     std::string visitPawnPromotion (PawnPromotionMessage* message, Session* session);
     std::string visitNewGame (NewGameMessage* message, Session* session);
+    std::string visitLogin (LoginMessage* message, Session* session);
+    std::string visitImportGame (ImportGameMessage* message, Session* session);
     
     Player* searchPlayer (const std::string& user);
     void removeGame (int gameId);

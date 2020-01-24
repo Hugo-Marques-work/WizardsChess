@@ -1,15 +1,15 @@
-#ifndef GAMESTATUSMESSAGE_H
-#define GAMESTATUSMESSAGE_H
+#ifndef IMPORTGAMEMESSAGE_H
+#define IMPORTGAMEMESSAGE_H
 
 #include "Message.h"
 #include <string>
 
-class GameStatusMessage : public Message
+class ImportGameMessage : public Message
 {
 private:
     int _gameId;
 public:
-    GameStatusMessage(int gameId);
+    ImportGameMessage(int gameId);
     std::string accept (MessageVisitor* visitor, Session* session);
     
     int gameId() { return _gameId; }

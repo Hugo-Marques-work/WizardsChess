@@ -1,8 +1,7 @@
 #include "ListGamesMessage.h"
 #include "MessageVisitor.h"
 
-ListGamesMessage::ListGamesMessage(const std::string& user, const std::string& pass): 
-    _user(user), _pass(pass)
+ListGamesMessage::ListGamesMessage()
 {
 
 }

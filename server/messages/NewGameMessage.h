@@ -7,14 +7,13 @@
 class NewGameMessage : public Message
 {
 private:
-    std::string _user1, _user2; 
+    std::string _user; 
 public:
-    NewGameMessage (const std::string& user1, const std::string& user2);
+    NewGameMessage (const std::string& user);
     
     std::string accept (MessageVisitor* visitor, Session* session);
     
-    const std::string& user1() { return _user1; }
-    const std::string& user2() { return _user2; }
+    const std::string& user() { return _user; }
 };
 
 #endif
