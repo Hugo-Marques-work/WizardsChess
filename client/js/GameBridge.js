@@ -19,7 +19,7 @@ class GameBridge {
         this.move = { from : null, toPos : null };
         this.waitingForResponse = false;
 
-        if(this.imWhite) {
+        if(this.imWhite == this.game.whiteTurn) {
             this.state = new MyTurnState(this);
         }
         else {
@@ -86,7 +86,7 @@ class GameBridge {
                 this.move.toPos)) {
                 
                 this.waitingForResponse = true;
-                this.serverCommunicator.move(this.move.from.getBoardPos().x,
+                this.serverCommunicator.move(this.game.gameId, this.move.from.getBoardPos().x,
                     this.move.from.getBoardPos().y, this.move.toPos.x, 
                     this.move.toPos.y);
             }

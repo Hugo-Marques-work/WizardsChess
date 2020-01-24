@@ -409,7 +409,7 @@ class AnswerParser {
             this.readBishop(importedGame,lexer);
 
             if(hasPassant == "YES")
-                game.chessMatrix.enPassantPiece = game.getCell(enPassantPiecePos);
+                importedGame.chessMatrix.enPassantPiece = importedGame.getCell(enPassantPiecePos);
 
             return new ImportGameAnswer(imWhite == 1 ? true : false, otherUser, importedGame);
 

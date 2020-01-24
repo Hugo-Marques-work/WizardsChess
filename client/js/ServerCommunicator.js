@@ -92,10 +92,10 @@ class ServerCommunicator {
         }
     }
 
-    move(x1,y1,x2,y2) {   
+    move(gameId,x1,y1,x2,y2) {   
         this.socket.onmessage= this.moveOnMessage.bind(this);
 
-        let request = requestGameMove(this.gameId,x1,y1,x2,y2);
+        let request = requestGameMove(gameId,x1,y1,x2,y2);
         this.socket.send(request);
     }
 
