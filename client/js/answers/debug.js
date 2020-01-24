@@ -86,10 +86,11 @@ class LoginAnswer extends Answer {
 }
 
 class GameInfo {
-    constructor (gameId, otherUser, color) {
+    constructor (gameId, otherUser, isWhite, isWhiteTurn) {
         this.gameId = gameId;
         this.otherUser = otherUser;
-        this.isWhite = color;
+        this.isWhite = isWhite;
+        this.isWhiteTurn = isWhiteTurn;
     }
 }
 
@@ -237,16 +238,20 @@ class AnswerParser {
             total = lexer.readInteger();
             
             for (var i = 0; i < total; i++) {
-                var id, otherUser, color;
+                var id, otherUser, color, turn;
                 
                 id = lexer.readInteger();
                 otherUser = lexer.readString();
-                color = lexer.readString()
+                color = lexer.readString();
+                turn = lexer.readString();
                 
                 if (color != 'W' && color != 'B')
                     throw new WrongInputException("Reading color: expected W or B");
                 
-                listGameInfo.push(new GameInfo(id, otherUser, color));
+                if (turn != 'W' && turn != 'B')
+                    throw new WrongInputException("Reading turn: expected W or B");
+                
+                listGameInfo.push(new GameInfo(id, otherUser, (color == 'W'), (turn == 'W')));
             }
             
         } catch (e) {

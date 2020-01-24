@@ -37,6 +37,7 @@ Game::~Game ()
         delete piece;
     
     delete _state;
+    delete _chessMatrix;
 }
 
 void Game::createDrawConditions()
