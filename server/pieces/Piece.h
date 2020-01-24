@@ -3,6 +3,7 @@
 #include "../Position.h"
 #include <list>
 #include <utility>
+#include <string>
 
 class ChessMatrix;
 class Game;
@@ -48,6 +49,7 @@ public:
 
     virtual void die() { _alive = false;}
 
+    virtual std::string stringify();
     bool getAlive() { return _alive; }
     //Used for a text simulation of the game
     inline virtual void debugPrint() {}

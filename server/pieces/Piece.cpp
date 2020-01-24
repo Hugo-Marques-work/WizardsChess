@@ -1,4 +1,5 @@
 #include "Piece.h"
+#include <string>
 
 bool Piece::validateMove(Position dst)
 {
@@ -9,3 +10,10 @@ bool Piece::validateMove(Position dst)
     }
     return false;
 }
+
+
+std::string Piece::stringify() {
+    return std::to_string(_id) + " " +
+        std::to_string(_myPos.x) + " " + std::to_string(_myPos.y) + " " +
+        std::to_string(_forward) + " " + std::to_string(_alive);
+} 

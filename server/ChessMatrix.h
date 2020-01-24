@@ -54,6 +54,10 @@ public:
     {
         return _enPassantDest;
     }
+
+    int getEnPassantLiveTime() {
+        return _enPassantLiveTime;
+    }
     //Used for a text simulation of the game
     void printMatrix();
 };

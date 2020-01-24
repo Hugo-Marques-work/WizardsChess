@@ -1,7 +1,12 @@
 class PawnPiece extends Piece{
     constructor(id,white,pos,g,forward) {
-        var actualPos = pos.clone();
-        super(id,white,actualPos,g,forward);
+        if(pos!=undefined) {
+            var actualPos = pos.clone();
+            super(id,white,actualPos,g,forward);
+        }
+        else {
+            super(id,white,pos,g,forward);
+        }
         this.visual = new PawnPieceVisual(this);
 
         this.MIN_POS_Y = 0;

@@ -1,5 +1,5 @@
 class GameBridge {
-    constructor(serverCommunicator, newGame, gameId, white, otherUser) {
+    constructor(serverCommunicator, gameId, white, otherUser, game) {
         //Here to possibly use on the interface
         this.gameId = gameId;
         this.otherUser = otherUser;
@@ -11,7 +11,7 @@ class GameBridge {
         this.serverCommunicator = serverCommunicator;
         this.changeTurn = {change: false, myTurn: true};
         this.imWhite = white;
-        this.createGame(newGame);
+        this.handleGame(game);
 
         this.rayCaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
@@ -48,18 +48,18 @@ class GameBridge {
         this.scene.add(new THREE.AxisHelper(10));
     }
 
-    createGame(newGame) {
-        if(newGame) {
+    handleGame(game) {
+        if(game == undefined) {
+            this.game = new Game(this.serverCommunicator.gameId, true);
+        } else {
+            this.game = game;
+        }
 
-            this.game = new Game(this.serverCommunicator.gameId);
+        this.scene.add(this.game.chessMatrix.visual);
+        var visualPieces = this.game.getVisualPieces();
 
-            this.scene.add(this.game.chessMatrix.visual);
-            var visualPieces = this.game.getVisualPieces();
-
-            for(var piece in visualPieces) {
-                this.scene.add(visualPieces[piece]);
-            }
-
+        for(var piece in visualPieces) {
+            this.scene.add(visualPieces[piece]);
         }
     }
 

@@ -72,10 +72,13 @@
                 <br> Password: <br>
                 <input id="LoginScreenPassword" type="text" name="password">
                 <br>
-                <input type="button" value = "Create Account" onclick = "preGameHandler.createAccount();">
+                <input id="CreateAccount" type="button" value = "Create Account" onclick = "preGameHandler.createAccount();">
                 
-                <input type="button" value = "Login" onclick = "preGameHandler.login();">
+                <input id="LoginAccount" type="button" value = "Login" onclick = "preGameHandler.login();">
             </form>
+            <div id="AccountCreated" hidden="true">
+                <p> Account "<span id="AccountName"></span>" successfully created </p>
+            </div>
         </div>
         <div id="GameListScreen" hidden="true">
             <div id="GameListContainer">
@@ -98,14 +101,14 @@
             <div id="CreateGameDetails" hidden="true">
                 <form>
                     <input id = "CreateGameDetailsWhite" type="radio" name="white" value="1" checked> White<br>
-                    <input type="radio" name="white" value="0"> Black<br>
+                    <input id = "CreateGameDetailsBlack"type="radio" name="white" value="0"> Black<br>
 
                     Opponent: <br>
                     <input id="CreateGameDetailsOtherUser" type="text" name="otherUser">
 
-                    <input type="button" value = "Cancel" onclick = "preGameHandler.hideCreateGame();">
+                    <input id="CancelCreateGame" type="button" value = "Cancel" onclick = "preGameHandler.hideCreateGame();">
                     
-                    <input type="button" value = "Create" onclick = "preGameHandler.createGame();">
+                    <input id="CreateGameButton" type="button" value = "Create" onclick = "preGameHandler.createGame();">
                 </form>
             </div>
         </div>
@@ -117,12 +120,12 @@
             //preGameHandler.clearPreGame();
             //startChessGame("1111",true,"eliteHaxxxor");
             function startChessGame(gameId, white, otherUser) {
-                gameBridge = new GameBridge(sCom, true, gameId, white, otherUser);
+                gameBridge = new GameBridge(sCom, gameId, white, otherUser);
                 loop();
             }
             
-            function joinChessGame(gameId, white, otherUser, chessInfo) {
-                gameBridge = new GameBridge(sCom, false/*FIXME*/);
+            function joinChessGame(gameId, white, otherUser, game) {
+                gameBridge = new GameBridge(sCom, gameId, white, otherUser, game);
                 loop();
             }
         </script>

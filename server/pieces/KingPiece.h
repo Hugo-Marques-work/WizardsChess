@@ -22,6 +22,10 @@ public:
     { Piece::setPos(pos); _hasMoved = true; } 
 
     void debugPrint() override { std::cout << "K"; }
+    
+    std::string stringify() override {
+        return Piece::stringify() + " " + std::to_string(_hasMoved);
+    }
 };
  
 #endif

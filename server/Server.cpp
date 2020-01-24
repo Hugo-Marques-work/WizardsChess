@@ -357,6 +357,9 @@ std::string Server::visitLogin (LoginMessage* message, Session* session)
         return "LOGIN_A ERR USER";
 }
 
+//IMPORT_GAME_A OK |ENPASSANT|<YES OR NO> (YES) { <POS_X> <POX_Y> <POS_X> <POS_Y> N [ <POS_X> <POS_Y> ](*N) } 
+// |KING| <KING_STRING> N |QUEEN| [<QUEENSTRING>](*N) N |PAWN| [<PAWNSTRING>](*N)
+// REPEAT
 std::string Server::visitImportGame (ImportGameMessage* message, Session* session)
 {
     Game* game;
@@ -366,7 +369,102 @@ std::string Server::visitImportGame (ImportGameMessage* message, Session* sessio
     
     if ((game = player->searchGame(message->gameId())) != nullptr)
     {
-        return "IMPORT_GAME_A OK "; //TODO complete
+        std::string answer = "IMPORT_GAME_A OK ";
+
+        //GAME INFO
+        if( ( game->playerW()->user().compare(player->user()) ) == 0 ) {
+            answer += "1 " + game->playerB()->user() + " ";
+        } else {
+            answer += "0 " + game->playerW()->user() + " ";
+        }
+
+        answer += std::to_string( game->gameId() ) + " ";
+        answer += std::to_string( game->getTurn() ) + " ";
+
+        //ENPASSANT
+        if(game->getEnPassantPiece() != nullptr) {
+            answer += "YES ";
+            answer += std::to_string( game->getEnPassantPiece()->getPos().x ) + " " +
+                std::to_string( game->getEnPassantPiece()->getPos().y ) + " " +
+                std::to_string( game->getEnPassantDest()->x ) + " " +
+                std::to_string( game->getEnPassantDest()->y ) + " " +
+                std::to_string( game->getEnPassantLiveTime() );
+
+            answer += std::to_string( game->getEnPassantOrigin().size() );
+            for(Position& pos : game->getEnPassantOrigin() ) {
+                answer += std::to_string( pos.x ) + " " + std::to_string( pos.y ) + " ";
+            }
+        } 
+        else {
+            answer += "NO ";
+        }
+
+        //PIECES
+        answer += game->getKing(true).stringify() + " ";
+        answer += game->getKing(false).stringify() + " ";
+
+        std::list<QueenPiece>& queenW = game->getQueen(true);
+        std::list<QueenPiece>& queenB = game->getQueen(false);
+        
+        std::list<PawnPiece>& pawnW = game->getPawn(true);
+        std::list<PawnPiece>& pawnB = game->getPawn(false);
+
+        std::list<RookPiece>& rookW = game->getRook(true);
+        std::list<RookPiece>& rookB = game->getRook(false);
+
+        std::list<KnightPiece>& knightW = game->getKnight(true);
+        std::list<KnightPiece>& knightB = game->getKnight(false);
+
+        std::list<BishopPiece>& bishopW = game->getBishop(true); 
+        std::list<BishopPiece>& bishopB = game->getBishop(false);
+
+        answer += std::to_string( queenW.size() ) + " ";
+        for(QueenPiece& p : queenW)
+            answer += p.stringify() + " ";
+
+        answer += std::to_string( queenB.size() )+ " ";
+        for(QueenPiece& p : queenB)
+            answer += p.stringify() + " ";
+
+        //
+        answer += std::to_string( pawnW.size() )+ " ";
+        for(PawnPiece& p : pawnW)
+            answer += p.stringify() + " ";
+
+        //wtf moment 
+
+        answer += std::to_string( pawnB.size() ) + " ";
+        for(PawnPiece& p : pawnB)
+            answer += p.stringify() + " ";
+
+        //
+        answer += std::to_string( rookW.size() ) + " ";
+        for(RookPiece& p : rookW)
+            answer += p.stringify() + " ";
+
+        answer += std::to_string( rookB.size() )+ " ";
+        for(RookPiece& p : rookB)
+            answer += p.stringify() + " ";
+
+        //  
+        answer += std::to_string( knightW.size() ) + " ";
+        for(KnightPiece& p : knightW)
+            answer += p.stringify() + " ";
+
+        answer += std::to_string( knightB.size() )+ " ";
+        for(KnightPiece& p : knightB)
+            answer += p.stringify() + " ";
+        //
+        answer += std::to_string( bishopW.size() ) + " ";
+        for(BishopPiece& p : bishopW)
+            answer += p.stringify() + " ";
+
+        answer += std::to_string(  bishopB.size() ) + " ";
+        for(BishopPiece& p : bishopB)
+            answer += p.stringify() + " ";
+        //    
+
+        return answer; //TODO complete
     }
     
     else 

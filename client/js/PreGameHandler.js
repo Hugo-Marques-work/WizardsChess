@@ -4,6 +4,10 @@ class PreGameHandler {
     }
 
     createAccount() {
+        this.disableInput();
+        if(this.waiting == true) return;
+        this.waiting = true;
+
         let username = document.getElementById("LoginScreenUsername").value;
         let password = document.getElementById("LoginScreenPassword").value;
 
@@ -11,24 +15,52 @@ class PreGameHandler {
     }
 
     login() {
+        this.disableInput();
+        if(this.waiting == true) return;
+        this.waiting = true;
+        
         let username = document.getElementById("LoginScreenUsername").value;
         let password = document.getElementById("LoginScreenPassword").value;
 
         sCom.login(username,password);
     }
 
-    executeCreateAccount(success) {
-        if(success) {
-            this.hideLoginScreen();
-            this.showGameListScreen();
-        }
+    disableInput() {
+        document.getElementById("LoginScreenUsername").disabled = true;
+        document.getElementById("LoginScreenPassword").disabled = true;
+        document.getElementById("CreateAccount").disabled = true;
+        document.getElementById("LoginAccount").disabled = true;   
     }
 
+    enableInput() {
+        document.getElementById("LoginScreenUsername").disabled = false;
+        document.getElementById("LoginScreenPassword").disabled = false;
+        document.getElementById("CreateAccount").disabled = false;
+        document.getElementById("LoginAccount").disabled = false;   
+    }
+
+    executeCreateAccount(success) {
+        if(success) {
+            this.showAccountCreated("accountNumber");
+        } 
+        
+        this.waiting = false;
+        this.enableInput();
+    }
+
+    showAccountCreated(accNumber) {
+        document.getElementById("AccountCreated").hidden = false;
+        document.getElementById("AccountName").innerHTML = accNumber;
+    }
+    
     executeLogin(success) {
         if(success) {
             this.hideLoginScreen();
             this.showGameListScreen();
+        } else {
+            this.enableInput();
         }
+        this.waiting = false;
     }
 
     hideLoginScreen() {
@@ -77,20 +109,58 @@ class PreGameHandler {
         document.getElementById("CreateGameDetails").hidden = true;
     }
 
+    disableCreateGame() {
+        document.getElementById("CreateGameButton").disabled = true;   
+        document.getElementById("CreateGameDetailsWhite").disabled = true;
+        document.getElementById("CreateGameDetailsBlack").disabled = true;
+        document.getElementById("CreateGameDetailsOtherUser").disabled = true;
+        document.getElementById("CancelCreateGame").disabled = true;   
+    }
+
+    enableCreateGame() {
+        document.getElementById("CreateGameButton").disabled = false;
+        document.getElementById("CreateGameDetailsWhite").disabled = false;
+        document.getElementById("CreateGameDetailsBlack").disabled = false;
+        document.getElementById("CreateGameDetailsOtherUser").disabled = false;
+        document.getElementById("CancelCreateGame").disabled = false;  
+    }
+
     createGame() {
-        this.hideCreateGame();
+        if(this.waiting == true) return;
+        this.waiting = true;
+
+        this.disableCreateGame();
         let white = document.getElementById("CreateGameDetailsWhite").checked;
         let otherUser = document.getElementById("CreateGameDetailsOtherUser").value;
-        this.clearPreGame();
         sCom.createGame(white, otherUser);
     }
 
-    joinGame(gameId) {
+    executeCreateGame(gameId,newGameInfo) {
         this.clearPreGame();
-        sCom.joinGame(gameId);
+        startChessGame(gameId,newGameInfo.white,newGameInfo.otherUser);
+    }
+
+    joinGame(gameId) {        
+        if(this.waiting == true) return;
+        this.waiting = true;
+
+        this.clearPreGame(); //<- FIXME
+        sCom.importGameAndJoin(gameId);
+    }
+
+    executeImportGameAndJoin(importedGameInfo) {
+        console.log("Importing game");
+        //FIXME IMPORT GAME! AND JOIN!
+        joinChessGame(importedGameInfo.importedGame.gameId, importedGameInfo.imWhite,
+            importedGameInfo.otherUser, importedGameInfo.importedGame);
     }
 
     clearPreGame() {
         document.getElementById("GameListScreen").hidden = true;
+    }
+
+    cancelRequest() {
+        this.enableCreateGame();
+        this.waiting = false;
     }
 }

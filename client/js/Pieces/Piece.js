@@ -4,7 +4,11 @@ class Piece {
             this.id = 0;
             this.white = true;
             this.pos = new Position(0,0);
-            this.game = null;
+            if(g==undefined) {
+                this.game = null;
+            } else {
+                this.game = g;
+            }
             this.forward = true;
         }
         else {
@@ -79,7 +83,7 @@ class Piece {
         return false;
     }
 
-    setPos(pos) { this.pos = pos; }
+    setPos(pos) { console.log(pos); this.pos = pos; }
 
     die() { this.alive = false; }
 

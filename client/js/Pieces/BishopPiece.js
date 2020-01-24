@@ -1,7 +1,12 @@
 class BishopPiece extends Piece {
     constructor(id,white,pos,g,forward) {
-        var actualPos = pos.clone();
-        super(id,white,actualPos,g,forward);
+        if(pos!=undefined) {
+            var actualPos = pos.clone();
+            super(id,white,actualPos,g,forward);
+        }
+        else {
+            super(id,white,pos,g,forward);
+        }
         this.visual = new BishopPieceVisual(this);
 
     }

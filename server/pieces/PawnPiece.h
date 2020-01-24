@@ -21,6 +21,10 @@ public:
     bool getForward() { return _forward; }
 
     void debugPrint() override { std::cout << "P"; }
+
+    std::string stringify() override {
+        return Piece::stringify() + " " + std::to_string(_hasMoved);
+    }
 };
 
 #endif

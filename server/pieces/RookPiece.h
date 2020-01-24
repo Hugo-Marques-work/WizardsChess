@@ -18,6 +18,10 @@ public:
 
     bool hasMoved() { return _hasMoved; }
     void debugPrint() override { std::cout << "R"; }
+    
+    std::string stringify() override {
+        return Piece::stringify() + " " + std::to_string(_hasMoved);
+    }
 };
 
 #endif

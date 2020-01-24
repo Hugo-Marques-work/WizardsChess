@@ -250,6 +250,10 @@ Piece* Game::getEnPassantPiece()
     return _chessMatrix->getEnPassantPiece();
 }
 
+int Game::getEnPassantLiveTime() {
+    return _chessMatrix->getEnPassantLiveTime();
+}
+
 Piece* Game::getCell(const Position& pos) 
 {
     return _chessMatrix->get(pos);

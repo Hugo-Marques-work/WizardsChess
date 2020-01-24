@@ -62,6 +62,7 @@ public:
     std::list<Position>& getEnPassantOrigin();
     Position* getEnPassantDest();
     Piece* getEnPassantPiece();
+    int getEnPassantLiveTime();
     Piece* getCell(const Position& pos);
     void setState(GameState* state) { _state = state; }
     GameState* getState () {return _state;}

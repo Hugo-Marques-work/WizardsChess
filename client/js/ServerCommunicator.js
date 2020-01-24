@@ -1,6 +1,6 @@
 class ServerCommunicator {
     constructor() {
-        this.socket = new WebSocket("ws://10.0.2.15:8001");   
+        this.socket = new WebSocket("ws://0.0.0.0:8001");   
 
         this.socket.onopen = this.globalOnOpen.bind(this);
         this.socket.onclose = this.globalOnClose.bind(this);
@@ -13,7 +13,7 @@ class ServerCommunicator {
     }
 
     createAccount(username, password) {
-        this.socket.onmessage = this.loginOnMessage.bind(this);;
+        this.socket.onmessage = this.createAccountOnMessage.bind(this);;
 
         this.username = username;
 
@@ -72,8 +72,24 @@ class ServerCommunicator {
         }
     }
 
-    importFullGame() {
+    importGame(gameId) {
         //FIXME
+        this.socket.onmessage = this.importGameOnMessage.bind(this);
+
+        let request = requestImportGame(gameId);
+        this.socket.send(request);
+    }
+
+    importGameOnMessage(event) {
+        try{
+            let game = this.answerParser.parseImportGame(event.data);
+            
+                        //FIXME?
+
+        } catch ( error ) {
+            console.log(error.message);
+            alert(error.message);
+        }
     }
 
     move(x1,y1,x2,y2) {   
@@ -96,7 +112,8 @@ class ServerCommunicator {
             //DEBUG FIXME 
             console.log(error);
             alert(error.message);            
-            //MOVE IS NOT ACCEPTED BY SERVER BUT IS ACCEPTED BY CLIENT. CLIENT IS CORRUPTED!
+            //MOVE IS NOT ACCEPTED BY SER 
+            this.preGameHandler.cancelRequest();
             this.importFullGame();
         }
     }
@@ -154,22 +171,25 @@ class ServerCommunicator {
 
         this.newGameInfo = {white: white, otherUser: otherUser};
 
+        //FIXME Pouco prioritario, newGame = white beggining
         if(white) {
-            var request = requestNewGame(this.username, otherUser);
+            var request = requestNewGame(otherUser);
         }
         else {
-            var request = requestNewGame(otherUser, this.username);
+            var request = requestNewGame(otherUser);
         }
         this.socket.send(request);
     }
 
     createGameOnMessage(event) {
         try {
-            let game = this.answerParser.parseNewGame(event.data);
+            let newGame = this.answerParser.parseNewGame(event.data);
             //game should return gameId FIXME
             this.gameId = 0;
-            startChessGame(this.gameId,this.newGameInfo.white,this.newGameInfo.otherUser);
+            preGameHandler.executeCreateGame(this.gameId,
+                this.newGameInfo);
         } catch( error ) { 
+            preGameHandler.cancelRequest();
             //DEBUG FIXME 
             console.log(error.message);
             alert(error.message);            
@@ -177,14 +197,22 @@ class ServerCommunicator {
         }
     }
 
-    joinGame(gameId) {
-        this.socket.onmessage = this.joinGameOnMessage.bind(this);
+    importGameAndJoin(gameId) {
+        this.socket.onmessage = this.importGameAndJoinOnMessage.bind(this);
 
-        let request = requestGameStatus(gameId);
+        let request = requestImportGame(gameId);
         this.socket.send(request);
     }
 
-    joinGameOnMessage(event) {
-        //FIXME
+    importGameAndJoinOnMessage(event) {
+        //try {
+            let importedGameInfo = this.answerParser.parseImportGame(event.data);
+
+            preGameHandler.executeImportGameAndJoin(importedGameInfo);
+        /*} catch( error ) {
+            preGameHandler.cancelRequest();
+            console.log(error.message);
+            alert(error.message);
+        }*/
     }
 }

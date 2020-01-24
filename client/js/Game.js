@@ -1,5 +1,5 @@
 class Game {
-    constructor(gameId, whiteTurn, currentState) {
+    constructor(gameId, newGame, whiteTurn, currentState) {
         this.gameId = gameId;
         if(this.whiteTurn == undefined) {
 
@@ -25,17 +25,18 @@ class Game {
             }
         }
 
-        this.createBoardFromNothing();
-
         if(currentState == undefined) {
             this.state = new PlayingState(this);
         }
         else {
             this.state = currentState;
         }
+        
+        if(newGame) {
+            this.createBoardFromNothing();
+        }
 
         this.meWhite= true//FIXME
-
     }
 
     //IDEA FOR IMPORTING AN EXISTING GAME FROM THE SERVER

@@ -23,7 +23,7 @@ function requestGameLastMove (gameId) {
 }
 
 function requestGameMove (gameId, x1, y1, x2, y2) {
-    return "GAME_MOVE_R " /*+ gameId*/ + " " 
+    return "GAME_MOVE_R " /*+ gameId + " " */
                 + x1 + " " + y1 + " " + x2 + " " + y2;
 }
 
@@ -37,4 +37,8 @@ function requestPawnPromotion (gameId, type) {
 
 function requestNewGame (other) {
     return "NEW_GAME_R " + other;
+}
+
+function requestImportGame(gameId) {
+    return "IMPORT_GAME_R " + gameId;
 }

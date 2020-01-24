@@ -163,6 +163,14 @@ class NewGameAnswer extends Answer {
     }
 }
 
+class ImportGameAnswer extends Answer {
+    constructor (imWhite, otherUser, importedGame) {
+        super();
+        this.otherUser = otherUser;
+        this.imWhite = imWhite;
+        this.importedGame = importedGame;
+    }
+}
 // AnswerParser.js
 class AnswerParser {
     checkError (lexer) {
@@ -341,4 +349,181 @@ class AnswerParser {
         
         return new NewGameAnswer();
     }
+
+    //FIXME
+
+    parseImportGame(string) {
+        var lexer = new Lexer (string);
+        
+        this.checkType(lexer, "IMPORT_GAME_A");
+        this.checkError(lexer);
+
+        //try {
+            var imWhite = lexer.readInteger();
+            var otherUser = lexer.readString();
+
+            var gameId = lexer.readInteger();
+            var importedGame = new Game(gameId, false);
+
+            importedGame.whiteTurn = lexer.readInteger();
+
+            //CURRENT STATE FIXME!!!!!
+            var state = new PlayingState(importedGame);
+            importedGame.state = state;
+
+
+            //ENPASSANT
+            var hasPassant = lexer.readString();
+
+            var enPassantPiecePos;
+            if(hasPassant == "YES") {
+                enPassantPiecePos = new Position( lexer.readInteger(), 
+                    lexer.readInteger() );
+
+                importedGame.chessMatrix.enPassantDest = new Position( 
+                    lexer.readInteger(), lexer.readInteger() );
+                
+                importedGame.chessMatrix.enPassantLiveTime = lexer.readInteger();
+
+                var nDest = lexer.readInteger();
+                for(let i = 0; i < nDest; i++) {
+                    importedGame.chessMatrix.enPassantOrigin.push( new Position(
+                        lexer.readInteger(), lexer.readInteger() ) );
+                }
+            }
+
+            //KING
+
+            //var pieces = { kingW, kingB, queenW: [], queenB: [], pawnW: [], pawnB: [],
+            //    rookW: [], rookB: [], knightW: [], knightB: [], bishopW: [], bishopB: []};
+            importedGame.kingW = new KingPiece(undefined,undefined,undefined,importedGame,undefined);
+            this.readMovePiece(importedGame.kingW, true, importedGame, lexer);
+            
+            importedGame.kingB = new KingPiece(undefined,undefined,undefined,importedGame,undefined);
+            this.readMovePiece(importedGame.kingB, false, importedGame, lexer);
+
+            this.readQueen(importedGame,lexer);
+            this.readPawn(importedGame,lexer);
+            this.readRook(importedGame,lexer);
+            this.readKnight(importedGame,lexer);
+            this.readBishop(importedGame,lexer);
+
+            if(hasPassant == "YES")
+                game.chessMatrix.enPassantPiece = game.getCell(enPassantPiecePos);
+
+            return new ImportGameAnswer(imWhite == 1 ? true : false, otherUser, importedGame);
+
+        /*} catch(e) {
+            throw new WrongInputException("Reading Game Import:" + e.message);
+        }*/
+    }
+
+    readQueen(importedGame, lexer) {
+
+        var nPieces = lexer.readInteger();
+        for(let i = 0; i < nPieces; i++) {
+            var pW = new QueenPiece(undefined,undefined,undefined,importedGame,undefined);
+            this.readPiece(pW, true, importedGame, lexer);
+            importedGame.queenW.push(pW);
+        }
+
+        nPieces = lexer.readInteger();
+        for(let i = 0; i < nPieces; i++) {
+            var pB = new QueenPiece(undefined,undefined,undefined,importedGame,undefined);
+            this.readPiece(pB, false, importedGame, lexer);
+            importedGame.queenB.push(pB);
+        }
+    }
+
+    readPawn(importedGame, lexer) {
+
+        var nPieces = lexer.readInteger();
+        for(let i = 0; i < nPieces; i++) {
+            var pW = new PawnPiece(undefined,undefined,undefined,importedGame,undefined);
+            this.readMovePiece(pW, true, importedGame, lexer);
+            importedGame.pawnW.push(pW);
+        }
+
+        nPieces = lexer.readInteger();
+        for(let i = 0; i < nPieces; i++) {
+            var pB = new PawnPiece(undefined,undefined,undefined,importedGame,undefined);
+            this.readMovePiece(pB, false, importedGame, lexer);
+            importedGame.pawnB.push(pB);
+        }
+
+    }
+
+    readRook(importedGame, lexer) {
+
+        var nPieces = lexer.readInteger();
+        for(let i = 0; i < nPieces; i++) {
+            var pW = new RookPiece(undefined,undefined,undefined,importedGame,undefined);
+            this.readMovePiece(pW, true, importedGame, lexer);
+            importedGame.rookW.push(pW);
+        }
+
+        nPieces = lexer.readInteger();
+        for(let i = 0; i < nPieces; i++) {
+            var pB = new RookPiece(undefined,undefined,undefined,importedGame,undefined);
+            this.readMovePiece(pB, false, importedGame, lexer);
+            importedGame.rookB.push(pB);
+        }
+
+    }
+
+    readKnight(importedGame, lexer) {
+
+        var nPieces = lexer.readInteger();
+        for(let i = 0; i < nPieces; i++) {
+            var pW = new KnightPiece(undefined,undefined,undefined,importedGame,undefined);
+            this.readPiece(pW, true, importedGame, lexer);
+            importedGame.knightW.push(pW);
+        }
+
+        nPieces = lexer.readInteger();
+        for(let i = 0; i < nPieces; i++) {
+            var pB = new KnightPiece(undefined,undefined,undefined,importedGame,undefined);
+            this.readPiece(pB, false, importedGame, lexer);
+            importedGame.knightB.push(pB);
+        }
+    }
+
+    readBishop(importedGame, lexer) {
+
+        var nPieces = lexer.readInteger();
+        for(let i = 0; i < nPieces; i++) {
+            var pW = new BishopPiece(undefined,undefined,undefined,importedGame,undefined);
+            this.readPiece(pW, true, importedGame, lexer);
+            importedGame.bishopW.push(pW);
+        }
+
+        nPieces = lexer.readInteger();
+        for(let i = 0; i < nPieces; i++) {
+            var pB = new BishopPiece(undefined,undefined,undefined,importedGame,undefined);
+            this.readPiece(pB, false, importedGame, lexer);
+            importedGame.bishopB.push(pB);
+        }
+    }
+    
+    readMovePiece(p, white, importedGame, lexer) {    
+        this.readPiece(p, white, importedGame, lexer);
+
+        var hasMoved = lexer.readInteger();
+        p.hasMoved = hasMoved == 1 ? true : false;
+    }
+
+    readPiece(p, white, importedGame, lexer) {
+        var id = lexer.readInteger();
+        var pos = new Position( lexer.readInteger(), lexer.readInteger() );
+        var forward = lexer.readInteger();
+        var alive = lexer.readInteger();
+
+        p.set(id,white, pos, importedGame, forward == 1 ? true : false, );
+        p.alive = alive == 1 ? true : false;
+
+        importedGame.chessMatrix.set(pos,p);
+        p.setPos(pos);
+    }
 }
+
+//Missing: I'm white? CurrentState? whiteTurn? 
