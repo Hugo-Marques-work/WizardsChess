@@ -2,6 +2,7 @@
 #define CHECKGAMEVISITOR_H
 
 #include "gamestates/GameStateVisitor.h"
+#include <string>
 
 class CheckGameVisitor: public GameStateVisitor
 {

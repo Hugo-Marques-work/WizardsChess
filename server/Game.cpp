@@ -1,23 +1,26 @@
 #include "Game.h"
 #include "gamestates/PlayingState.h"
-#include <list> 
 #include "exceptions/InvalidActionException.h"
 #include "exceptions/InvalidMoveException.h"
 #include "exceptions/NoSuchPieceException.h"
 #include "exceptions/NotYourTurnException.h"
 #include "exceptions/FirstTurnException.h"
 #include "Player.h"
+#include "Move.h"
+#include "PawnPromotionStrategy.h"
+#include "ChessMatrix.h"
 
 Game::Game (int gameId, Player* playerW, Player* playerB): 
     _gameId (gameId), _playerW(playerW), _playerB(playerB), _lastMove(nullptr)
 {
     _whiteTurn = false;
+    _chessMatrix = new ChessMatrix;
 
     for(int x = 0; x < MAX_X; x++)
     {
         for(int y = 0; y < MAX_Y; y++)
         {
-            _chessMatrix.set(Position(x,y), nullptr);
+            _chessMatrix->set(Position(x,y), nullptr);
         }
     }
     
@@ -72,8 +75,8 @@ void Game::boardCreation()
         _pawnW.push_back(PawnPiece(x*2, true, posW, this, forward) );
         _pawnB.push_back(PawnPiece(x*2+1, false, posB, this, !forward) );
         
-        _chessMatrix.set(posB, &(_pawnB.back()) );
-        _chessMatrix.set(posW, &( _pawnW.back()) );
+        _chessMatrix->set(posB, &(_pawnB.back()) );
+        _chessMatrix->set(posW, &( _pawnW.back()) );
     }
 
     posW.y = secondYW;
@@ -88,40 +91,40 @@ void Game::boardCreation()
         {
             _rookW.push_back(RookPiece(rookId*2, true, posW, this, forward) );
             _rookB.push_back(RookPiece(rookId*2+1, false, posB, this, !forward) );
-            _chessMatrix.set(posB, &_rookB.back());
-            _chessMatrix.set(posW, &_rookW.back());
+            _chessMatrix->set(posB, &_rookB.back());
+            _chessMatrix->set(posW, &_rookW.back());
             rookId++;
         }
         else if(x==1 || x == MAX_X -2)
         {
             _knightW.push_back(KnightPiece(knightId*2, true, posW, this, forward) );
             _knightB.push_back(KnightPiece(knightId*2+1, false, posB, this, !forward) );
-            _chessMatrix.set(posB, &_knightB.back());
-            _chessMatrix.set(posW, &_knightW.back());
+            _chessMatrix->set(posB, &_knightB.back());
+            _chessMatrix->set(posW, &_knightW.back());
             knightId++;
         }
         else if(x==2 || x == MAX_X -3)
         {
             _bishopW.push_back(BishopPiece(bishopId*2, true, posW, this, forward) );
             _bishopB.push_back(BishopPiece(bishopId*2+1, false, posB, this, !forward) );
-            _chessMatrix.set(posB, &_bishopB.back());
-            _chessMatrix.set(posW, &_bishopW.back());
+            _chessMatrix->set(posB, &_bishopB.back());
+            _chessMatrix->set(posW, &_bishopW.back());
             bishopId++;
         }
         else if(x==3)
         {
             _kingW.set(kingId*2, true, posW, this, forward);
             _kingB.set(kingId*2+1, false, posB, this, !forward);
-            _chessMatrix.set(posB, &_kingB);
-            _chessMatrix.set(posW, &_kingW);
+            _chessMatrix->set(posB, &_kingB);
+            _chessMatrix->set(posW, &_kingW);
             kingId++;
         }  
         else if(x==4)
         {
             _queenW.push_back(QueenPiece(queenId*2, true, posW, this, forward) );
             _queenB.push_back(QueenPiece(queenId*2+1, false, posB, this, !forward) );
-            _chessMatrix.set(posB, &_queenB.back());
-            _chessMatrix.set(posW, &_queenW.back());
+            _chessMatrix->set(posB, &_queenB.back());
+            _chessMatrix->set(posW, &_queenW.back());
             queenId++;
         }
     }
@@ -161,7 +164,7 @@ void Game::fillEnPassant(const Position& lastPos,Piece* piece)
         }        
     }
 
-    _chessMatrix.setEnPassant(piece, posList,lastPos);
+    _chessMatrix->setEnPassant(piece, posList,lastPos);
 }
 
 void Game::removePawn(PawnPiece* p)
@@ -190,22 +193,30 @@ void Game::removePawn(PawnPiece* p)
 
 void Game::printMatrix()
 {
-    _chessMatrix.printMatrix();
+    _chessMatrix->printMatrix();
 }
 
-Move Game::lastMove ()
+const Move& Game::lastMove ()
 {
     if (_lastMove == nullptr) 
         throw FirstTurnException ();
     else
         return *_lastMove;
 }
+
 void Game::setLastMove (const Move& move)
 {
     if (_lastMove != nullptr)
         delete _lastMove;
     
     _lastMove = new Move (move.origin, move.destination);
+}
+
+void Game::promote(PawnPromotionStrategy* strategy)
+{
+    //Inserting the piece must be done by the messages otherwise
+    // it needs 6 different methods or a instanceof
+    _state->promote(strategy);
 }
 
 bool Game::drop (const std::string& userId)
@@ -216,6 +227,32 @@ bool Game::drop (const std::string& userId)
 const std::string& Game::getTurnUser () 
 {
     return _whiteTurn ? _playerW->user() : _playerB->user();
+}
+
+void Game::tickTurn() 
+{
+    _whiteTurn = !_whiteTurn; 
+    _chessMatrix->tickTurn(); 
+}
+
+std::list<Position>& Game::getEnPassantOrigin() 
+{ 
+    return _chessMatrix->getEnPassantOrigin();
+}
+
+Position* Game::getEnPassantDest() 
+{ 
+    return _chessMatrix->getEnPassantDest();
+}
+
+Piece* Game::getEnPassantPiece() 
+{
+    return _chessMatrix->getEnPassantPiece();
+}
+
+Piece* Game::getCell(const Position& pos) 
+{
+    return _chessMatrix->get(pos);
 }
 
 #include <iostream>

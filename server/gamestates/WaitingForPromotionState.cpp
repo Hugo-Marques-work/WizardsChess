@@ -4,6 +4,7 @@
 #include "../Player.h"
 #include "../exceptions/NoSuchGameException.h"
 #include "../exceptions/InvalidActionException.h"
+#include "../ChessMatrix.h"
 
 void WaitingForPromotionState::promote(PawnPromotionStrategy* strategy)
 {

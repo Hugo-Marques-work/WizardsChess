@@ -13,6 +13,34 @@ void ChessMatrix::oneSideBoardCreation(bool white,bool forward)
 {
 
 }
+
+void ChessMatrix::clearEnPassant()
+{
+    if(_enPassantOrigin.empty() && _enPassantDest==nullptr) return;
+    _enPassantOrigin.clear();
+    _enPassantDest = nullptr;
+    _enPassantPiece = nullptr;
+}
+
+void ChessMatrix::tickTurn()
+{
+    _enPassantLiveTime--;
+    if(_enPassantLiveTime<0)
+        clearEnPassant();
+}
+
+void ChessMatrix::setEnPassant(Piece* piece, const std::list<Position>& p, const Position& origin)
+{
+    clearEnPassant();
+    for(const Position& pos : p)
+    {
+        _enPassantOrigin.emplace_front(pos);
+    }
+    _enPassantDest = new Position(origin.x,origin.y);
+    _enPassantPiece = piece;
+    _enPassantLiveTime = 2;
+}
+
 ChessMatrix::ChessMatrix()
 { 
     _pieces = array< array<Piece*,8>, 8>();

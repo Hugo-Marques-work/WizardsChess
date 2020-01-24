@@ -1,13 +1,13 @@
 #ifndef GAMESTATEVISITOR_H
 #define GAMESTATEVISITOR_H
 
-#include <string>
-
 class PlayingState;
 class DrawState;
 class WinState;
 class DropState;
 class WaitingForPromotionState;
+
+#include <string>
 
 class GameStateVisitor
 {

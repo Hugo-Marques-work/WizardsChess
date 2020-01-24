@@ -1,9 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "PawnPromotionStrategy.h"
-#include "gamestates/GameState.h"
-#include "ChessMatrix.h"
+
 #include "pieces/Piece.h"
 #include "pieces/PawnPiece.h"
 #include "pieces/QueenPiece.h"
@@ -11,9 +9,12 @@
 #include "pieces/KingPiece.h"
 #include "pieces/RookPiece.h"
 #include "pieces/BishopPiece.h"
-#include "Move.h"
 
+class Move;
 class Player;
+class GameState;
+class PawnPromotionStrategy;
+class ChessMatrix;
 
 class Game
 {
@@ -23,7 +24,7 @@ private:
     Move* _lastMove;
     int _gameId;
     bool _whiteTurn;
-    ChessMatrix _chessMatrix;
+    ChessMatrix* _chessMatrix;
     GameState* _state;
     Player *_playerW, *_playerB;
     
@@ -48,42 +49,20 @@ public:
     
     int gameId () {return _gameId;}
     
-    void promote(PawnPromotionStrategy* strategy)
-    {
-        //Inserting the piece must be done by the messages otherwise
-        // it needs 6 different methods or a instanceof
-        _state->promote(strategy);
-    }
+    void promote(PawnPromotionStrategy* strategy);
 
-    ChessMatrix* getMatrix () { return &_chessMatrix; }
-
+    ChessMatrix* getMatrix () { return _chessMatrix; }
     bool getTurn() { return _whiteTurn; }
     const std::string& getTurnUser ();
 
     void boardCreation();
- 
-    Piece* getCell(const Position& pos)
-    {
-        return _chessMatrix.get(pos);
-    }
-
-    void tickTurn() 
-    { 
-        _whiteTurn = !_whiteTurn; 
-        _chessMatrix.tickTurn(); 
-    }
-
+    void tickTurn();
     void fillEnPassant(const Position& lastPos,Piece* piece);
     
-    std::list<Position>& getEnPassantOrigin() 
-    { return _chessMatrix.getEnPassantOrigin(); }
-
-    Position* getEnPassantDest() 
-    { return _chessMatrix.getEnPassantDest(); }
-
-    Piece* getEnPassantPiece() 
-    { return _chessMatrix.getEnPassantPiece(); }
-
+    std::list<Position>& getEnPassantOrigin();
+    Position* getEnPassantDest();
+    Piece* getEnPassantPiece();
+    Piece* getCell(const Position& pos);
     void setState(GameState* state) { _state = state; }
     GameState* getState () {return _state;}
 
@@ -142,9 +121,10 @@ public:
     {
         if(white) { _queenW.push_front(p);} else { _queenB.push_front(p);}
     }
+    
     //can't insert a king
 
-    Move lastMove ();
+    const Move& lastMove ();
     void setLastMove (const Move& move);
     void printMatrix();
     

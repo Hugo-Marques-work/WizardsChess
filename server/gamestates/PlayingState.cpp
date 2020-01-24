@@ -1,13 +1,14 @@
 #include "PlayingState.h"
 #include "DropState.h"
+#include "WaitingForPromotionState.h"
+#include "WinState.h"
+#include "DrawState.h"
 #include "../Player.h"
 #include "../Game.h"
 #include "../exceptions/NoSuchGameException.h"
 #include "../exceptions/InvalidActionException.h"
 #include "../exceptions/PieceNotYoursException.h"
-#include "WaitingForPromotionState.h"
-#include "WinState.h"
-#include "DrawState.h"
+#include "../ChessMatrix.h"
 
 std::string PlayingState::accept (GameStateVisitor* visitor) 
 {
@@ -71,7 +72,6 @@ void PlayingState::move(const Position& origin, const Position& dest,
 
         try
         {
-        //CAN THROW "PAWN_PROMOTION_EXCEPTION"
             p->setPos(dest);
         }
         catch( PawnPromotionException& e)

@@ -1,11 +1,5 @@
 #include "CheckGameVisitor.h"
 
-#include "gamestates/PlayingState.h"
-#include "gamestates/DrawState.h"
-#include "gamestates/WinState.h"
-#include "gamestates/DropState.h"
-#include "gamestates/WaitingForPromotionState.h"
-
 std::string CheckGameVisitor::visitPlaying (PlayingState* state)
 {
     return "PLAYING_STATE";

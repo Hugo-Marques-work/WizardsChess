@@ -10,18 +10,15 @@
 
 #include "exceptions/NoSuchPieceException.h"
 
-//FIXME implementações... em .h
 //FIXME iostream
 //FIXME throw out_of_range
 
 class ChessMatrix
 {
 private:
-    const int MAX_X = 8;
-    const int MAX_Y = 8;
-    //FIXME: Hugo, por que usas MAX_X e MAX_Y, e depois 8 hard-coded?
-    //FIXME: É um workaround
-    std::array< std::array<Piece*,8>, 8> _pieces;
+    static const int MAX_X = 8;
+    static const int MAX_Y = 8;
+    std::array< std::array<Piece*,MAX_X>, MAX_Y> _pieces;
     
     std::list<Position> _enPassantOrigin;
     Position* _enPassantDest;
@@ -39,33 +36,9 @@ public:
     }
 
     void set(const Position& pos, Piece* p) noexcept(false);
-
-    void clearEnPassant()
-    {
-        if(_enPassantOrigin.empty() && _enPassantDest==nullptr) return;
-        _enPassantOrigin.clear();
-        _enPassantDest = nullptr;
-        _enPassantPiece = nullptr;
-    }
-
-    void setEnPassant(Piece* piece, const std::list<Position>& p, const Position& origin)
-    {
-        clearEnPassant();
-        for(const Position& pos : p)
-        {
-            _enPassantOrigin.emplace_front(pos);
-        }
-        _enPassantDest = new Position(origin.x,origin.y);
-        _enPassantPiece = piece;
-        _enPassantLiveTime = 2;
-    }
-
-    void tickTurn()
-    {
-        _enPassantLiveTime--;
-        if(_enPassantLiveTime<0)
-            clearEnPassant();
-    }
+    void clearEnPassant();
+    void setEnPassant(Piece* piece, const std::list<Position>& p, const Position& origin);
+    void tickTurn();
 
     Piece* getEnPassantPiece()
     {

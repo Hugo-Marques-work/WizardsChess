@@ -8,7 +8,6 @@
 #include "messages/MessageFactory.h"
 #include "Session.h"
 
-#include <memory>
 #include <list>
 #include <map>
 
