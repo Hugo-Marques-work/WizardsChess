@@ -97,7 +97,7 @@ std::string Server::visitListGames (ListGamesMessage* message, Session* session)
 {
     Player* player;
     
-    //FIXME FIXME apenas verificar na parte de login
+    //FIXME apenas verificar na parte de login
     
     if ((player = searchPlayer(session->userName())) != nullptr)
     {
@@ -108,10 +108,15 @@ std::string Server::visitListGames (ListGamesMessage* message, Session* session)
         for (std::pair <int, Game*> pair : player->games())
         {
             Game* game = pair.second;
+            
+            std::string turn = game->getTurn () ? " W" : " B";
+            
             if (game->playerW() == player)
                 result += " " + std::to_string(game->gameId()) + " " + game->playerB()->user() + " W";
             else
                 result += " " + std::to_string(game->gameId()) + " " + game->playerW()->user() + " B";
+            
+            result += turn;
         }
         
         return result;
@@ -124,6 +129,8 @@ std::string Server::visitGameMove (GameMoveMessage* message, Session* session)
 {
     Player* player;
     Game* game;
+    std::string status;
+    CheckGameVisitor visitor;
     
     if ((player = searchPlayer(session->userName())) != nullptr)
     {
@@ -137,7 +144,9 @@ std::string Server::visitGameMove (GameMoveMessage* message, Session* session)
             game->move (Position (message->x1(), message->y1()), 
                         Position (message->x2(), message->y2()), player->user());
             
-            return "GAME_MOVE_A OK";
+            status = game->getState()->accept(&visitor);
+            
+            return "GAME_MOVE_A OK " + status;
         }
         catch (NoSuchPieceException& e)
         {
@@ -371,7 +380,7 @@ std::string Server::visitImportGame (ImportGameMessage* message, Session* sessio
     {
         std::string answer = "IMPORT_GAME_A OK ";
 
-        //GAME INFO
+        //game info
         if( ( game->playerW()->user().compare(player->user()) ) == 0 ) {
             answer += "1 " + game->playerB()->user() + " ";
         } else {
@@ -381,7 +390,7 @@ std::string Server::visitImportGame (ImportGameMessage* message, Session* sessio
         answer += std::to_string( game->gameId() ) + " ";
         answer += std::to_string( game->getTurn() ) + " ";
 
-        //ENPASSANT
+        //enpassant
         if(game->getEnPassantPiece() != nullptr) {
             answer += "YES ";
             answer += std::to_string( game->getEnPassantPiece()->getPos().x ) + " " +
@@ -399,7 +408,7 @@ std::string Server::visitImportGame (ImportGameMessage* message, Session* sessio
             answer += "NO ";
         }
 
-        //PIECES
+        //pieces
         answer += game->getKing(true).stringify() + " ";
         answer += game->getKing(false).stringify() + " ";
 
@@ -431,7 +440,7 @@ std::string Server::visitImportGame (ImportGameMessage* message, Session* sessio
         for(PawnPiece& p : pawnW)
             answer += p.stringify() + " ";
 
-        //wtf moment 
+        //FIXME wtf moment 
 
         answer += std::to_string( pawnB.size() ) + " ";
         for(PawnPiece& p : pawnB)
@@ -464,7 +473,7 @@ std::string Server::visitImportGame (ImportGameMessage* message, Session* sessio
             answer += p.stringify() + " ";
         //    
 
-        return answer; //TODO complete
+        return answer;
     }
     
     else 
