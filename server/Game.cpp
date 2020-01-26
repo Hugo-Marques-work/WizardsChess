@@ -135,6 +135,7 @@ void Game::move(const Position& origin, const Position& dest,
             const std::string& userId) 
 {
     _state->move(origin, dest, userId);
+    setLastMove(Move(origin, dest));
 }
  
 void Game::fillEnPassant(const Position& lastPos,Piece* piece)

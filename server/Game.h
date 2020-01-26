@@ -38,6 +38,8 @@ private:
     
     std::list<Piece*> _promoted;
     std::list<std::list<Piece*>> _drawCondition;
+    
+    void setLastMove (const Move& move);
 public:
     Game(int gameId, Player* playerW, Player* playerB);
     ~Game();
@@ -126,7 +128,6 @@ public:
     //can't insert a king
 
     const Move& lastMove ();
-    void setLastMove (const Move& move);
     void printMatrix();
     
     //true if the game can be deleted
