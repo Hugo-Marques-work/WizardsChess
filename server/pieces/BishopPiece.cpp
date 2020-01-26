@@ -1,6 +1,8 @@
 #include "BishopPiece.h"
 #include "../Game.h"
 
+#include <stdexcept>
+
 std::list<Position> BishopPiece::getValidMoves()
 {
     Piece* piece;

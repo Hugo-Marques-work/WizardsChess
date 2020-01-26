@@ -1,5 +1,4 @@
 #include "Piece.h"
-#include <string>
 
 bool Piece::validateMove(Position dst)
 {

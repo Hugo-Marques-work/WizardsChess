@@ -29,9 +29,7 @@ private:
 public:
     ChessMatrix();
 
-    Piece* get(const Position& pos) noexcept(false)
-    {
-        //Throw out_of_range    
+    Piece* get(const Position& pos) noexcept(false) {
         return _pieces.at(pos.x).at(pos.y);
     }
 
@@ -40,25 +38,9 @@ public:
     void setEnPassant(Piece* piece, const std::list<Position>& p, const Position& origin);
     void tickTurn();
 
-    Piece* getEnPassantPiece()
-    {
-        return _enPassantPiece;
-    }
-
-    std::list<Position>& getEnPassantOrigin()
-    {
-        return _enPassantOrigin;
-    }
-
-    Position* getEnPassantDest()
-    {
-        return _enPassantDest;
-    }
-
-    int getEnPassantLiveTime() {
-        return _enPassantLiveTime;
-    }
-    //Used for a text simulation of the game
-    void printMatrix();
+    Piece* getEnPassantPiece() {return _enPassantPiece;}
+    std::list<Position>& getEnPassantOrigin() {return _enPassantOrigin;}
+    Position* getEnPassantDest(){return _enPassantDest;}
+    int getEnPassantLiveTime() {return _enPassantLiveTime;}
 };
 #endif

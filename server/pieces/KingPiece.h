@@ -2,9 +2,7 @@
 #define _KING_PIECE_
 
 #include "Piece.h"
-#include <list>
 
-#include <iostream>
 class KingPiece : public Piece
 {
 private:
@@ -20,8 +18,6 @@ public:
 
     void setPos(const Position& pos) override 
     { Piece::setPos(pos); _hasMoved = true; } 
-
-    void debugPrint() override { std::cout << "K"; }
     
     std::string stringify() override {
         return Piece::stringify() + " " + std::to_string(_hasMoved);

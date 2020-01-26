@@ -1,7 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-
 #include "pieces/Piece.h"
 #include "pieces/PawnPiece.h"
 #include "pieces/QueenPiece.h"
@@ -128,7 +127,6 @@ public:
     //can't insert a king
 
     const Move& lastMove ();
-    void printMatrix();
     
     //true if the game can be deleted
     bool drop (const std::string& userId);

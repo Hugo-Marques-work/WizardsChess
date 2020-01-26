@@ -25,7 +25,6 @@ Game::Game (int gameId, Player* playerW, Player* playerB):
     }
     
     boardCreation();
-    printMatrix();
     createDrawConditions(); 
 
     _state = new PlayingState(this);
@@ -191,11 +190,6 @@ void Game::removePawn(PawnPiece* p)
             }
         }
     }
-}
-
-void Game::printMatrix()
-{
-    _chessMatrix->printMatrix();
 }
 
 const Move& Game::lastMove ()
