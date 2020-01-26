@@ -26,7 +26,6 @@ class Board {
     }
 
     set(pos,piece) {
-        console.log(pos.x);
         this.pieces[pos.x][pos.y] = piece;
     }
 

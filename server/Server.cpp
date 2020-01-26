@@ -440,8 +440,6 @@ std::string Server::visitImportGame (ImportGameMessage* message, Session* sessio
         for(PawnPiece& p : pawnW)
             answer += p.stringify() + " ";
 
-        //FIXME wtf moment 
-
         answer += std::to_string( pawnB.size() ) + " ";
         for(PawnPiece& p : pawnB)
             answer += p.stringify() + " ";

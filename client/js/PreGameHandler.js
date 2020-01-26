@@ -92,9 +92,9 @@ class PreGameHandler {
             let cellGameId = row.insertCell(k++);
             let cellTurnNumber = row.insertCell(k++);
 
-            cellReadyToPlay.innerHTML = "";
+            cellReadyToPlay.innerHTML = gameInfo.isWhite == gameInfo.isWhiteTurn ? "Ready To Play" : "Not Ready";
             cellOpponent.innerHTML = gameInfo.otherUser;
-            cellColor.innerHTML = gameInfo.isWhite;
+            cellColor.innerHTML = gameInfo.isWhite ? "White" : "Black";
             cellGameId.innerHTML = gameInfo.gameId;
             cellTurnNumber.innerHTML = "";
         }

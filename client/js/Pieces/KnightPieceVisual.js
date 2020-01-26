@@ -20,7 +20,7 @@ class KnightPieceVisual extends THREE.Object3D {
     changePos() {
         var v = this.logic.translatePosIntoVisual();
         this.position.set(v.x,v.y,v.z);
-        console.log(this.position);
+        //console.log(this.position);
     }
     
     getBoardPos() {
