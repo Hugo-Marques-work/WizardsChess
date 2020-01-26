@@ -3,8 +3,8 @@ CFLAGS = -std=c++17 -g
 CCOMPILE = -c 
 
 all: GameDropMessage.o ListGamesMessage.o Parser.o GameLastMoveMessage.o\
-Message.o PawnPromotionMessage.o GameMoveMessage.o MessageFactory.o\
-RegMessage.o GameStatusMessage.o MessageVisitor.o GameTurnMessage.o\
+PawnPromotionMessage.o GameMoveMessage.o MessageFactory.o\
+RegMessage.o GameStatusMessage.o  GameTurnMessage.o\
 NewGameMessage.o LoginMessage.o ImportGameMessage.o
 
 GameDropMessage.o: GameDropMessage.cpp
@@ -18,9 +18,6 @@ Parser.o: Parser.cpp
 
 GameLastMoveMessage.o: GameLastMoveMessage.cpp
 	$(CC) $(CFLAGS) $(CCOMPILE) GameLastMoveMessage.cpp
-
-Message.o: Message.cpp
-	$(CC) $(CFLAGS) $(CCOMPILE) Message.cpp
 
 PawnPromotionMessage.o: PawnPromotionMessage.cpp
 	$(CC) $(CFLAGS) $(CCOMPILE) PawnPromotionMessage.cpp
@@ -39,10 +36,7 @@ LoginMessage.o: LoginMessage.cpp
 
 GameStatusMessage.o: GameStatusMessage.cpp
 	$(CC) $(CFLAGS) $(CCOMPILE) GameStatusMessage.cpp
-	
-MessageVisitor.o: MessageVisitor.cpp
-	$(CC) $(CFLAGS) $(CCOMPILE) MessageVisitor.cpp
-	
+
 GameTurnMessage.o: GameTurnMessage.cpp
 	$(CC) $(CFLAGS) $(CCOMPILE) GameTurnMessage.cpp
 

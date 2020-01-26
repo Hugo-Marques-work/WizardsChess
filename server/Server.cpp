@@ -339,9 +339,7 @@ std::string Server::visitNewGame (NewGameMessage* message, Session* session)
     player1->addGame (game);
     player2->addGame (game);
     
-    _nextGameId++;
-    
-    return "NEW_GAME_A OK";
+    return "NEW_GAME_A OK " + std::to_string(_nextGameId++);
 }
 
 std::string Server::visitLogin (LoginMessage* message, Session* session) 

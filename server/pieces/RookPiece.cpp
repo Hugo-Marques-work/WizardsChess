@@ -1,6 +1,8 @@
 #include "RookPiece.h"
 #include "../Game.h"
 
+#include <stdexcept>
+
 std::list<Position> RookPiece::getValidMoves()
 {
     Piece* piece;

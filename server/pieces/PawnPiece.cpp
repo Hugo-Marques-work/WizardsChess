@@ -2,10 +2,11 @@
 #include "../Game.h"
 #include "../exceptions/PawnPromotionException.h"
 
+#include <stdexcept>
+
 std::list<Position> PawnPiece::getValidMoves()
 {
     //InFrontOfMe
-    std::cout << _myPos.x << " " << _myPos.y <<std::endl;
     int yToAdd = 1;
     if(_forward==false)
         yToAdd = -1;

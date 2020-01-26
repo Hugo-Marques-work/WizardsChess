@@ -1,6 +1,8 @@
 #include "QueenPiece.h"
 #include "../Game.h"
 
+#include <stdexcept>
+
 std::list<Position> QueenPiece::getValidMoves()
 {
     Piece* piece;

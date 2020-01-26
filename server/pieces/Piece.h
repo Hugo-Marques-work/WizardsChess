@@ -1,8 +1,8 @@
 #ifndef _PIECE_H_
 #define _PIECE_H_
 #include "../Position.h"
+
 #include <list>
-#include <utility>
 #include <string>
 
 class ChessMatrix;
@@ -51,7 +51,5 @@ public:
 
     virtual std::string stringify();
     bool getAlive() { return _alive; }
-    //Used for a text simulation of the game
-    inline virtual void debugPrint() {}
 };
 #endif

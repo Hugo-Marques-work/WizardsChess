@@ -2,9 +2,7 @@
 #define _ROOK_PIECE_
 
 #include "Piece.h"
-#include <list>
 
-#include <iostream>
 class RookPiece : public Piece
 {
     bool _hasMoved = false;
@@ -17,7 +15,6 @@ public:
     { Piece::setPos(pos); _hasMoved = true; } 
 
     bool hasMoved() { return _hasMoved; }
-    void debugPrint() override { std::cout << "R"; }
     
     std::string stringify() override {
         return Piece::stringify() + " " + std::to_string(_hasMoved);
