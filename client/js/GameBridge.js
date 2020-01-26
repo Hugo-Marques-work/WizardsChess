@@ -6,7 +6,6 @@ class GameBridge {
 
         this.createRenderer();
         this.createScene();
-        this.createCamera();
 
         this.serverCommunicator = serverCommunicator;
         this.changeTurn = {change: false, myTurn: true};
@@ -26,6 +25,9 @@ class GameBridge {
             this.setOtherTurn();
         }
         
+
+        this.createCamera();
+
         window.addEventListener("keydown",this);
         window.addEventListener("keyup",this);
         window.addEventListener("resize",this);
@@ -69,7 +71,12 @@ class GameBridge {
         //var fov1 = 10;
         //this.camera = new THREE.OrthographicCamera( - fov1 * window.innerWidth / window.innerHeight, 
         //    fov1 * window.innerWidth / window.innerHeight, fov1, -fov1, -100, 100);
-        this.camera.position.set(0, 50, 50 );
+
+        if(this.imWhite)
+            this.camera.position.set(0, 50, -50 );
+        else            
+            this.camera.position.set(0, 50, 50 );
+
         this.camera.lookAt(this.scene.position);
     }
 
@@ -148,7 +155,7 @@ class GameBridge {
         this.changeTurn.change = true;
         this.changeTurn.myTurn = true;
         this.move.from = gameLastMove.from;
-        this.move.to = gameLastMove.to;
+        this.move.toPos = gameLastMove.to;
     }
 
     checkChangeTurn() {
@@ -175,6 +182,7 @@ class GameBridge {
         this.state = new MyTurnState(this);
         this.move.from = null;
         this.move.to = null;
+        this.move.toPos = null;
     }
 
     getWhite() {

@@ -136,6 +136,8 @@ class Game {
 
     getCell(pos) { return this.chessMatrix.get(pos); }
 
+    getCellVisual(pos) { return this.chessMatrix.getVisual(pos); }
+    
     tickTurn() {
         this.whiteTurn = !this.whiteTurn;
         this.chessMatrix.tickTurn();

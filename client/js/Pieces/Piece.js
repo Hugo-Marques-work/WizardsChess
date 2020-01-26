@@ -94,6 +94,10 @@ class Piece {
     translatePosIntoVisual() {
         return this.game.translatePosIntoVisual(this.pos);
     }
+
+    makeVisual() {
+        this.visual.makeVisual();
+    }
     update() { 
         //VIRTUAL    
     }

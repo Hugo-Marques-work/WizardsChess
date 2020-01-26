@@ -63,6 +63,15 @@ class PreGameHandler {
         this.waiting = false;
     }
 
+    refreshList() {
+        if(this.waiting) return;
+        
+
+        var table = document.getElementById("GameListScreenBody");
+        table.innerHTML = "";
+        this.showGameListScreen();
+    }
+
     hideLoginScreen() {
         document.getElementById("LoginScreen").hidden = true;
     }
@@ -76,13 +85,14 @@ class PreGameHandler {
     }
 
     listGames(games) { 
-        var table = document.getElementById("GameListTable");
+        var table = document.getElementById("GameListScreenBody");
         let listGameInfo = games.listGameInfo;
         for(let i in listGameInfo) {
             let gameInfo = listGameInfo[i];
-            let row = table.insertRow(/*i+*/1);
+            let row = table.insertRow(/*i+*/0);
             let string = "gameId-" + gameInfo.gameId ;
             row.classList.add( string );
+            row.classList.add( "gameListRow" );
             row.setAttribute("onclick", "preGameHandler.joinGame("
                 + gameInfo.gameId + ")" );
             let k = 0;

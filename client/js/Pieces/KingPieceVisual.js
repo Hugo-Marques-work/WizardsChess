@@ -1,38 +1,22 @@
-class KingPieceVisual extends THREE.Object3D {
+class KingPieceVisual extends PieceVisual {
     constructor(logic) {
-        super();
-
-        this.logic = logic;
-        
-
-        var geometry = new THREE.BoxGeometry(1,1,1);
-        
-        var matPhong = new THREE.MeshPhongMaterial({color: 0x35a19b});
-        
-        var mesh = new THREE.Mesh(geometry, matPhong);
-        
-        var v = this.logic.translatePosIntoVisual();
-        this.position.set(v.x,v.y,v.z);
-
-        //this.position.set(0,0.5,0);
-        this.add(mesh);
-    }
-    
-    changePos() {
-        var v = this.logic.translatePosIntoVisual();
-        this.position.set(v.x,v.y,v.z);
-        //console.log(this.position);
-    }
-    
-    getBoardPos() {
-        return this.logic.pos;
+        super(logic);
     }
 
-    update(deltaTime) {
-        //FIXME
-    }
-    
-    die() {
-        this.visible = false;
+    makeVisual() {
+
+        var geometry = new THREE.BoxGeometry(0.5,1,0.5);
+        
+        if(this.logic.white) {
+            this.highlightMaterial = new THREE.MeshPhongMaterial({color:0xffffff, opacity:0.5, transparent: true});
+            this.normalMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, opacity:1,  transparent: true});
+        } else {
+            this.highlightMaterial = new THREE.MeshPhongMaterial({color:0x000000, opacity:0.5, transparent: true});
+            this.normalMaterial = new THREE.MeshPhongMaterial({color: 0x000000, opacity:1,  transparent: true});
+        }
+        
+        this.mesh = new THREE.Mesh(geometry, this.normalMaterial);
+
+        this.add(this.mesh);
     }
 }

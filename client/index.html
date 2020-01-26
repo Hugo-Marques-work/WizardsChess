@@ -21,6 +21,7 @@
         <script src="js/TileVisual.js"></script>       
 
         <script src="js/Pieces/Piece.js"></script>
+        <script src="js/Pieces/PieceVisual.js"></script>
         <script src="js/Pieces/BishopPiece.js"></script>
         <script src="js/Pieces/BishopPieceVisual.js"></script>
         <script src="js/Pieces/KingPiece.js"></script>
@@ -83,6 +84,7 @@
         <div id="GameListScreen" hidden="true">
             <div id="GameListContainer">
                 <table id="GameListTable">
+                    <thead>
                     <tr>
                         <th> Ready to play</th>
                         <th> Opponent </th>
@@ -90,6 +92,10 @@
                         <th> Game ID</th>
                         <th> Turn Number</th>
                     </tr>
+                    </thead>
+                    <tbody id="GameListScreenBody">
+
+                    </tbody>
                 </table>
             </div>
             <div id="CreateGame">
@@ -111,6 +117,8 @@
                     <input id="CreateGameButton" type="button" value = "Create" onclick = "preGameHandler.createGame();">
                 </form>
             </div>
+
+            <button onclick="preGameHandler.refreshList()"> Refresh </button>
         </div>
 
 

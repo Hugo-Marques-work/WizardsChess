@@ -528,6 +528,7 @@ class AnswerParser {
 
         importedGame.chessMatrix.set(pos,p);
         p.setPos(pos);
+        p.makeVisual();
     }
 }
 
