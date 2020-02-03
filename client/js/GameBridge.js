@@ -26,7 +26,6 @@ class GameBridge {
             this.setOtherTurn();
         }
         
-
         this.createCamera();
 
         window.addEventListener("keydown",this);
@@ -259,11 +258,10 @@ class GameBridge {
                 break;
         }
     }
-}
-
-
-function loop() {
-    gameBridge.update();
-    gameBridge.render();
-    requestAnimationFrame(loop);
+    
+    loop() {
+        this.update();
+        this.render();
+        requestAnimationFrame(this.loop.bind(this));
+    }
 }

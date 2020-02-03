@@ -223,7 +223,7 @@ class LoggedState extends ScreenState {
                 var isWhite = this.games.listGameInfo[this.currentGameId - 1].isWhite;
                 var otherUser = this.games.listGameInfo[this.currentGameId - 1].otherUser;
                 this.gamebridge = new GameBridge (this.screen.communicator, this.currentGameId, isWhite, otherUser, dom);
-                this.loop();
+                this.gamebridge.loop();
             }
         }
     }
@@ -316,8 +316,7 @@ class LoggedState extends ScreenState {
         
         if (this.currentGameId == -1) {
             document.getElementById('loggedScreenPlay').innerHTML = "To play a game, go <b>My Games</b> e select one.";
-        }
-        
+        }   
     }
     
     createGame (dom) {
@@ -328,11 +327,5 @@ class LoggedState extends ScreenState {
     
     joinGame (gameId) {
         this.currentGameId = gameId;
-    }
-    
-    loop() {
-        this.gamebridge.update();
-        this.gamebridge.render();
-        requestAnimationFrame(this.loop.bind(this));
     }
 }
