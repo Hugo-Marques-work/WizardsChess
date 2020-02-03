@@ -317,9 +317,10 @@ std::string Server::visitPawnPromotion (PawnPromotionMessage* message, Session* 
 std::string Server::visitNewGame (NewGameMessage* message, Session* session)
 {   
     Player *player1, *player2;
+    Game* game;
     
-    player1 = searchPlayer(message->user());
-    player2 = searchPlayer(session->userName());
+    player1 = searchPlayer(session->userName());
+    player2 = searchPlayer(message->user());
     
     if (player1 == nullptr)
         return "NEW_GAME_A ERR USER_NOT_FOUND";
@@ -332,7 +333,12 @@ std::string Server::visitNewGame (NewGameMessage* message, Session* session)
     if (player1->user() == player2->user())
         return "NEW_GAME_A ERR SAME_USER";
     
-    Game* game = new Game (_nextGameId, player1, player2);
+    if (message->color() == "W") 
+        game = new Game (_nextGameId, player1, player2);
+    else if (message->color() == "B") 
+        game = new Game (_nextGameId, player2, player1);
+    else
+        return "NEW_GAME_A ERR COLOR";
     
     _games.insert (std::make_pair (_nextGameId, game));
     

@@ -1,10 +1,11 @@
 class GameBridge {
-    constructor(serverCommunicator, gameId, white, otherUser, game) {
+    constructor(serverCommunicator, gameId, white, otherUser, parentDom, game) {
         //Here to possibly use on the interface
+        
         this.gameId = gameId;
         this.otherUser = otherUser;
 
-        this.createRenderer();
+        this.createRenderer(parentDom);
         this.createScene();
         this.createCamera();
 
@@ -36,10 +37,10 @@ class GameBridge {
         this.timer = new Date();
     }
 
-    createRenderer() {
+    createRenderer(parentDom) {
         this.renderer = new THREE.WebGLRenderer( {antialias: true} );
-        this.renderer.setSize(window.innerWidth,window.innerHeight);
-        document.body.appendChild(this.renderer.domElement);
+        this.renderer.setSize(parentDom.offsetWidth, parentDom.offsetHeight);
+        parentDom.appendChild(this.renderer.domElement);
     }
 
     createScene() {

@@ -198,11 +198,12 @@ Message* MessageFactory::parsePawnPromotion(Parser& parser)
 
 Message* MessageFactory::parseNewGame(Parser& parser)
 {
-    std::string user;
+    std::string user, color;
     
     try
     {
         user = parser.readString();
+        color = parser.readString();
     }
     
     catch ( ParserException& e )
@@ -210,7 +211,7 @@ Message* MessageFactory::parseNewGame(Parser& parser)
         throw WrongInputException(e.what());
     }
     
-    return new NewGameMessage (user);
+    return new NewGameMessage (user, color);
 }
 
 Message* MessageFactory::parseLogin(Parser& parser)

@@ -35,8 +35,15 @@ function requestPawnPromotion (gameId, type) {
     return "PAWN_PROMOTION_R " + gameId + " " + type;
 }
 
-function requestNewGame (other) {
-    return "NEW_GAME_R " + other;
+function requestNewGame (other, iAmWhite) {
+    var color;
+    
+    if (iAmWhite)
+        color = "W";
+    else
+        color = "B";
+    
+    return "NEW_GAME_R " + other + " " + color;
 }
 
 function requestImportGame(gameId) {

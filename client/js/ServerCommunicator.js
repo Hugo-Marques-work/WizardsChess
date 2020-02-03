@@ -1,6 +1,6 @@
 class ServerCommunicator {
-    constructor() {
-        this.socket = new WebSocket("ws://0.0.0.0:8001");   
+    constructor(addr) {
+        this.socket = new WebSocket(addr);   
 
         this.socket.onopen = this.globalOnOpen.bind(this);
         this.socket.onclose = this.globalOnClose.bind(this);
@@ -12,6 +12,22 @@ class ServerCommunicator {
         this.answerParser = new AnswerParser(); 
     }
 
+    setOnLoginComplete (func) {
+        this.onLoginComplete = func;
+    }
+    
+    setOnCreateAccountComplete (func) {
+        this.onCreateAccountComplete = func;
+    }
+    
+    setOnListGamesComplete (func) {
+        this.onListGamesComplete = func;
+    }
+    
+    setOnCreateGameComplete (func) {
+        this.onCreateGameComplete = func;
+    }
+    
     createAccount(username, password) {
         this.socket.onmessage = this.createAccountOnMessage.bind(this);;
 
@@ -24,10 +40,11 @@ class ServerCommunicator {
     createAccountOnMessage(event) {
         try { 
             this.answerParser.parseReg(event.data);
-            preGameHandler.executeCreateAccount(true);
-        } catch( error ) {
+            this.onCreateAccountComplete(true);
+        } catch(error) {
             alert(error.message);
-            preGameHandler.executeCreateAccount(false);
+            this.onCreateAccountComplete(false);
+            console.log(error.message);
             //Couldn't reg
         }
     }
@@ -35,7 +52,7 @@ class ServerCommunicator {
     login(username, password) {
         this.socket.onmessage = this.loginOnMessage.bind(this);
 
-        this.username = username;
+        this.username = username; 
 
         let request = requestLogin(username, password);
         this.socket.send(request);
@@ -44,10 +61,11 @@ class ServerCommunicator {
     loginOnMessage(event) {
         try { 
             this.answerParser.parseLogin(event.data);
-            preGameHandler.executeLogin(true);
-        } catch( error ) {
+            this.onLoginComplete(true);
+        } catch(error) {
             alert(error.message);
-            preGameHandler.executeLogin(false);
+            console.log(error.message);
+            this.onLoginComplete(false);
             //Couldn't login
         }
     }
@@ -64,7 +82,7 @@ class ServerCommunicator {
         try {
             let games = this.answerParser.parseListGames(event.data);
             console.log(games);
-            preGameHandler.listGames(games);
+            this.onListGamesComplete(games);
         } catch( error ) { 
             //DEBUG FIXME 
             alert(error.message);            
@@ -166,18 +184,9 @@ class ServerCommunicator {
     }
 
     createGame(white,otherUser) {
-
         this.socket.onmessage = this.createGameOnMessage.bind(this);
-
         this.newGameInfo = {white: white, otherUser: otherUser};
-
-        //FIXME Pouco prioritario, newGame = white beggining
-        if(white) {
-            var request = requestNewGame(otherUser);
-        }
-        else {
-            var request = requestNewGame(otherUser);
-        }
+        var request = requestNewGame(otherUser, white);
         this.socket.send(request);
     }
 
@@ -186,12 +195,10 @@ class ServerCommunicator {
             let newGame = this.answerParser.parseNewGame(event.data);
             //game should return gameId FIXME
             this.gameId = 0;
-            preGameHandler.executeCreateGame(this.gameId,
-                this.newGameInfo);
+            this.onCreateGameComplete(this.gameId, this.newGameInfo);
         } catch( error ) { 
-            preGameHandler.cancelRequest();
+            //FIXME - wtf??? preGameHandler.cancelRequest();
             //DEBUG FIXME 
-            console.log(error.message);
             alert(error.message);            
             //Shouldn't happen
         }

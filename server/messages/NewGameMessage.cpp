@@ -1,8 +1,8 @@
 #include "NewGameMessage.h"
 #include "MessageVisitor.h"
 
-NewGameMessage::NewGameMessage(const std::string& user): 
-    _user(user)
+NewGameMessage::NewGameMessage(const std::string& user, const std::string& color): 
+    _user(user), _color(color)
 {
     
 }
