@@ -7,7 +7,6 @@ class GameBridge {
 
         this.createRenderer(parentDom);
         this.createScene();
-        this.createCamera();
 
         this.serverCommunicator = serverCommunicator;
         this.changeTurn = {change: false, myTurn: true};
@@ -20,13 +19,16 @@ class GameBridge {
         this.move = { from : null, toPos : null };
         this.waitingForResponse = false;
 
-        if(this.imWhite) {
-            this.state = new MyTurnState(this);
+        if(this.imWhite == this.game.whiteTurn) {
+            this.setMyTurn();
         }
         else {
-            this.state = new OtherTurnState(this);
+            this.setOtherTurn();
         }
         
+
+        this.createCamera();
+
         window.addEventListener("keydown",this);
         window.addEventListener("keyup",this);
         window.addEventListener("resize",this);
@@ -70,7 +72,12 @@ class GameBridge {
         //var fov1 = 10;
         //this.camera = new THREE.OrthographicCamera( - fov1 * window.innerWidth / window.innerHeight, 
         //    fov1 * window.innerWidth / window.innerHeight, fov1, -fov1, -100, 100);
-        this.camera.position.set(0, 50, 50 );
+
+        if(this.imWhite)
+            this.camera.position.set(0, 50, -50 );
+        else            
+            this.camera.position.set(0, 50, 50 );
+
         this.camera.lookAt(this.scene.position);
     }
 
@@ -87,7 +94,7 @@ class GameBridge {
                 this.move.toPos)) {
                 
                 this.waitingForResponse = true;
-                this.serverCommunicator.move(this.move.from.getBoardPos().x,
+                this.serverCommunicator.move(this.game.gameId, this.move.from.getBoardPos().x,
                     this.move.from.getBoardPos().y, this.move.toPos.x, 
                     this.move.toPos.y);
             }
@@ -110,7 +117,7 @@ class GameBridge {
         }
     }
 
-    executeMove() {
+    executeMove() {        
         //can be state not much point tho
         this.game.move(this.move.from.getBoardPos(), this.move.toPos);
         this.move.from = null;
@@ -145,9 +152,11 @@ class GameBridge {
         this.changeTurn.myTurn = false;
     }
 
-    readyMyTurn() {
+    readyMyTurn(gameLastMove) {
         this.changeTurn.change = true;
         this.changeTurn.myTurn = true;
+        this.move.from = gameLastMove.from;
+        this.move.toPos = gameLastMove.to;
     }
 
     checkChangeTurn() {
@@ -155,6 +164,7 @@ class GameBridge {
             this.changeTurn.change = false;
 
             if(this.changeTurn.myTurn) {
+                this.game.move(this.move.from, this.move.toPos);
                 this.setMyTurn();
             }
             else {
@@ -171,6 +181,9 @@ class GameBridge {
     setMyTurn() {
         //FIXME Haven't changed everything with this cuz it doesn't need communication with server. Overview it
         this.state = new MyTurnState(this);
+        this.move.from = null;
+        this.move.to = null;
+        this.move.toPos = null;
     }
 
     getWhite() {

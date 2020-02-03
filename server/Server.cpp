@@ -401,9 +401,9 @@ std::string Server::visitImportGame (ImportGameMessage* message, Session* sessio
                 std::to_string( game->getEnPassantPiece()->getPos().y ) + " " +
                 std::to_string( game->getEnPassantDest()->x ) + " " +
                 std::to_string( game->getEnPassantDest()->y ) + " " +
-                std::to_string( game->getEnPassantLiveTime() );
+                std::to_string( game->getEnPassantLiveTime() ) + " ";
 
-            answer += std::to_string( game->getEnPassantOrigin().size() );
+            answer += std::to_string( game->getEnPassantOrigin().size() ) + " ";
             for(Position& pos : game->getEnPassantOrigin() ) {
                 answer += std::to_string( pos.x ) + " " + std::to_string( pos.y ) + " ";
             }
@@ -443,8 +443,6 @@ std::string Server::visitImportGame (ImportGameMessage* message, Session* sessio
         answer += std::to_string( pawnW.size() )+ " ";
         for(PawnPiece& p : pawnW)
             answer += p.stringify() + " ";
-
-        //FIXME wtf moment 
 
         answer += std::to_string( pawnB.size() ) + " ";
         for(PawnPiece& p : pawnB)

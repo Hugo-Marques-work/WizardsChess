@@ -121,7 +121,8 @@ class GameMoveAnswer extends Answer {
         super();
         this.info = info;
 
-        if(this.info === "NEXT"/*FIXME MESSAGE*/)
+        console.log(this.info);
+        if(this.info === "PLAYING_STATE"/*FIXME MESSAGE*/)
             this.isNext = true;
         else 
             this.isNext = false;
@@ -139,10 +140,9 @@ class GameMoveAnswer extends Answer {
 class GameLastMoveAnswer extends Answer {
     constructor (x1, y1, x2, y2) {
         super();
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
+
+        this.from = new Position(x1,y1);
+        this.to = new Position(x2,y2);
     }
 }
 
@@ -244,7 +244,7 @@ class AnswerParser {
                 otherUser = lexer.readString();
                 color = lexer.readString();
                 turn = lexer.readString();
-                
+                                
                 if (color != 'W' && color != 'B')
                     throw new WrongInputException("Reading color: expected W or B");
                 
@@ -414,7 +414,7 @@ class AnswerParser {
             this.readBishop(importedGame,lexer);
 
             if(hasPassant == "YES")
-                game.chessMatrix.enPassantPiece = game.getCell(enPassantPiecePos);
+                importedGame.chessMatrix.enPassantPiece = importedGame.getCell(enPassantPiecePos);
 
             return new ImportGameAnswer(imWhite == 1 ? true : false, otherUser, importedGame);
 
@@ -528,6 +528,7 @@ class AnswerParser {
 
         importedGame.chessMatrix.set(pos,p);
         p.setPos(pos);
+        p.makeVisual();
     }
 }
 

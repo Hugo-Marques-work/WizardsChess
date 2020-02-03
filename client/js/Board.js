@@ -25,6 +25,10 @@ class Board {
         return this.pieces[pos.x][pos.y];
     }
 
+    getVisual(pos) {
+        return this.visual.getTile(pos);
+    }
+    
     set(pos,piece) {
         this.pieces[pos.x][pos.y] = piece;
     }
@@ -64,6 +68,7 @@ class Board {
     translatePosIntoVisual(position) {
         return this.visual.translatePosIntoVisual(position);
     }
+
     getBoardVisualTiles() {
         return this.visual.getTiles();
     }

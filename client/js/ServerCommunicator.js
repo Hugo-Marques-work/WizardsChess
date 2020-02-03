@@ -110,16 +110,17 @@ class ServerCommunicator {
         }
     }
 
-    move(x1,y1,x2,y2) {   
+    move(gameId,x1,y1,x2,y2) {   
         this.socket.onmessage= this.moveOnMessage.bind(this);
 
-        let request = requestGameMove(this.gameId,x1,y1,x2,y2);
+        let request = requestGameMove(gameId,x1,y1,x2,y2);
         this.socket.send(request);
     }
 
     moveOnMessage(event) {
         try {
             let gameMoveAnswer = this.answerParser.parseGameMove(event.data);
+            
             if( gameMoveAnswer.isNext ) {
                 gameBridge.executeMove();
             }
@@ -139,18 +140,58 @@ class ServerCommunicator {
     setOtherTurn() {
         this.socket.onmessage= this.setOtherTurnOnMessage.bind(this);
 
+        this.readyToAskOtherTurn = true;
+
+        var that = this;
+        this.askOtherTurnTimeout = setTimeout(function () {
+            that.askOtherTurn();
+        }, 1000);
         //this.socket.send(something?);
+    }
+
+    askOtherTurn() {
+        if(this.readyToAskOtherTurn == true) {
+            this.readyToAskOtherTurn = false;
+            
+            let request = requestGameTurn(gameBridge.game.gameId);
+            this.socket.send(request);
+        }
+
+        var that = this;
+        this.askOtherTurnTimeout = setTimeout(function () {
+            that.askOtherTurn();
+        }, 1000);
+
     }
 
     setOtherTurnOnMessage(event) {
         try {
             let otherTurnAnswer = this.answerParser.parseGameTurn(event.data);
             if ( otherTurnAnswer.white == gameBridge.getWhite() ) {
-                //What Do ? Turn did not change FIXME
+                clearTimeout(this.askOtherTurnTimeout);
+                this.askLastMove();
+                return;
             }
-            else {
-                gameBridge.setMyTurn();
-            }
+        } catch( error ) {
+            alert(error.message);
+
+        }
+        this.readyToAskOtherTurn = true;
+        console.log("otherTurnNotYet");
+    }
+
+    askLastMove() {
+        this.socket.onmessage= this.askLastMoveOnMessage.bind(this);
+
+        let request = requestGameLastMove(gameBridge.game.gameId);
+        this.socket.send(request);
+    }
+
+    askLastMoveOnMessage(event) {
+        try {
+            let gameLastMove = this.answerParser.parseGameLastMove(event.data);
+            
+            gameBridge.readyMyTurn(gameLastMove);
         } catch( error ) {
             alert(error.message);
 

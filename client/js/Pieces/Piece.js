@@ -83,7 +83,7 @@ class Piece {
         return false;
     }
 
-    setPos(pos) { console.log(pos); this.pos = pos; }
+    setPos(pos) { this.pos = pos; }
 
     die() { this.alive = false; }
 
@@ -93,6 +93,10 @@ class Piece {
     //////////////////////////////////////VISUAL
     translatePosIntoVisual() {
         return this.game.translatePosIntoVisual(this.pos);
+    }
+
+    makeVisual() {
+        this.visual.makeVisual();
     }
     update() { 
         //VIRTUAL    
