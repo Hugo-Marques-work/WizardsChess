@@ -63,8 +63,8 @@ class LoginState extends ScreenState {
     constructor (screen) {
         super(screen);
         
-        this.screen.communicator.setOnCreateAccountComplete (LoginState.prototype.createAccountComplete.bind(this));
-        this.screen.communicator.setOnLoginComplete (LoginState.prototype.loginComplete.bind(this));
+        this.createAccountCompleteFunc = LoginState.prototype.createAccountComplete.bind(this);
+        this.loginCompleteFunc= LoginState.prototype.loginComplete.bind(this);
         
         this.listImplemented = [
             new Event ('loginScreenLogin', 'onmouseover', LoginState.prototype.mouseOver.bind(this)),
@@ -111,7 +111,7 @@ class LoginState extends ScreenState {
         this.showMessage("Waiting for server.");
         this.disableInput();
         
-        this.screen.communicator.login(username, password);
+        this.screen.communicator.login(username, password, this.loginCompleteFunc);
     }
     
     doCreateAccount (dom) {
@@ -121,7 +121,7 @@ class LoginState extends ScreenState {
         this.showMessage("Waiting for server.");
         this.disableInput();
         
-        this.screen.communicator.createAccount(username, password);
+        this.screen.communicator.createAccount(username, password, this.createAccountCompleteFunc);
     }
     
     loginComplete (sucess) {
@@ -182,9 +182,9 @@ class LoggedState extends ScreenState {
         this.currentDiv = 0;
         this.selectDiv(0);
         
-        this.screen.communicator.setOnListGamesComplete (LoggedState.prototype.listGamesComplete.bind(this));
-        this.screen.communicator.setOnCreateGameComplete (LoggedState.prototype.createGameComplete.bind(this));
-        this.screen.communicator.listGames();
+        this.listGamesFunc = LoggedState.prototype.listGamesComplete.bind(this);
+        this.createGameFunc = LoggedState.prototype.createGameComplete.bind(this);
+        this.screen.communicator.listGames(this.listGamesFunc);
         
         this.gameBridge = null;
         this.currentGameId = -1;
@@ -223,7 +223,6 @@ class LoggedState extends ScreenState {
                 var isWhite = this.games.listGameInfo[this.currentGameId - 1].isWhite;
                 var otherUser = this.games.listGameInfo[this.currentGameId - 1].otherUser;
                 this.gamebridge = new GameBridge (this.screen.communicator, this.currentGameId, isWhite, otherUser, dom);
-                this.gamebridge.loop();
             }
         }
     }
@@ -237,7 +236,7 @@ class LoggedState extends ScreenState {
     }
     
     createGameComplete (newGameId, gameInfo) {
-        this.screen.communicator.listGames();
+        this.screen.communicator.listGames(this.listGamesFunc);
         document.getElementById("CreateGameMessage").innerHTML = "Game created.";
     }
     
@@ -322,7 +321,7 @@ class LoggedState extends ScreenState {
     createGame (dom) {
         var isWhite = document.getElementById('CreateGameDetailsWhite').value == 1;
         var opponent = document.getElementById('CreateGameDetailsOtherUser').value;
-        this.screen.communicator.createGame(isWhite, opponent);
+        this.screen.communicator.createGame(isWhite, opponent, this.createGameFunc);
     }
     
     joinGame (gameId) {

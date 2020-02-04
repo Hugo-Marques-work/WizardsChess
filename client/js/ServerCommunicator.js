@@ -11,24 +11,9 @@ class ServerCommunicator {
         this.username = null;
         this.answerParser = new AnswerParser(); 
     }
-
-    setOnLoginComplete (func) {
-        this.onLoginComplete = func;
-    }
     
-    setOnCreateAccountComplete (func) {
+    createAccount(username, password, func) {
         this.onCreateAccountComplete = func;
-    }
-    
-    setOnListGamesComplete (func) {
-        this.onListGamesComplete = func;
-    }
-    
-    setOnCreateGameComplete (func) {
-        this.onCreateGameComplete = func;
-    }
-    
-    createAccount(username, password) {
         this.socket.onmessage = this.createAccountOnMessage.bind(this);;
 
         this.username = username;
@@ -40,7 +25,7 @@ class ServerCommunicator {
     createAccountOnMessage(event) {
         try { 
             this.answerParser.parseReg(event.data);
-            this.onCreateAccountComplete(true);
+            this.onCreateAccountComplete(true); 
         } catch(error) {
             alert(error.message);
             this.onCreateAccountComplete(false);
@@ -49,7 +34,8 @@ class ServerCommunicator {
         }
     }
 
-    login(username, password) {
+    login(username, password, func) {
+        this.onLoginComplete = func;
         this.socket.onmessage = this.loginOnMessage.bind(this);
 
         this.username = username; 
@@ -70,7 +56,8 @@ class ServerCommunicator {
         }
     }
 
-    listGames() {
+    listGames(func) {
+        this.onListGamesComplete = func;
         this.socket.onmessage = this.listGamesOnMessage.bind(this);
 
         let request = requestListGames();
@@ -90,6 +77,7 @@ class ServerCommunicator {
         }
     }
 
+    /*
     importGame(gameId) {
         //FIXME
         this.socket.onmessage = this.importGameOnMessage.bind(this);
@@ -108,9 +96,10 @@ class ServerCommunicator {
             console.log(error.message);
             alert(error.message);
         }
-    }
+    }*/
 
-    move(gameId,x1,y1,x2,y2) {   
+    move(gameId,x1,y1,x2,y2, func) {   
+        this.onMoveComplete = func;
         this.socket.onmessage= this.moveOnMessage.bind(this);
 
         let request = requestGameMove(gameId,x1,y1,x2,y2);
@@ -121,12 +110,7 @@ class ServerCommunicator {
         try {
             let gameMoveAnswer = this.answerParser.parseGameMove(event.data);
             
-            if( gameMoveAnswer.isNext ) {
-                gameBridge.executeMove();
-            }
-            else if( !gameMoveAnswer.isNext ) {
-                gameBridge.readyPromote();
-            }
+            this.onMoveComplete(gameMoveAnswer);
         } catch( error ) { 
             //DEBUG FIXME 
             console.log(error);
@@ -137,41 +121,32 @@ class ServerCommunicator {
         }
     }
 
-    setOtherTurn() {
+    setOtherTurn(gameBridge,func) {
+        console.log(gameBridge);
+        this.setOtherTurnComplete = func;
+        
         this.socket.onmessage= this.setOtherTurnOnMessage.bind(this);
 
         this.readyToAskOtherTurn = true;
 
-        var that = this;
-        this.askOtherTurnTimeout = setTimeout(function () {
-            that.askOtherTurn();
-        }, 1000);
         //this.socket.send(something?);
     }
 
-    askOtherTurn() {
+    askOtherTurn(gameId) {
+        //FIXME WHAT IF CHANGE!!!
         if(this.readyToAskOtherTurn == true) {
             this.readyToAskOtherTurn = false;
             
-            let request = requestGameTurn(gameBridge.game.gameId);
+            let request = requestGameTurn(gameId);
             this.socket.send(request);
         }
-
-        var that = this;
-        this.askOtherTurnTimeout = setTimeout(function () {
-            that.askOtherTurn();
-        }, 1000);
-
     }
 
     setOtherTurnOnMessage(event) {
         try {
             let otherTurnAnswer = this.answerParser.parseGameTurn(event.data);
-            if ( otherTurnAnswer.white == gameBridge.getWhite() ) {
-                clearTimeout(this.askOtherTurnTimeout);
-                this.askLastMove();
-                return;
-            }
+            
+            this.setOtherTurnComplete(otherTurnAnswer);
         } catch( error ) {
             alert(error.message);
 
@@ -180,10 +155,11 @@ class ServerCommunicator {
         console.log("otherTurnNotYet");
     }
 
-    askLastMove() {
+    askLastMove(gameId, func) {
+        this.askLastMoveComplete = func;
         this.socket.onmessage= this.askLastMoveOnMessage.bind(this);
 
-        let request = requestGameLastMove(gameBridge.game.gameId);
+        let request = requestGameLastMove(gameId);
         this.socket.send(request);
     }
 
@@ -191,7 +167,7 @@ class ServerCommunicator {
         try {
             let gameLastMove = this.answerParser.parseGameLastMove(event.data);
             
-            gameBridge.readyMyTurn(gameLastMove);
+            this.askLastMoveComplete(gameLastMove);
         } catch( error ) {
             alert(error.message);
 
@@ -224,7 +200,8 @@ class ServerCommunicator {
 
     }
 
-    createGame(white,otherUser) {
+    createGame(white, otherUser, func) {
+        this.onCreateGameComplete = func;
         this.socket.onmessage = this.createGameOnMessage.bind(this);
         this.newGameInfo = {white: white, otherUser: otherUser};
         var request = requestNewGame(otherUser, white);
@@ -245,18 +222,20 @@ class ServerCommunicator {
         }
     }
 
-    importGameAndJoin(gameId) {
-        this.socket.onmessage = this.importGameAndJoinOnMessage.bind(this);
+    importGame(gameId, func) {
+        this.importGameComplete = func;
+        this.socket.onmessage = this.importGameOnMessage.bind(this);
 
         let request = requestImportGame(gameId);
+        console.log(request);
         this.socket.send(request);
     }
 
-    importGameAndJoinOnMessage(event) {
+    importGameOnMessage(event) {
         //try {
             let importedGameInfo = this.answerParser.parseImportGame(event.data);
 
-            preGameHandler.executeImportGameAndJoin(importedGameInfo);
+            this.importGameComplete(importedGameInfo);
         /*} catch( error ) {
             preGameHandler.cancelRequest();
             console.log(error.message);

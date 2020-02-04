@@ -1,17 +1,20 @@
 class GameBridge {
-    constructor(serverCommunicator, gameId, white, otherUser, parentDom, game) {
+    constructor(serverCommunicator, gameId, white, otherUser, parentDom) {
         //Here to possibly use on the interface
-        
+        this.createRenderer(parentDom);
+        this.imWhite = white;
+        this.serverCommunicator = serverCommunicator;
         this.gameId = gameId;
         this.otherUser = otherUser;
+        this.createBinds();
+        this.serverCommunicator.importGame(gameId, this.importGameCompleteFunc);
+    }
 
-        this.createRenderer(parentDom);
+    initialization() {
+
         this.createScene();
 
-        this.serverCommunicator = serverCommunicator;
         this.changeTurn = {change: false, myTurn: true};
-        this.imWhite = white;
-        this.handleGame(game);
 
         this.rayCaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
@@ -36,6 +39,17 @@ class GameBridge {
         window.addEventListener("mouseup",this);
 
         this.timer = new Date();
+
+        this.loop();
+    }
+
+    createBinds() {
+        this.moveCompleteFunc = GameBridge.prototype.moveComplete.bind(this);
+        this.drawCompleteFunc = GameBridge.prototype.drawComplete.bind(this);
+        this.dropCompleteFunc = GameBridge.prototype.dropComplete.bind(this);
+        this.readyMyTurnFunc = GameBridge.prototype.readyMyTurn.bind(this);
+        this.importGameCompleteFunc = GameBridge.prototype.importGameComplete.bind(this);
+        this.askOtherTurnFunc = GameBridge.prototype.askOtherTurnComplete.bind(this);
     }
 
     createRenderer(parentDom) {
@@ -48,21 +62,21 @@ class GameBridge {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color()
         this.scene.add(new THREE.AxisHelper(10));
-    }
 
-    handleGame(game) {
-        if(game == undefined) {
-            this.game = new Game(this.serverCommunicator.gameId, true);
-        } else {
-            this.game = game;
-        }
-
+        //game stuff
         this.scene.add(this.game.chessMatrix.visual);
         var visualPieces = this.game.getVisualPieces();
 
         for(var piece in visualPieces) {
             this.scene.add(visualPieces[piece]);
         }
+    }
+
+    importGameComplete(importedGameInfo) {
+
+        this.game = importedGameInfo.importedGame;
+        
+        this.initialization();
     }
 
     createCamera() {
@@ -95,7 +109,7 @@ class GameBridge {
                 this.waitingForResponse = true;
                 this.serverCommunicator.move(this.game.gameId, this.move.from.getBoardPos().x,
                     this.move.from.getBoardPos().y, this.move.toPos.x, 
-                    this.move.toPos.y);
+                    this.move.toPos.y, this.moveCompleteFunc);
             }
             else {
                 //Actually impossible
@@ -116,9 +130,22 @@ class GameBridge {
         }
     }
 
+    moveComplete(gameMoveAnswer) {
+        if( gameMoveAnswer.isNext ) {
+            this.executeMove();
+        }
+        else if( !gameMoveAnswer.isNext ) {
+            this.readyPromote();
+        }
+    }
+
     executeMove() {        
         //can be state not much point tho
-        this.game.move(this.move.from.getBoardPos(), this.move.toPos);
+        try {
+            this.game.move(this.move.from.getBoardPos(), this.move.toPos);
+        } catch( error ) {
+            //FIXME
+        }
         this.move.from = null;
         this.move.toPos = null;
         this.waitingForResponse = false;
@@ -139,11 +166,19 @@ class GameBridge {
     }
 
     readyDraw() {
-        this.serverCommunicator.draw();
+        this.serverCommunicator.draw(this.drawCompleteFunc);
+    }
+
+    drawComplete() {
+
     }
 
     readyDrop() {
-        this.serverCommunicator.drop();
+        this.serverCommunicator.drop(this.dropCompleteFunc);
+    }
+
+    dropComplete() {
+
     }
 
     readyOtherTurn() {
@@ -174,7 +209,26 @@ class GameBridge {
 
     setOtherTurn() {
         this.state = new OtherTurnState(this);
-        this.serverCommunicator.setOtherTurn();
+        this.serverCommunicator.setOtherTurn(this, this.askOtherTurnFunc);
+        var that = this;
+        this.askOtherTurn();
+    }
+
+    askOtherTurn() {
+
+        this.serverCommunicator.askOtherTurn(this.gameId);
+        var that = this;
+        this.askOtherTurnTimeout = setTimeout(function () {
+            that.askOtherTurn();
+        }, 1000);
+    }
+
+    askOtherTurnComplete(otherTurnAnswer) {
+        if ( otherTurnAnswer.white == this.getWhite() ) {
+            clearTimeout(this.askOtherTurnTimeout);
+            this.serverCommunicator.askLastMove(this.gameId, this.readyMyTurnFunc);
+            return;
+        }
     }
 
     setMyTurn() {
@@ -205,8 +259,11 @@ class GameBridge {
 
     onMouseMovement(e) {
         e.preventDefault();
-        this.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-        this.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
+        let canvasBounds = this.renderer.context.canvas.getBoundingClientRect();
+        this.mouse.x = ( ( event.clientX - canvasBounds.left ) / ( canvasBounds.right - canvasBounds.left ) ) * 2 - 1;
+        this.mouse.y = - ( ( event.clientY - canvasBounds.top ) / ( canvasBounds.bottom - canvasBounds.top) ) * 2 + 1;
+        //this.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
+        //this.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
     }
 
     onMouseDown(e) {

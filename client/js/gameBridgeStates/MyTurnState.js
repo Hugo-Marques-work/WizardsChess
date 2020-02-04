@@ -15,17 +15,24 @@ class MyTurnState extends GameBridgeState {
         if(this.bridge.intersects.pieces.length>0) {
 
             var piece = this.bridge.intersects.pieces[0].object.parent;
-            if(this.bridge.move.from == null ) {
+            if(this.bridge.move.from == null) {
                 //if(this.bridge.intersects.pieces[0].white == this.bridge.game.meWhite) {
                     this.bridge.move.from = piece;
                     this.bridge.move.from.setHighlight(true);
                     this.bridge.game.getCellVisual(this.bridge.move.from.getBoardPos()).setHighlight(true);
+                    this.movableHighlighted = this.bridge.move.from.logic.getValidMoves();
+                    for(let pos in this.movableHighlighted) {
+                        this.bridge.game.getCellVisual(this.movableHighlighted[pos]).setMovable();
+                    }
                 //}
             }
             else {
                 this.bridge.move.toPos = piece.getBoardPos();
                 this.bridge.move.from.setHighlight(false);
                 this.bridge.game.getCellVisual(this.bridge.move.from.getBoardPos()).setHighlight(false);
+                for(let pos in this.movableHighlighted) {
+                    this.bridge.game.getCellVisual(this.movableHighlighted[pos]).setHighlight(false);
+                }
 
                 //Should handle a plethora of stuff! for example same color
                 //Need a connection between visual and logic
@@ -52,7 +59,12 @@ class MyTurnState extends GameBridgeState {
                     else {*/
                         this.bridge.move.from = this.bridge.move.from.visual;
                         this.bridge.move.from.setHighlight(true);
-                        tile.setHighlight(true);
+                        tile.setHighlight(true); 
+                        
+                        this.movableHighlighted = this.bridge.move.from.logic.getValidMoves();
+                        for(let pos in this.movableHighlighted) {
+                            this.bridge.game.getCellVisual(pos).setMovable();
+                        }
 
                         //this.bridge.move.from.children[0].material.setValues( { transparent: true, opacity: 0.5});
 
@@ -64,6 +76,9 @@ class MyTurnState extends GameBridgeState {
                 
                 this.bridge.move.from.setHighlight(false);
                 this.bridge.game.getCellVisual(this.bridge.move.from.getBoardPos()).setHighlight(false);
+                for(let pos in this.movableHighlighted) {
+                    this.bridge.game.getCellVisual(this.movableHighlighted[pos]).setHighlight(false);
+                }
 
                 //this.bridge.move.from.children[0].material.setValues( { opacity: 1});
 
