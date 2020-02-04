@@ -21,7 +21,7 @@ private:
     const int MAX_X = 8;
     const int MAX_Y = 8;
     Move* _lastMove;
-    int _gameId;
+    int _gameId, _turnCount;
     bool _whiteTurn;
     ChessMatrix* _chessMatrix;
     GameState* _state;
@@ -49,7 +49,7 @@ public:
     Player* playerB () {return _playerB;}
     
     int gameId () {return _gameId;}
-    
+    int turnCount () {return _turnCount;}
     void promote(PawnPromotionStrategy* strategy);
 
     ChessMatrix* getMatrix () { return _chessMatrix; }

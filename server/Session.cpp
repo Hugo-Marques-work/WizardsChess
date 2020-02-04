@@ -1,8 +1,7 @@
 #include "Session.h"
 
-Session::Session() 
+Session::Session(int sessionId) : _logged(false), _sessionId(sessionId)
 {
-    _logged = false;
 }
 
 void Session::login (const std::string& userName)

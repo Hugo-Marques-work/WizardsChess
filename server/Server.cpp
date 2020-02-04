@@ -7,6 +7,7 @@
 #include "exceptions/InvalidActionException.h"
 #include "exceptions/InvalidMoveException.h"
 #include "exceptions/PawnPromotionException.h"
+#include "exceptions/LogicErrorException.h"
 #include "gamestates/GameState.h"
 #include "Move.h"
 #include "CheckGameVisitor.h"
@@ -42,7 +43,7 @@ std::string Server::process(const std::string& msg, int session)
 
 int Server::createSession () 
 {
-    Session* session = new Session();
+    Session* session = new Session(_nextSession);
     _sessions.insert(std::make_pair(_nextSession, session));
     
     return _nextSession++;
@@ -97,8 +98,6 @@ std::string Server::visitListGames (ListGamesMessage* message, Session* session)
 {
     Player* player;
     
-    //FIXME apenas verificar na parte de login
-    
     if ((player = searchPlayer(session->userName())) != nullptr)
     {
         std::string result ("LIST_GAMES_A OK ");
@@ -121,8 +120,8 @@ std::string Server::visitListGames (ListGamesMessage* message, Session* session)
         
         return result;
     }
-    else 
-        return "LIST_GAMES_A ERR USER_NOT_FOUND";
+    else
+        throw LogicErrorException ("User is logged but user is not found.");
 }
 
 std::string Server::visitGameMove (GameMoveMessage* message, Session* session)
@@ -170,7 +169,7 @@ std::string Server::visitGameMove (GameMoveMessage* message, Session* session)
         }
     }
     else 
-        return "GAME_MOVE_A ERR USER_NOT_FOUND";
+        throw LogicErrorException ("User is logged but user is not found.");
 }
 
 std::string Server::visitGameStatus (GameStatusMessage* message, Session* session)
@@ -188,7 +187,7 @@ std::string Server::visitGameStatus (GameStatusMessage* message, Session* sessio
         return "GAME_STATUS_A OK " + game->getState()->accept(&visitor);
     }
     else 
-        return "GAME_STATUS_A ERR USER_NOT_FOUND";
+        throw LogicErrorException ("User is logged but user is not found.");
 }
 
 std::string Server::visitGameDrop (GameDropMessage* message, Session* session)
@@ -219,7 +218,7 @@ std::string Server::visitGameDrop (GameDropMessage* message, Session* session)
             return "GAME_DROP_A ERR GAME_NOT_FOUND";
     }
     else 
-        return "GAME_DROP_A ERR USER_NOT_FOUND";
+        throw LogicErrorException ("User is logged but user is not found.");
 }
 
 std::string Server::visitGameTurn (GameTurnMessage* message, Session* session)
@@ -236,7 +235,7 @@ std::string Server::visitGameTurn (GameTurnMessage* message, Session* session)
             return "GAME_TURN_A ERR GAME_NOT_FOUND";
     }
     else 
-        return "GAME_TURN_A ERR USER_NOT_FOUND";
+        throw LogicErrorException ("User is logged but user is not found.");
 }
 
 std::string Server::visitGameLastMove (GameLastMoveMessage* message, Session* session)
@@ -266,7 +265,7 @@ std::string Server::visitGameLastMove (GameLastMoveMessage* message, Session* se
             return "GAME_LAST_MOVE_A ERR GAME_NOT_FOUND";
     }
     else 
-        return "GAME_LAST_MOVE_A ERR USER_NOT_FOUND";
+        throw LogicErrorException ("User is logged but user is not found.");
 }
 
 std::string Server::visitPawnPromotion (PawnPromotionMessage* message, Session* session) 
@@ -311,7 +310,7 @@ std::string Server::visitPawnPromotion (PawnPromotionMessage* message, Session* 
             return "PAWN_PROMOTION_A ERR GAME_NOT_FOUND";
     }
     else 
-        return "PAWN_PROMOTION_A ERR USER_NOT_FOUND"; //FIXME se houver erro e' no login
+        throw LogicErrorException ("User is logged but user is not found.");
 }
 
 std::string Server::visitNewGame (NewGameMessage* message, Session* session)
@@ -326,9 +325,7 @@ std::string Server::visitNewGame (NewGameMessage* message, Session* session)
         return "NEW_GAME_A ERR USER_NOT_FOUND";
     
     if (player2 == nullptr)
-    {
-        //FIXME
-    }
+        throw LogicErrorException ("User is logged but user is not found.");
     
     if (player1->user() == player2->user())
         return "NEW_GAME_A ERR SAME_USER";
@@ -378,7 +375,8 @@ std::string Server::visitImportGame (ImportGameMessage* message, Session* sessio
     Game* game;
     Player* player;
     
-    player = searchPlayer(session->userName());
+    if ((player = searchPlayer(session->userName())) != nullptr)
+        throw LogicErrorException ("User is logged but user is not found.");
     
     if ((game = player->searchGame(message->gameId())) != nullptr)
     {
@@ -496,7 +494,9 @@ Server::~Server ()
     for (it2 = _games.begin(); it2 != _games.end(); it2++) 
         delete it2->second;
     
-    //FIXME terminar todas as ligacoes
-    for (it3 = _sessions.begin(); it3 != _sessions.end(); it3++) 
+    for (it3 = _sessions.begin(); it3 != _sessions.end(); it3++)  
+    {
+        closeSession(it3->second->sessionId());
         delete it3->second;
+    }
 }

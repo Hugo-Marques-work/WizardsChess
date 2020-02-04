@@ -30,5 +30,4 @@ Game* Player::searchGame (int gameId)
 void Player::removeGame (int gameId)
 {
     _games.erase (gameId);
-    /*NoSuchGameException?*/
 }
