@@ -18,11 +18,12 @@ class PawnPiece extends Piece{
     getValidMoves() {
         let yToAdd = this.forward ? 1 : -1;
         let valid =[];
+        debugger;
         try {
-            this.pushIfAvailable( valid, new Position(this.pos.x , 
+            let flag = this.pushIfAvailable( valid, new Position(this.pos.x , 
                 this.pos.y + yToAdd), false);
 
-            if(this.hasMoved == false) {
+            if(this.hasMoved == false && flag == true) {
                 this.pushIfAvailable( valid,new Position(this.pos.x , 
                     this.pos.y + yToAdd*2), false);
             }

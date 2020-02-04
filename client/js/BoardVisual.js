@@ -68,11 +68,12 @@ class BoardVisual extends THREE.Object3D {
                 var geometry = new THREE.BoxGeometry(this.posSize, this.posHeight, this.posSize);
                 var matNormal = new THREE.MeshPhongMaterial({color: 0xffffff, map: whiteTexture, bumpMap:whiteBumpMap, specular:0x305284, shininess: 1});
                 var matHighlight = new THREE.MeshPhongMaterial({color: 0xff00ff, map: whiteTexture, bumpMap:whiteBumpMap, specular:0x305284, shininess: 1});
+                var matMovable = new THREE.MeshPhongMaterial({color: 0xff0000, map: whiteTexture, bumpMap:whiteBumpMap, specular:0x305284, shininess: 1});
 
                 var pos1 = new THREE.Mesh(geometry, matNormal);
 
                 var tile1Pos = new Position(x/2, y/2);
-                var tile1 = new TileVisual(pos1, matNormal, matHighlight, tile1Pos);
+                var tile1 = new TileVisual(pos1, matNormal, matMovable, matHighlight, tile1Pos);
 
                 this.tiles.push(tile1);
                 this.orderedTiles[tile1Pos.x][tile1Pos.y] = tile1;
@@ -82,7 +83,7 @@ class BoardVisual extends THREE.Object3D {
                 var pos2 = new THREE.Mesh(geometry, matNormal);
                 
                 var tile2Pos = new Position(x/2 + 1, y/2 + 1);
-                var tile2 = new TileVisual(pos2, matNormal, matHighlight, tile2Pos);
+                var tile2 = new TileVisual(pos2, matNormal, matMovable, matHighlight, tile2Pos);
 
                 this.tiles.push(tile2);
                 this.orderedTiles[tile2Pos.x][tile2Pos.y] = tile2;
@@ -104,11 +105,12 @@ class BoardVisual extends THREE.Object3D {
 
                 var matNormal = new THREE.MeshPhongMaterial({color:  0xffffff, map: blackTexture, bumpMap:blackBumpMap, specular:0xffffff, shininess: 1});
                 var matHighlight = new THREE.MeshPhongMaterial({color:  0xff00ff, map: blackTexture, bumpMap:blackBumpMap, specular:0xffffff, shininess: 1});
+                var matMovable = new THREE.MeshPhongMaterial({color: 0xff0000, map: blackTexture, bumpMap:blackBumpMap, specular:0xffffff, shininess: 1});
 
                 var pos1 = new THREE.Mesh(geometry, matNormal);
 
                 var tile1Pos = new Position(x/2, y/2 + 1);
-                var tile1 = new TileVisual(pos1, matNormal, matHighlight, tile1Pos);
+                var tile1 = new TileVisual(pos1, matNormal, matMovable, matHighlight, tile1Pos);
 
                 this.tiles.push(tile1);
                 this.orderedTiles[tile1Pos.x][tile1Pos.y] = tile1;
@@ -118,7 +120,7 @@ class BoardVisual extends THREE.Object3D {
                 var pos2 = new THREE.Mesh(geometry, matNormal);
 
                 var tile2Pos = new Position(x/2 + 1, y/2);
-                var tile2 = new TileVisual(pos2, matNormal, matHighlight, tile2Pos);
+                var tile2 = new TileVisual(pos2, matNormal, matMovable, matHighlight, tile2Pos);
 
                 this.tiles.push(tile2);
                 this.orderedTiles[tile2Pos.x][tile2Pos.y] = tile2;

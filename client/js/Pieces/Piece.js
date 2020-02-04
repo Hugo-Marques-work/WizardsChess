@@ -78,6 +78,7 @@ class Piece {
                     
             if(piece == null) {
                 valid.push( pos );
+                return true;
             }
         }
         return false;
