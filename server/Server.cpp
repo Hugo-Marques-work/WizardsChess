@@ -111,9 +111,11 @@ std::string Server::visitListGames (ListGamesMessage* message, Session* session)
             std::string turn = game->getTurn () ? " W" : " B";
             
             if (game->playerW() == player)
-                result += " " + std::to_string(game->gameId()) + " " + game->playerB()->user() + " W";
+                result += " " + std::to_string(game->gameId()) + " " + 
+                    game->playerB()->user() + " W "  + std::to_string(game->turnCount());
             else
-                result += " " + std::to_string(game->gameId()) + " " + game->playerW()->user() + " B";
+                result += " " + std::to_string(game->gameId()) + " " + 
+                    game->playerW()->user() + " B "  + std::to_string(game->turnCount());
             
             result += turn;
         }
@@ -121,7 +123,7 @@ std::string Server::visitListGames (ListGamesMessage* message, Session* session)
         return result;
     }
     else
-        throw LogicErrorException ("User is logged but user is not found.");
+        throw LogicErrorException ("User is logged but it is not found.");
 }
 
 std::string Server::visitGameMove (GameMoveMessage* message, Session* session)
@@ -375,7 +377,7 @@ std::string Server::visitImportGame (ImportGameMessage* message, Session* sessio
     Game* game;
     Player* player;
     
-    if ((player = searchPlayer(session->userName())) != nullptr)
+    if ((player = searchPlayer(session->userName())) == nullptr)
         throw LogicErrorException ("User is logged but user is not found.");
     
     if ((game = player->searchGame(message->gameId())) != nullptr)

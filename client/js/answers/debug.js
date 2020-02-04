@@ -86,11 +86,12 @@ class LoginAnswer extends Answer {
 }
 
 class GameInfo {
-    constructor (gameId, otherUser, isWhite, isWhiteTurn) {
+    constructor (gameId, otherUser, isWhite, isWhiteTurn, turnCount) {
         this.gameId = gameId;
         this.otherUser = otherUser;
         this.isWhite = isWhite;
         this.isWhiteTurn = isWhiteTurn;
+        this.turnCount = turnCount;
     }
 }
 
@@ -238,11 +239,12 @@ class AnswerParser {
             total = lexer.readInteger();
             
             for (var i = 0; i < total; i++) {
-                var id, otherUser, color, turn;
+                var id, otherUser, color, turn, turnCount;
                 
                 id = lexer.readInteger();
                 otherUser = lexer.readString();
                 color = lexer.readString();
+                turnCount = lexer.readInteger();
                 turn = lexer.readString();
                                 
                 if (color != 'W' && color != 'B')
@@ -251,7 +253,7 @@ class AnswerParser {
                 if (turn != 'W' && turn != 'B')
                     throw new WrongInputException("Reading turn: expected W or B");
                 
-                listGameInfo.push(new GameInfo(id, otherUser, (color == 'W'), (turn == 'W')));
+                listGameInfo.push(new GameInfo(id, otherUser, (color == 'W'), (turn == 'W'), turnCount));
             }
             
         } catch (e) {

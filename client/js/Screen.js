@@ -265,7 +265,7 @@ class LoggedState extends ScreenState {
                 cellOpponent.innerHTML = gameInfo.otherUser;
                 cellColor.innerHTML = gameInfo.isWhite ? "White" : "Black";
                 cellGameId.innerHTML = gameInfo.gameId;
-                cellTurnNumber.innerHTML = "";
+                cellTurnNumber.innerHTML = gameInfo.turnCount;
             }
             
             if (games.listGameInfo.length == 1)
