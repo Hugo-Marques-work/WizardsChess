@@ -79,10 +79,9 @@
         </div>
         
         <div id="loggedScreenMenu">
-            <table style="width:100%;border:none">
-                <tr id="loggedScreenEntry1" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')" onclick="screen.event(this, 'onclick')"><td style="border:none">My Games</td></tr>
-                <tr id="loggedScreenEntry2" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')" onclick="screen.event(this, 'onclick')" ><td style="border:none">New Game</td></tr>
-                <tr id="loggedScreenEntry3" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')" onclick="screen.event(this, 'onclick')" ><td style="border:none;">Play</td></tr>
+            <table id="menu" style="width:100%;border:none">
+                <tr id="loggedScreenEntryA" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')" onclick="screen.event(this, 'onclick')"><td style="border:none">My Games</td></tr>
+                <tr id="loggedScreenEntryB" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')" onclick="screen.event(this, 'onclick')" ><td style="border:none">New Game</td></tr>
             </table>
         </div>
         
@@ -101,7 +100,7 @@
                 <input id="CreateGameButton" type="button" class="button" value = "Create" onclick = "screen.event(this, 'onclick')">
                 <p id = "CreateGameMessage"></p>
             </div>
-            <div id="loggedScreenPlay" onshow="console.log('show!!!');" style="display:none; padding:0.1in; overflow:hidden;">
+            <div id="loggedScreenPlay" style="display:none; padding:0.1in; overflow:hidden;">
             </div>
         </div>
         

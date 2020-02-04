@@ -1,13 +1,17 @@
 class GameBridge {
-    constructor(serverCommunicator, gameId, white, otherUser, parentDom) {
+    constructor(serverCommunicator, gameId, white, otherUser, parentDom, width, height) {
         //Here to possibly use on the interface
-        this.createRenderer(parentDom);
+        this.createRenderer(parentDom, width, height);
         this.imWhite = white;
         this.serverCommunicator = serverCommunicator;
         this.gameId = gameId;
         this.otherUser = otherUser;
         this.createBinds();
         this.serverCommunicator.importGame(gameId, this.importGameCompleteFunc);
+    }
+    
+    getDomElement () {
+        return this.renderer.domElement;
     }
 
     initialization() {
@@ -52,9 +56,9 @@ class GameBridge {
         this.askOtherTurnFunc = GameBridge.prototype.askOtherTurnComplete.bind(this);
     }
 
-    createRenderer(parentDom) {
+    createRenderer(parentDom, width, height) {
         this.renderer = new THREE.WebGLRenderer( {antialias: true} );
-        this.renderer.setSize(parentDom.offsetWidth, parentDom.offsetHeight);
+        this.renderer.setSize(width, height);
         parentDom.appendChild(this.renderer.domElement);
     }
 
