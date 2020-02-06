@@ -1,7 +1,7 @@
 class ServerCommunicator {
     constructor(addr) {
         this.socket = new WebSocket(addr);   
-
+        
         this.socket.onopen = this.globalOnOpen.bind(this);
         this.socket.onclose = this.globalOnClose.bind(this);
         this.socket.onerror = this.globalOnError.bind(this);
@@ -224,12 +224,15 @@ class ServerCommunicator {
     }
 
     importGame(gameId, func) {
-        this.importGameComplete = func;
-        this.socket.onmessage = this.importGameOnMessage.bind(this);
-
-        let request = requestImportGame(gameId);
-        console.log(request);
-        this.socket.send(request);
+        if (this.socket.readyState != 1) {
+            setTimeout(this.importGame.bind(this, gameId), 1000);
+        } else {
+            this.importGameComplete = func;
+            this.socket.onmessage = this.importGameOnMessage.bind(this);
+            let request = requestImportGame(gameId);
+            console.log(request);
+            this.socket.send(request);
+        }
     }
 
     importGameOnMessage(event) {

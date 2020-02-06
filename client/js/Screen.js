@@ -349,7 +349,8 @@ class LoggedState extends ScreenState {
             
             var isWhite = this.games.listGameInfo[gameId - 1].isWhite;
             var otherUser = this.games.listGameInfo[gameId - 1].otherUser;
-            var gamebridge = new GameBridge (this.screen.communicator, gameId, isWhite, otherUser, div, this.width, this.height);
+            
+            var gamebridge = new GameBridge (null, gameId, isWhite, otherUser, div, this.width, this.height);
             
             this.gameMap[gameId] = new PlayingGameInfo(gameBridge, table.rows.length - 1);
         }
