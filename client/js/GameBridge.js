@@ -3,7 +3,7 @@ class GameBridge {
         //Here to possibly use on the interface
         this.createRenderer(parentDom, width, height);
         this.imWhite = white;
-        this.serverCommunicator = serverCommunicator;
+        this.serverCommunicator = new ServerCommunicator("ws://0.0.0.0:8000");
         this.gameId = gameId;
         this.otherUser = otherUser;
         this.createBinds();

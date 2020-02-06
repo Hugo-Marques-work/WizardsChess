@@ -114,10 +114,11 @@ class ServerCommunicator {
         } catch( error ) { 
             //DEBUG FIXME 
             console.log(error);
-            alert(error.message);            
+            alert(error.message);  
+                      
             //MOVE IS NOT ACCEPTED BY SER 
-            this.preGameHandler.cancelRequest();
-            this.importFullGame();
+            //this.preGameHandler.cancelRequest();
+            //this.importFullGame();
         }
     }
 

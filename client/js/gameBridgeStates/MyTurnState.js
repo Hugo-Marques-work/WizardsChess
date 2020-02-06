@@ -63,7 +63,7 @@ class MyTurnState extends GameBridgeState {
                         
                         this.movableHighlighted = this.bridge.move.from.logic.getValidMoves();
                         for(let pos in this.movableHighlighted) {
-                            this.bridge.game.getCellVisual(pos).setMovable();
+                            this.bridge.game.getCellVisual(this.movableHighlighted[pos]).setMovable();
                         }
 
                         //this.bridge.move.from.children[0].material.setValues( { transparent: true, opacity: 0.5});
