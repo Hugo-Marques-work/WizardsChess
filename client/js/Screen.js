@@ -313,14 +313,6 @@ class LoggedState extends ScreenState {
         this.selectDiv(1);
     }
     
-    play (dom) {
-        this.selectDiv(2);
-        
-        if (this.currentGameId == -1) {
-            document.getElementById('loggedScreenPlay').innerHTML = "To play a game, go <b>My Games</b> e select one.";
-        }   
-    }
-    
     createGame (dom) {
         var isWhite = document.getElementById('CreateGameDetailsWhite').value == 1;
         var opponent = document.getElementById('CreateGameDetailsOtherUser').value;
