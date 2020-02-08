@@ -3,7 +3,7 @@ class GameBridge {
         //Here to possibly use on the interface
         this.createRenderer(parentDom, width, height);
         this.imWhite = white;
-        this.serverCommunicator = new ServerCommunicator("ws://0.0.0.0:8000");
+        this.serverCommunicator = /*new ServerCommunicator("ws://0.0.0.0:8000");*/ serverCommunicator;
         this.gameId = gameId;
         this.otherUser = otherUser;
         this.createBinds();
@@ -64,7 +64,7 @@ class GameBridge {
 
     createScene() {
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color()
+        this.scene.background = new THREE.Color(0xe0d6b4);
         this.scene.add(new THREE.AxisHelper(10));
 
         //game stuff
@@ -73,6 +73,7 @@ class GameBridge {
 
         for(var piece in visualPieces) {
             this.scene.add(visualPieces[piece]);
+            console.log(visualPieces[piece]);
         }
     }
 
@@ -91,9 +92,9 @@ class GameBridge {
         //    fov1 * window.innerWidth / window.innerHeight, fov1, -fov1, -100, 100);
 
         if(this.imWhite)
-            this.camera.position.set(0, 50, -50 );
+            this.camera.position.set(50, 50, -50 );
         else            
-            this.camera.position.set(0, 50, 50 );
+            this.camera.position.set(50, 50, 50 );
 
         this.camera.lookAt(this.scene.position);
     }
