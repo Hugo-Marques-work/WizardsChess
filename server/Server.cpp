@@ -96,7 +96,10 @@ std::string Server::visitReg (RegMessage* message, Session* session)
 
 std::string Server::visitListGames (ListGamesMessage* message, Session* session)
 {
-    Player* player;
+    Player* player; 
+    
+    if (!session->isLogged())
+        return "LIST_GAMES_A ERR NOT_LOGGED";
     
     if ((player = searchPlayer(session->userName())) != nullptr)
     {
@@ -132,6 +135,9 @@ std::string Server::visitGameMove (GameMoveMessage* message, Session* session)
     Game* game;
     std::string status;
     CheckGameVisitor visitor;
+    
+    if (!session->isLogged())
+        return "LIST_GAMES_A ERR NOT_LOGGED";
     
     if ((player = searchPlayer(session->userName())) != nullptr)
     {
@@ -179,6 +185,9 @@ std::string Server::visitGameStatus (GameStatusMessage* message, Session* sessio
     Player* player;
     CheckGameVisitor visitor;
     
+    if (!session->isLogged())
+        return "LIST_GAMES_A ERR NOT_LOGGED";
+    
     if ((player = searchPlayer(session->userName())) != nullptr)
     {
         Game* game = player->searchGame (message->gameId());
@@ -195,6 +204,9 @@ std::string Server::visitGameStatus (GameStatusMessage* message, Session* sessio
 std::string Server::visitGameDrop (GameDropMessage* message, Session* session)
 {
     Player* player;
+    
+    if (!session->isLogged())
+        return "LIST_GAMES_A ERR NOT_LOGGED";
     
     if ((player = searchPlayer(session->userName())) != nullptr)
     {   
@@ -227,6 +239,9 @@ std::string Server::visitGameTurn (GameTurnMessage* message, Session* session)
 {
     Player* player;
     
+    if (!session->isLogged())
+        return "LIST_GAMES_A ERR NOT_LOGGED";
+    
     if ((player = searchPlayer(session->userName())) != nullptr)
     {
         Game* game = player->searchGame(message->gameId());
@@ -243,6 +258,9 @@ std::string Server::visitGameTurn (GameTurnMessage* message, Session* session)
 std::string Server::visitGameLastMove (GameLastMoveMessage* message, Session* session)
 {
     Player* player;
+    
+    if (!session->isLogged())
+        return "LIST_GAMES_A ERR NOT_LOGGED";
     
     if ((player = searchPlayer(session->userName())) != nullptr)
     {
@@ -273,6 +291,9 @@ std::string Server::visitGameLastMove (GameLastMoveMessage* message, Session* se
 std::string Server::visitPawnPromotion (PawnPromotionMessage* message, Session* session) 
 {
     Player* player;
+    
+    if (!session->isLogged())
+        return "LIST_GAMES_A ERR NOT_LOGGED";
     
     if ((player = searchPlayer(session->userName())) != nullptr)
     {
@@ -319,6 +340,9 @@ std::string Server::visitNewGame (NewGameMessage* message, Session* session)
 {   
     Player *player1, *player2;
     Game* game;
+    
+    if (!session->isLogged())
+        return "LIST_GAMES_A ERR NOT_LOGGED";
     
     player1 = searchPlayer(session->userName());
     player2 = searchPlayer(message->user());
@@ -376,6 +400,9 @@ std::string Server::visitImportGame (ImportGameMessage* message, Session* sessio
 {
     Game* game;
     Player* player;
+    
+    if (!session->isLogged())
+        return "LIST_GAMES_A ERR NOT_LOGGED";
     
     if ((player = searchPlayer(session->userName())) == nullptr)
         throw LogicErrorException ("User is logged but user is not found.");
