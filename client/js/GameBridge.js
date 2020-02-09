@@ -126,7 +126,7 @@ class GameBridge {
         } catch ( exception ) {
 
             //DEBUG FIXME
-            alert(exception);
+            //alert(exception);
             console.log(exception);
 
             //We can display a message according to the exception that makes the move impossible

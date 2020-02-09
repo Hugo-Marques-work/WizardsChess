@@ -25,6 +25,7 @@ class BishopPieceVisual extends PieceVisual {
                  child.scale.set(scale.x, scale.y, scale.z);
                  child.castShadow = true;
                  child.material = that.normalMaterial;
+                 child.userData.visual = that;
                  that.mesh = child;
                  that.add(child);
                  

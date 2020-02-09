@@ -68,7 +68,7 @@ class BoardVisual extends THREE.Object3D {
                 var geometry = new THREE.BoxGeometry(this.posSize, this.posHeight, this.posSize);
                 var matNormal = new THREE.MeshPhongMaterial({color: 0xffffff, map: whiteTexture, bumpMap:whiteBumpMap, specular:0x305284, shininess: 1});
                 var matHighlight = new THREE.MeshPhongMaterial({color: 0xff00ff, map: whiteTexture, bumpMap:whiteBumpMap, specular:0x305284, shininess: 1});
-                var matMovable = new THREE.MeshPhongMaterial({color: 0xff0000, map: whiteTexture, bumpMap:whiteBumpMap, specular:0x305284, shininess: 1});
+                var matMovable = new THREE.MeshPhongMaterial({color: 0xff0000, specular:0x305284, shininess: 1});
 
                 var pos1 = new THREE.Mesh(geometry, matNormal);
 
@@ -105,7 +105,7 @@ class BoardVisual extends THREE.Object3D {
 
                 var matNormal = new THREE.MeshPhongMaterial({color:  0xffffff, map: blackTexture, bumpMap:blackBumpMap, specular:0xffffff, shininess: 1});
                 var matHighlight = new THREE.MeshPhongMaterial({color:  0xff00ff, map: blackTexture, bumpMap:blackBumpMap, specular:0xffffff, shininess: 1});
-                var matMovable = new THREE.MeshPhongMaterial({color: 0xff0000, map: blackTexture, bumpMap:blackBumpMap, specular:0xffffff, shininess: 1});
+                var matMovable = new THREE.MeshPhongMaterial({color: 0xff0000, specular:0xffffff, shininess: 1});
 
                 var pos1 = new THREE.Mesh(geometry, matNormal);
 

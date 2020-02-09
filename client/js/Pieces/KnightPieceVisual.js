@@ -17,23 +17,30 @@ class KnightPieceVisual extends PieceVisual {
         }
 
         loader.load(            
-            "/../../pieces/knightNew.glb",
+            "/../../pieces/knight3.glb",
             function ( gltf ) {
              
-                 var scale = new THREE.Vector3(0.8,0.08,0.8);
-                 var centerOffset = 0.5;
-                 var child = gltf.scene.children[0];
-                 child.position.set(0, centerOffset, 0);
-                 if(white)
-                    child.rotation.set(0,-Math.PI/2,0);
-                 else 
-                    child.rotation.set(0,Math.PI/2,0);
-                 child.scale.set(scale.x, scale.y, scale.z);
-                 child.castShadow = true;
-                 child.material = that.normalMaterial;
-                 that.mesh = child;
-                 that.add(child);
-                 
+                var scale = new THREE.Vector3(0.7,0.8,0.7);
+                var centerOffset = 2;
+                /*var child1 = gltf.scene.children[0];
+                var child2 = gltf.scene.children[1];
+                var child = new THREE.Object3D();
+                child.add(child1);
+                child.add(child2);*/
+                var child = gltf.scene;
+                that.addUserDataVisual(child);
+                child.position.set(0, centerOffset, 0);
+                if(white)
+                child.rotation.set(0,-Math.PI/2,0);
+                else 
+                child.rotation.set(0,Math.PI/2,0);
+                child.scale.set(scale.x, scale.y, scale.z);
+                child.castShadow = true;
+                child.userData.visual = that;
+                that.mesh = child;
+                that.add(child);
+
+                that.setHighlight(false);
             },
          );
 
@@ -51,5 +58,32 @@ class KnightPieceVisual extends PieceVisual {
         this.mesh = new THREE.Mesh(geometry, this.normalMaterial);
 
         this.add(this.mesh);*/
+    }
+
+    setHighlight(activate) {
+        if(activate) {
+            this.changeMat(this.mesh,this.highlightMaterial);  
+        } else {
+            this.changeMat(this.mesh,this.normalMaterial); 
+        }
+    }
+
+    changeMat(child,material) {
+
+        child.material = material;  
+        for( var i in child.children ) 
+        {
+           //if(child[i] instanceof THREE.Object3D)     
+                this.changeMat(child.children[i],material);            
+        }
+    }
+    
+    addUserDataVisual(child) {
+        child.userData.visual = this;    
+        for( var i in child.children ) 
+        {
+           //if(child[i] instanceof THREE.Object3D)     
+                this.addUserDataVisual(child.children[i]);            
+        }
     }
 }
