@@ -1,18 +1,21 @@
 class GameBridge {
-    constructor(serverCommunicator, gameId, white, otherUser, parentDom, width, height) {
+    constructor(gameId, white, otherUser, parentDom, width, height, login, password) {
         //Here to possibly use on the interface
         this.createRenderer(parentDom, width, height);
         this.imWhite = white;
-        this.serverCommunicator = /*new ServerCommunicator("ws://0.0.0.0:8000");*/ serverCommunicator;
+        this.serverCommunicator = new ServerCommunicator("ws://0.0.0.0:8000", true, login, password);
         this.gameId = gameId;
         this.otherUser = otherUser;
         this.createBinds();
         this.serverCommunicator.importGame(gameId, this.importGameCompleteFunc);
+        this.loopBind = this.loop.bind(this);
     }
     
     getDomElement () {
         return this.renderer.domElement;
     }
+    
+    
 
     initialization() {
 
@@ -37,7 +40,7 @@ class GameBridge {
 
         window.addEventListener("keydown",this);
         window.addEventListener("keyup",this);
-        window.addEventListener("resize",this);
+        //window.addEventListener("resize",this);
         window.addEventListener("mousedown",this);
         window.addEventListener("mousemove",this,false);
         window.addEventListener("mouseup",this);
@@ -288,6 +291,14 @@ class GameBridge {
     onMouseUp(e) {
         //Not sure if we should use it
     }
+    
+    resize (w, h) {
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        if (window.innerHeight > 0 && window.innerWidth > 0) {
+            this.camera.aspect = window.innerWidth / window.innerHeight;
+            this.camera.updateProjectionMatrix();
+        }
+    }
 
     onKeyUp(e) {}
     onKeyDown(e) {}
@@ -324,6 +335,6 @@ class GameBridge {
     loop() {
         this.update();
         this.render();
-        requestAnimationFrame(this.loop.bind(this));
+        requestAnimationFrame(this.loopBind);
     }
 }

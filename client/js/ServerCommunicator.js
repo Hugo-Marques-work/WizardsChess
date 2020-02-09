@@ -1,6 +1,15 @@
 class ServerCommunicator {
-    constructor(addr) {
-        this.socket = new WebSocket(addr);   
+    constructor(addr, bLogin, user, pass) {
+        this.socket = new WebSocket(addr);
+        
+        this.bLogin = bLogin;
+        
+        if (this.bLogin == true) {
+            this.user = user;
+            this.pass = pass;
+        }
+        
+        
         
         this.socket.onopen = this.globalOnOpen.bind(this);
         this.socket.onclose = this.globalOnClose.bind(this);
@@ -31,6 +40,13 @@ class ServerCommunicator {
             this.onCreateAccountComplete(false);
             console.log(error.message);
             //Couldn't reg
+        }
+    }
+    
+    //when login on open
+    onLoginCompleteHandler(sucess) {
+        if (!sucess) {
+            console.log('Login for gameBridge: error.');
         }
     }
 
@@ -177,7 +193,11 @@ class ServerCommunicator {
 
     globalOnOpen(event) {
         console.log(event);
-        console.log("SOCKET HAS OPENED");
+        console.log("socket has opened");
+        
+        if (this.bLogin) {
+            this.login (this.user, this.pass, this.onLoginCompleteHandler);
+        }
     }
 
     globalOnMessage(event) {
@@ -225,7 +245,7 @@ class ServerCommunicator {
 
     importGame(gameId, func) {
         if (this.socket.readyState != 1) {
-            setTimeout(this.importGame.bind(this, gameId), 1000);
+            setTimeout(this.importGame.bind(this, gameId, func), 2000);
         } else {
             this.importGameComplete = func;
             this.socket.onmessage = this.importGameOnMessage.bind(this);
@@ -238,7 +258,6 @@ class ServerCommunicator {
     importGameOnMessage(event) {
         //try {
             let importedGameInfo = this.answerParser.parseImportGame(event.data);
-
             this.importGameComplete(importedGameInfo);
         /*} catch( error ) {
             preGameHandler.cancelRequest();

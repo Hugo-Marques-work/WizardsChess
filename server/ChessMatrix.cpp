@@ -44,6 +44,8 @@ void ChessMatrix::setEnPassant(Piece* piece, const std::list<Position>& p, const
 ChessMatrix::ChessMatrix()
 { 
     _pieces = array< array<Piece*,8>, 8>();
+    _enPassantPiece = nullptr;
+    _enPassantDest = nullptr;
 }
 
 //Has some std::couts to help with text simulation

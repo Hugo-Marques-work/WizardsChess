@@ -41,13 +41,13 @@ class ScreenState {
         var i, list = this.implemented();
         
         for (i in list) {
-            if (list[i].eventName == eventName && list[i].elementId == dom.id) {
+            if (list[i].eventName == eventName && (dom == null || list[i].elementId == dom.id)) {
                 list[i].handler(dom);
                 return;
             }
         }
         
-        console.log ("Could not handle event " + eventName + " for " + dom.id);
+        console.log ("Could not handle event " + eventName + " for " + dom == null ? 'body' : dom.id);
     }
     
     hide () {
@@ -65,7 +65,7 @@ class LoginState extends ScreenState {
         super(screen);
         
         this.createAccountCompleteFunc = LoginState.prototype.createAccountComplete.bind(this);
-        this.loginCompleteFunc= LoginState.prototype.loginComplete.bind(this);
+        this.loginCompleteFunc = LoginState.prototype.loginComplete.bind(this);
         
         this.listImplemented = [
             new Event ('loginScreenLogin', 'onmouseover', LoginState.prototype.mouseOver.bind(this)),
@@ -130,8 +130,11 @@ class LoginState extends ScreenState {
     }
     
     loginComplete (sucess) {
+        var username = document.getElementById("loginScreenUsername").value;
+        var password = document.getElementById("loginScreenPassword").value;
+        
         if (sucess) {
-            this.screen.setState(new LoggedState(this.screen));
+            this.screen.setState(new LoggedState(this.screen, username, password));
         }
         else {
             this.enableInput();
@@ -182,33 +185,38 @@ class PlayingGameInfo {
 }
 
 class LoggedState extends ScreenState {
-    constructor (screen) {
+    constructor (screen, login, pass) {
         super(screen);
+        
+        this.login = login;
+        this.pass = pass;
         
         this.divList = [
             new DivInfo ('loggedScreenListGames', 'loggedScreenEntryA'),
             new DivInfo ('loggedScreenNewGame', 'loggedScreenEntryB')
         ];
         
-        this.currentDiv = 0;
-        this.selectDiv(0);
-        
         this.listGamesFunc = LoggedState.prototype.listGamesComplete.bind(this);
         this.createGameFunc = LoggedState.prototype.createGameComplete.bind(this);
-        this.screen.communicator.listGames(this.listGamesFunc);
+        this.mouseOverBind = LoggedState.prototype.mouseOver.bind(this);
+        this.mouseOutBind = LoggedState.prototype.mouseOut.bind(this);
+        this.updateGameListBind = LoggedState.prototype.updateGameList.bind(this);
+        
+        this.currentDiv = 0;
+        this.selectDiv (0);
         
         this.gameBridge = null;
         this.gameMap = new Object();
         
-        //FIXME tantos bind
         this.listImplemented = [
-            new Event ('loggedScreenEntryA', 'onmouseover', LoggedState.prototype.mouseOver.bind(this)),
-            new Event ('loggedScreenEntryB', 'onmouseover', LoggedState.prototype.mouseOver.bind(this)),
-            new Event ('loggedScreenEntryA', 'onmouseout', LoggedState.prototype.mouseOut.bind(this)),
-            new Event ('loggedScreenEntryB', 'onmouseout', LoggedState.prototype.mouseOut.bind(this)),
+            new Event ('loggedScreenEntryA', 'onmouseover', this.mouseOverBind),
+            new Event ('loggedScreenEntryB', 'onmouseover', this.mouseOverBind),
+            new Event ('loggedScreenEntryA', 'onmouseout', this.mouseOutBind),
+            new Event ('loggedScreenEntryB', 'onmouseout', this.mouseOutBind),
             new Event ('loggedScreenEntryA', 'onclick', LoggedState.prototype.myGames.bind(this)),
             new Event ('loggedScreenEntryB', 'onclick', LoggedState.prototype.newGame.bind(this)),
-            new Event ('CreateGameButton', 'onclick', LoggedState.prototype.createGame.bind(this))
+            new Event ('CreateGameButton', 'onclick', LoggedState.prototype.createGame.bind(this)),
+            new Event ('', 'onresize', LoggedState.prototype.resize.bind(this))
         ];
     }
     
@@ -216,6 +224,14 @@ class LoggedState extends ScreenState {
         var contentDiv = document.getElementById('loggedScreenContent');
         this.height = contentDiv.offsetHeight;
         this.width  = contentDiv.offsetWidth;
+    }
+    
+    updateGameList () {
+        this.screen.communicator.listGames(this.listGamesFunc);
+        
+        if (this.currentDiv == 0) {
+            setTimeout(this.updateGameListBind, 3000);
+        }
     }
     
     selectDiv (index) {
@@ -228,6 +244,19 @@ class LoggedState extends ScreenState {
         
         entry = document.getElementById(this.divList[this.currentDiv].entryId);
         entry.style.backgroundColor = "rgb(150,150,150, 1.0)";
+        
+        if (index == 0) {
+            this.updateGameList();
+        }
+    }
+    
+    resize () {
+        var i, contentDiv = document.getElementById('loggedScreenContent');
+        this.height = contentDiv.offsetHeight;
+        this.width  = contentDiv.offsetWidth;
+        
+        for (i in this.gameMap)
+            this.gameMap[i].gameBridge.resize (this.width, this.height);
     }
     
     implemented () {
@@ -264,7 +293,7 @@ class LoggedState extends ScreenState {
                 let cellGameId = row.insertCell(k++);
                 let cellTurnNumber = row.insertCell(k++);
 
-                cellReadyToPlay.innerHTML = gameInfo.isWhite == gameInfo.isWhiteTurn ? "Ready To Play" : "Not Ready";
+                cellReadyToPlay.innerHTML = (gameInfo.isWhite == gameInfo.isWhiteTurn ? "Ready To Play" : "Not Ready");
                 cellOpponent.innerHTML = gameInfo.otherUser;
                 cellColor.innerHTML = gameInfo.isWhite ? "White" : "Black";
                 cellGameId.innerHTML = gameInfo.gameId;
@@ -350,7 +379,7 @@ class LoggedState extends ScreenState {
             var isWhite = this.games.listGameInfo[gameId - 1].isWhite;
             var otherUser = this.games.listGameInfo[gameId - 1].otherUser;
             
-            var gameBridge = new GameBridge (this.screen.communicator /* FIXME */, gameId, isWhite, otherUser, div, this.width, this.height);
+            var gameBridge = new GameBridge (gameId, isWhite, otherUser, div, this.width, this.height, this.login, this.pass);
             
             this.gameMap[gameId] = new PlayingGameInfo(gameBridge, table.rows.length - 1);
         }

@@ -55,14 +55,14 @@
         var communicator;
         
         function load () {
-            communicator = new ServerCommunicator("ws://0.0.0.0:8000");
+            communicator = new ServerCommunicator("ws://0.0.0.0:8000", false);
             screen = new Screen(communicator);
         }
         
     </script>
 </head>
 
-<body onload="load()">
+<body onload="load()" onresize="screen.event(null, 'onresize')">
     <div id ="loginScreen" style="display:none;">
         <div id="loginScreenBox" >
             <p style="font-size:16pt;">WizardChess</p>
