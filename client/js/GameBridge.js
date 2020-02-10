@@ -1,7 +1,8 @@
 class GameBridge {
-    constructor(gameId, white, otherUser, parentDom, width, height, login, password) {
+    constructor(gameId, white, otherUser, parentDom, width, height, login, password, onMyTurnHandler) {
         //Here to possibly use on the interface
         this.createRenderer(parentDom, width, height);
+        this.onMyTurnHandler = onMyTurnHandler;
         this.imWhite = white;
         this.serverCommunicator = new ServerCommunicator("ws://0.0.0.0:8000", true, login, password);
         this.gameId = gameId;
@@ -38,16 +39,27 @@ class GameBridge {
         
         this.createCamera();
 
-        window.addEventListener("keydown",this);
-        window.addEventListener("keyup",this);
-        //window.addEventListener("resize",this);
-        window.addEventListener("mousedown",this);
-        window.addEventListener("mousemove",this,false);
-        window.addEventListener("mouseup",this);
-
         this.timer = new Date();
 
         this.loop();
+    }
+    
+    captureMouse () {
+        var dom = document.getElementById("loggedScreenPlay" + this.gameId);
+        dom.addEventListener("keydown",this);
+        dom.addEventListener("keyup",this);
+        dom.addEventListener("mousedown",this);
+        dom.addEventListener("mousemove",this,false);
+        dom.addEventListener("mouseup",this);
+    }
+    
+    releaseMouse () {
+        var dom = document.getElementById("loggedScreenPlay" + this.gameId);
+        dom.removeEventListener("keydown",this);
+        dom.removeEventListener("keyup",this);
+        dom.removeEventListener("mousedown",this);
+        dom.removeEventListener("mousemove",this,false);
+        dom.removeEventListener("mouseup",this);
     }
 
     createBinds() {
@@ -149,11 +161,7 @@ class GameBridge {
 
     executeMove() {        
         //can be state not much point tho
-        try {
-            this.game.move(this.move.from.getBoardPos(), this.move.toPos);
-        } catch( error ) {
-            //FIXME
-        }
+        this.game.move(this.move.from.getBoardPos(), this.move.toPos);
         this.move.from = null;
         this.move.toPos = null;
         this.waitingForResponse = false;
@@ -199,6 +207,7 @@ class GameBridge {
         this.changeTurn.myTurn = true;
         this.move.from = gameLastMove.from;
         this.move.toPos = gameLastMove.to;
+        this.onMyTurnHandler(this.gameId);
     }
 
     checkChangeTurn() {
@@ -275,6 +284,8 @@ class GameBridge {
     }
 
     onMouseDown(e) {
+        document.getElementById('loggedScreenEntry' + this.gameId).style.backgroundColor = "rgb(150, 150, 150)";
+        
         e.preventDefault();
         console.log("MouseDown");
         this.rayCaster.setFromCamera( this.mouse, this.camera );

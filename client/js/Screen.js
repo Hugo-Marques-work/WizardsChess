@@ -47,7 +47,7 @@ class ScreenState {
             }
         }
         
-        console.log ("Could not handle event " + eventName + " for " + dom == null ? 'body' : dom.id);
+        console.log ("Could not handle event " + eventName + " for " + (dom == null ? 'body' : dom.id));
     }
     
     hide () {
@@ -201,12 +201,15 @@ class LoggedState extends ScreenState {
         this.mouseOverBind = LoggedState.prototype.mouseOver.bind(this);
         this.mouseOutBind = LoggedState.prototype.mouseOut.bind(this);
         this.updateGameListBind = LoggedState.prototype.updateGameList.bind(this);
+        this.onMyTurnHandlerBind = LoggedState.prototype.onMyTurnHandler.bind(this);
         
         this.currentDiv = 0;
         this.selectDiv (0);
         
         this.gameBridge = null;
         this.gameMap = new Object();
+        
+        this.games = null;
         
         this.listImplemented = [
             new Event ('loggedScreenEntryA', 'onmouseover', this.mouseOverBind),
@@ -240,6 +243,7 @@ class LoggedState extends ScreenState {
         
         this.hideDiv(this.divList[this.currentDiv].divId);
         this.currentDiv = index;
+        var oldDiv = this.currentDiv;
         this.showDiv(this.divList[this.currentDiv].divId);
         
         entry = document.getElementById(this.divList[this.currentDiv].entryId);
@@ -247,6 +251,22 @@ class LoggedState extends ScreenState {
         
         if (index == 0) {
             this.updateGameList();
+        }
+        
+        if (oldDiv > 1) {
+            var i;
+            
+            for (i in this.gameMap)
+                if (this.gameMap[i].menuIndex == oldDiv)
+                    this.gameMap[i].gameBridge.releaseMouse ();
+        }
+        
+        if (index > 1) {
+            var i;
+            
+            for (i in this.gameMap)
+                if (this.gameMap[i].menuIndex == index)
+                    this.gameMap[i].gameBridge.captureMouse ();
         }
     }
     
@@ -274,6 +294,7 @@ class LoggedState extends ScreenState {
     
     listGamesComplete (games) {
         var table = document.getElementById("loggedScreenGameList");
+        var oldTable = this.games;
         this.games = games;
         
         if (games.listGameInfo.length > 0) {
@@ -297,6 +318,7 @@ class LoggedState extends ScreenState {
                 cellOpponent.innerHTML = gameInfo.otherUser;
                 cellColor.innerHTML = gameInfo.isWhite ? "White" : "Black";
                 cellGameId.innerHTML = gameInfo.gameId;
+                
                 cellTurnNumber.innerHTML = gameInfo.turnCount;
             }
             
@@ -379,11 +401,17 @@ class LoggedState extends ScreenState {
             var isWhite = this.games.listGameInfo[gameId - 1].isWhite;
             var otherUser = this.games.listGameInfo[gameId - 1].otherUser;
             
-            var gameBridge = new GameBridge (gameId, isWhite, otherUser, div, this.width, this.height, this.login, this.pass);
+            var gameBridge = new GameBridge (gameId, isWhite, otherUser, div, this.width, 
+                                             this.height, this.login, this.pass, this.onMyTurnHandlerBind);
             
             this.gameMap[gameId] = new PlayingGameInfo(gameBridge, table.rows.length - 1);
         }
         
         this.selectDiv(this.gameMap[gameId].menuIndex);
+    }
+    
+    onMyTurnHandler(gameId) {
+        var dom = document.getElementById("loggedScreenEntry" + gameId);
+        dom.style.backgroundColor = "rgb(255, 0, 150, 1.0)";
     }
 }

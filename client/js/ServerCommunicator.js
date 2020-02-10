@@ -1,7 +1,7 @@
 class ServerCommunicator {
     constructor(addr, bLogin, user, pass) {
         this.socket = new WebSocket(addr);
-        
+        this.canUse = false;
         this.bLogin = bLogin;
         
         if (this.bLogin == true) {
@@ -64,6 +64,7 @@ class ServerCommunicator {
         try { 
             this.answerParser.parseLogin(event.data);
             this.onLoginComplete(true);
+            this.canUse = true;
         } catch(error) {
             alert(error.message);
             console.log(error.message);
@@ -244,7 +245,7 @@ class ServerCommunicator {
     }
 
     importGame(gameId, func) {
-        if (this.socket.readyState != 1) {
+        if (this.canUse != true) {
             setTimeout(this.importGame.bind(this, gameId, func), 2000);
         } else {
             this.importGameComplete = func;
