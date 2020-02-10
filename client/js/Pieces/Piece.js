@@ -86,7 +86,7 @@ class Piece {
 
     setPos(pos) { this.pos = pos; }
 
-    die() { this.alive = false; }
+    die() { this.alive = false; this.visual.die(); }
 
     getAlive() { return this.alive; }
 

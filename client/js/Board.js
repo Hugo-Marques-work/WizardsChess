@@ -3,7 +3,7 @@ var BOARD_MAX_Y = 8;
 
 class Board {
     constructor() {
-        this.visual = new BoardVisual();
+        this.visual = new BoardVisual(this);
         
         this.pieces = [];
         for(let i = 0; i < BOARD_MAX_Y; i++)

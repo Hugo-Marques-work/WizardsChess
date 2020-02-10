@@ -272,7 +272,7 @@ class Game {
     }
 
     update(deltaTime) {
-        this.chessMatrix.update();
+        this.chessMatrix.update(deltaTime);
     }
     //DROP FIXME
     // drop(white) { }

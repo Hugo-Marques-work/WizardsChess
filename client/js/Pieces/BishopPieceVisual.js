@@ -6,6 +6,7 @@ class BishopPieceVisual extends PieceVisual {
     makeVisual() {
         var loader = new THREE.GLTFLoader();
         var that = this;
+        this.killableMaterial = new THREE.MeshPhongMaterial({color: this.killableColor, opacity: 1, transparent: true});
         if(this.logic.white) {
             this.highlightMaterial = new THREE.MeshPhongMaterial({color: this.whiteColor, opacity:0.5, transparent: true});
             this.normalMaterial = new THREE.MeshPhongMaterial({color: this.whiteColor, opacity:1,  transparent: true});

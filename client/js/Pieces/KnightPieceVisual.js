@@ -8,6 +8,7 @@ class KnightPieceVisual extends PieceVisual {
         var loader = new THREE.GLTFLoader();
         var that = this;
         var white = this.logic.white;
+        this.killableMaterial = new THREE.MeshPhongMaterial({color: this.killableColor, opacity: 1, transparent: true});
         if(this.logic.white) {
             this.highlightMaterial = new THREE.MeshPhongMaterial({color: this.whiteColor, opacity:0.5, transparent: true});
             this.normalMaterial = new THREE.MeshPhongMaterial({color: this.whiteColor, opacity:1,  transparent: true});
@@ -58,6 +59,10 @@ class KnightPieceVisual extends PieceVisual {
         this.mesh = new THREE.Mesh(geometry, this.normalMaterial);
 
         this.add(this.mesh);*/
+    }
+
+    setKillable() {
+        this.changeMat(this.mesh,this.killableMaterial);
     }
 
     setHighlight(activate) {

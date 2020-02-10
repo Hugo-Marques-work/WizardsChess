@@ -24,7 +24,8 @@ class MyTurnState extends GameBridgeState {
                     this.bridge.game.getCellVisual(this.bridge.move.from.getBoardPos()).setHighlight(true);
                     this.movableHighlighted = this.bridge.move.from.logic.getValidMoves();
                     for(let pos in this.movableHighlighted) {
-                        this.bridge.game.getCellVisual(this.movableHighlighted[pos]).setMovable();
+                        this.bridge.game.getCellVisual(this.movableHighlighted[pos]).setMovable(piece.logic.white);
+                        this.bridge.game.getCellVisual(this.movableHighlighted[pos]).killPiece();
                     }
                 }
             }
@@ -47,7 +48,7 @@ class MyTurnState extends GameBridgeState {
         else if(this.bridge.intersects.tiles.length>0) {
             //Only check board tiles if no piece clicked
 
-            var tile = this.bridge.intersects.tiles[0].object.parent;
+            var tile = this.bridge.intersects.tiles[0].object.userData.visual;
 
             if(this.bridge.move.from == null ) {
                 var boardPos = tile.getBoardPos();
@@ -66,7 +67,7 @@ class MyTurnState extends GameBridgeState {
                         
                         this.movableHighlighted = this.bridge.move.from.logic.getValidMoves();
                         for(let pos in this.movableHighlighted) {
-                            this.bridge.game.getCellVisual(this.movableHighlighted[pos]).setMovable();
+                            this.bridge.game.getCellVisual(this.movableHighlighted[pos]).setMovable(this.bridge.move.from.logic.white);
                         }
 
                         //this.bridge.move.from.children[0].material.setValues( { transparent: true, opacity: 0.5});
