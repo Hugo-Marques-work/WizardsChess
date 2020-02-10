@@ -528,9 +528,18 @@ class AnswerParser {
         p.set(id,white, pos, importedGame, forward == 1 ? true : false, );
         p.alive = alive == 1 ? true : false;
 
-        importedGame.chessMatrix.set(pos,p);
-        p.setPos(pos);
-        p.makeVisual();
+        if(p.alive) {
+            importedGame.chessMatrix.set(pos,p);
+            p.setPos(pos);
+            p.visual.changePos(false);
+            p.makeVisual();
+        }
+        else {
+            var newPos = importedGame.pushDead(p);
+            p.setPos(newPos);
+            p.visual.changePos(false);
+            p.makeVisual();
+        }
     }
 }
 

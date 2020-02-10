@@ -40,7 +40,6 @@ class BishopPiece extends Piece {
 
     setPos(pos) {
         super.setPos(pos);
-        this.visual.changePos();
     }
     
     update(deltaTime) {

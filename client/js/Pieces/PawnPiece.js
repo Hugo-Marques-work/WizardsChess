@@ -70,8 +70,6 @@ class PawnPiece extends Piece{
 
         this.hasMoved = true;
 
-        //FIXME (NEEDED?????)
-        this.visual.changePos();
         if(this.pos.y == this.MIN_POS_Y || 
             this.pos.y == this.MAX_POS_Y) {
             
@@ -85,6 +83,5 @@ class PawnPiece extends Piece{
 
     die() {
         super.die();
-        this.visual.die();
     }
 }

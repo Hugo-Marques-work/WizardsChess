@@ -88,7 +88,6 @@ class KingPiece extends Piece {
 
     setPos(pos) {
         super.setPos(pos);
-        this.visual.changePos();
         this.hasMoved = true;
     }
 

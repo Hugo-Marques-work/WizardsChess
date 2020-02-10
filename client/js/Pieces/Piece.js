@@ -84,9 +84,10 @@ class Piece {
         return false;
     }
 
-    setPos(pos) { this.pos = pos; }
+    setPos(pos) { this.pos = pos; /*this.visual.changePos();*/ }
 
-    die() { this.alive = false; this.visual.die(); }
+    die() { this.alive = false; }
+    dieVisual() { this.visual.die();}
 
     getAlive() { return this.alive; }
 

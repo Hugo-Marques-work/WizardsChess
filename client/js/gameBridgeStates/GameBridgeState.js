@@ -6,4 +6,6 @@ class GameBridgeState {
     handleMouseClick() {
         //abstract
     }
+
+    update(deltaTime) {}
 }

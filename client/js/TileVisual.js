@@ -102,7 +102,7 @@ class TileNormal extends TileState {
 class TileDown extends TileState {
     constructor(tile, axisPoint) {
         super(tile, axisPoint);
-        this.angle = Math.PI/3000;
+        this.angle = 2 * Math.PI/3000;
         this.currentAngle = 0;
     }
 
@@ -122,7 +122,7 @@ class TileOpen extends TileState {
     constructor(tile, axisPoint) {
         super(tile, axisPoint);
         
-        setTimeout(this.openDone.bind(this), 5000);
+        setTimeout(this.openDone.bind(this), 1500);
     }
 
     openDone() {
@@ -139,7 +139,7 @@ class TileOpen extends TileState {
 class TileUp extends TileState {
     constructor(tile, axisPoint) {
         super(tile, axisPoint);
-        this.angle = Math.PI/3000;
+        this.angle = 2 * Math.PI/3000;
         this.currentAngle = 0;
     }
 

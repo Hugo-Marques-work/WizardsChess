@@ -85,4 +85,8 @@ class Board {
             }
         }
     }
+
+    pushDead(piece) {
+        return this.visual.pushDead(piece);
+    }
 }

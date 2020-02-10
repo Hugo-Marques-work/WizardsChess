@@ -7,6 +7,9 @@ class GameBridge {
         this.serverCommunicator = new ServerCommunicator("ws://0.0.0.0:8000", true, login, password);
         this.gameId = gameId;
         this.otherUser = otherUser;
+
+        this.blackDead = [];
+        this.whiteDead = [];
         this.createBinds();
         this.serverCommunicator.importGame(gameId, this.importGameCompleteFunc);
         this.loopBind = this.loop.bind(this);
@@ -62,11 +65,14 @@ class GameBridge {
 
     createBinds() {
         this.moveCompleteFunc = GameBridge.prototype.moveComplete.bind(this);
+        this.moveFinishFunc = GameBridge.prototype.finishMove.bind(this);
+        this.promoteFinishFunc = GameBridge.prototype.finishPromote.bind(this);
         this.drawCompleteFunc = GameBridge.prototype.drawComplete.bind(this);
         this.dropCompleteFunc = GameBridge.prototype.dropComplete.bind(this);
         this.readyMyTurnFunc = GameBridge.prototype.readyMyTurn.bind(this);
         this.importGameCompleteFunc = GameBridge.prototype.importGameComplete.bind(this);
         this.askOtherTurnFunc = GameBridge.prototype.askOtherTurnComplete.bind(this);
+        this.setMyTurnFunc = GameBridge.prototype.setMyTurn.bind(this);
     }
 
     createRenderer(parentDom, width, height) {
@@ -159,15 +165,31 @@ class GameBridge {
 
     executeMove() {        
         //can be state not much point tho
+        var deadPiece = this.game.getCell(this.move.toPos);
         this.game.move(this.move.from.getBoardPos(), this.move.toPos);
+        this.animateMove(deadPiece,this.moveFinishFunc);
+    }
+
+    animateMove(deadPiece,func) {
+        this.state = new AnimationState(this, this.move, deadPiece, func);
+
+        //To Do After Animate
+    }
+
+    finishMove() {
         this.move.from = null;
-        this.move.toPos = null;
+        this.move.to = null;
         this.waitingForResponse = false;
         this.readyOtherTurn();
     }
 
-    readyPromote() {
+    readyPromote() {        
+        var deadPiece = this.game.getCell(this.move.toPos);
         this.game.move(this.move.from.getBoardPos(), this.move.toPos);
+        this.animateMove(deadPiece, this.promoteFinishFunc);
+    }
+
+    finishPromote() {
         this.state = new PromotionState(this,this.state);
         this.move.from = null;
         this.move.toPos = null;
@@ -203,7 +225,10 @@ class GameBridge {
     readyMyTurn(gameLastMove) {
         this.changeTurn.change = true;
         this.changeTurn.myTurn = true;
-        this.move.from = gameLastMove.from;
+        this.move.from = this.game.getCell(gameLastMove.from).visual;
+        console.log(this.move.from);
+        console.log(gameLastMove.from);
+        console.log(this.move.from.getBoardPos());
         this.move.toPos = gameLastMove.to;
         this.onMyTurnHandler(this.gameId);
     }
@@ -213,8 +238,12 @@ class GameBridge {
             this.changeTurn.change = false;
 
             if(this.changeTurn.myTurn) {
-                this.game.move(this.move.from, this.move.toPos);
-                this.setMyTurn();
+
+                var deadPiece = this.game.getCell(this.move.toPos);
+                //FIXME
+                this.game.move(this.move.from.getBoardPos(), this.move.toPos);
+                //this.game.move(this.move.from.getBoardPos(), this.move.toPos);
+                this.animateMove(deadPiece,this.setMyTurnFunc);
             }
             else {
                 this.setOtherTurn();
@@ -269,6 +298,7 @@ class GameBridge {
         }
 
         this.game.update(deltaTime);
+        this.state.update(deltaTime);
         this.timer = new Date();
     }
 

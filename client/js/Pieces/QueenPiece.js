@@ -47,7 +47,6 @@ class QueenPiece extends Piece {
 
     setPos(pos) {
         super.setPos(pos);
-        this.visual.changePos();
     }
     
     die() {

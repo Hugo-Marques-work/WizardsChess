@@ -23,6 +23,8 @@ class BoardVisual extends THREE.Object3D {
         this.posSize = 2;
         this.posHeight = 1;
 
+        this.whiteDead = [];
+        this.blackDead = [];
         this.createBase();
 
     }
@@ -147,5 +149,22 @@ class BoardVisual extends THREE.Object3D {
             this.tiles[i].update(deltaTime);
         }
         //FIXME
+    }
+
+    pushDead(piece) {
+        var k = 0;
+        var newDeadPos;
+        if(piece.white) {
+            this.whiteDead.push(piece);
+            k = this.whiteDead.length;
+            newDeadPos = new Position(k, BOARD_MAX_Y + 1);
+    
+        } 
+        else {
+            this.blackDead.push(piece);
+            k = this.blackDead.length;
+            newDeadPos = new Position(k, -1);
+        }
+        return newDeadPos;
     }
 }

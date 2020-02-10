@@ -271,6 +271,10 @@ class Game {
         return this.chessMatrix.getBoardVisualTiles();
     }
 
+    pushDead(piece) {
+        return this.chessMatrix.pushDead(piece);
+    }
+
     update(deltaTime) {
         this.chessMatrix.update(deltaTime);
     }

@@ -25,7 +25,6 @@ class MyTurnState extends GameBridgeState {
                     this.movableHighlighted = this.bridge.move.from.logic.getValidMoves();
                     for(let pos in this.movableHighlighted) {
                         this.bridge.game.getCellVisual(this.movableHighlighted[pos]).setMovable(piece.logic.white);
-                        this.bridge.game.getCellVisual(this.movableHighlighted[pos]).killPiece();
                     }
                 }
             }
