@@ -216,11 +216,26 @@ class LoggedState extends ScreenState {
             new Event ('loggedScreenEntryB', 'onmouseover', this.mouseOverBind),
             new Event ('loggedScreenEntryA', 'onmouseout', this.mouseOutBind),
             new Event ('loggedScreenEntryB', 'onmouseout', this.mouseOutBind),
+            new Event ('rightMenuDrop', 'onmouseout', this.mouseOutBind),
+            new Event ('rightMenuDrop', 'onmouseover', this.mouseOverBind),
+            new Event ('CreateGameButton', 'onmouseout', this.mouseOutBind),
+            new Event ('CreateGameButton', 'onmouseover', this.mouseOverBind),
             new Event ('loggedScreenEntryA', 'onclick', LoggedState.prototype.myGames.bind(this)),
             new Event ('loggedScreenEntryB', 'onclick', LoggedState.prototype.newGame.bind(this)),
             new Event ('CreateGameButton', 'onclick', LoggedState.prototype.createGame.bind(this)),
-            new Event ('', 'onresize', LoggedState.prototype.resize.bind(this))
+            new Event ('', 'onresize', LoggedState.prototype.resize.bind(this)),
+            new Event ('rightMenuDrop', 'onclick', LoggedState.prototype.drop.bind(this))
         ];
+    }
+    
+    drop () {
+        var i, gameBridge;
+        
+        for (i in this.gameMap)
+            if (this.gameMap[i].menuIndex == index)
+                gameBridge = this.gameMap[i].gameBridge;
+        
+        gameBridge.readyDrop ();
     }
     
     onShow () {
@@ -262,11 +277,24 @@ class LoggedState extends ScreenState {
         }
         
         if (index > 1) {
-            var i;
+            var i, gameBridge;
             
             for (i in this.gameMap)
                 if (this.gameMap[i].menuIndex == index)
-                    this.gameMap[i].gameBridge.captureMouse ();
+                    gameBridge = this.gameMap[i].gameBridge;
+            
+            gameBridge.captureMouse ();
+                
+            //populate right menu
+            var dom = document.getElementById("loggedScreenRightMenu");
+            dom.style.display = "";
+            
+            dom = document.getElementById("rightMenuOpponent");
+            dom.innerHTML = "Opponent: " + gameBridge.otherUser;
+        }
+        else {
+            var dom = document.getElementById("loggedScreenRightMenu");
+            dom.style.display = "none";
         }
     }
     
@@ -410,6 +438,7 @@ class LoggedState extends ScreenState {
         this.selectDiv(this.gameMap[gameId].menuIndex);
     }
     
+    //highlight
     onMyTurnHandler(gameId) {
         var dom = document.getElementById("loggedScreenEntry" + gameId);
         dom.style.backgroundColor = "rgb(255, 0, 150, 1.0)";

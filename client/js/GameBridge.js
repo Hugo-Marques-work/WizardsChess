@@ -16,8 +16,6 @@ class GameBridge {
         return this.renderer.domElement;
     }
     
-    
-
     initialization() {
 
         this.createScene();
@@ -194,7 +192,7 @@ class GameBridge {
     }
 
     dropComplete() {
-
+        
     }
 
     readyOtherTurn() {
@@ -343,7 +341,7 @@ class GameBridge {
         }
     }
     
-    loop() {
+    loop () {
         this.update();
         this.render();
         requestAnimationFrame(this.loopBind);

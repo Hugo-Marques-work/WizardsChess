@@ -99,22 +99,6 @@ table, td, th {
   border-collapse: collapse;
 }
 
-/*#loggedScreenEntry1 {
-    left:0%;
-    width:100%;
-    top:0;
-    height:0.4in;
-}
-
-#loggedScreenEntry2 {
-    left:0%;
-    width:100%;
-    top:0.4in;
-    height:0.4in;
-}*/
-
-/* FIXME class */
-
 #loggedScreenPlay {
     left:0%;
     top:0%;
@@ -136,3 +120,12 @@ table, td, th {
     height:100%;
 }
 
+#loggedScreenRightMenu {
+    left:85%;
+    top:0%;
+    width:15%;
+    height:100%;
+    background-color: rgb(255, 255, 255, 0.0);
+    z-index:1;
+    padding:0.1in;
+}

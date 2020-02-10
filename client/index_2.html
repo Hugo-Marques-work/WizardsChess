@@ -101,8 +101,12 @@
                 <p>Opponent: </p>
                 <input id="CreateGameDetailsOtherUser" type="text" class="edit" name="otherUser">
                 <p></p>
-                <input id="CreateGameButton" type="button" class="button" value = "Create" onclick = "screen.event(this, 'onclick')">
+                <input id="CreateGameButton" type="button" class="button" value = "Create" onclick = "screen.event(this, 'onclick')" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')">
                 <p id = "CreateGameMessage"></p>
+            </div>
+            <div id="loggedScreenRightMenu" style="display:none;">
+                <p id="rightMenuOpponent"></p>
+                <input id="rightMenuDrop" type="button" class="button" value = "Drop" onclick = "screen.event(this, 'onclick')" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')">
             </div>
         </div>
         
