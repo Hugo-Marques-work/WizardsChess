@@ -68,7 +68,6 @@ class GameBridge {
         this.moveFinishFunc = GameBridge.prototype.finishMove.bind(this);
         this.promoteFinishFunc = GameBridge.prototype.finishPromote.bind(this);
         this.drawCompleteFunc = GameBridge.prototype.drawComplete.bind(this);
-        this.dropCompleteFunc = GameBridge.prototype.dropComplete.bind(this);
         this.readyMyTurnFunc = GameBridge.prototype.readyMyTurn.bind(this);
         this.importGameCompleteFunc = GameBridge.prototype.importGameComplete.bind(this);
         this.askOtherTurnFunc = GameBridge.prototype.askOtherTurnComplete.bind(this);
@@ -209,12 +208,8 @@ class GameBridge {
 
     }
 
-    readyDrop() {
-        this.serverCommunicator.drop(this.dropCompleteFunc);
-    }
-
-    dropComplete() {
-        
+    closeSocket() {
+        this.serverCommunicator.closeSocket();
     }
 
     readyOtherTurn() {

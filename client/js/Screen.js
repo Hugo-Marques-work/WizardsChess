@@ -232,10 +232,27 @@ class LoggedState extends ScreenState {
         var i, gameBridge;
         
         for (i in this.gameMap)
-            if (this.gameMap[i].menuIndex == index)
-                gameBridge = this.gameMap[i].gameBridge;
+            if (this.gameMap[i].menuIndex == this.currentDiv)
+                break;
         
-        gameBridge.readyDrop ();
+        this.screen.communicator.drop(i, this.onDropComplete.bind(this));
+    }
+    
+    onDropComplete (sucess) {
+        
+        if (!sucess) {
+            alert('Error in game drop.');
+        } else {
+            var i, gameBridge;
+            
+            for (i in this.gameMap)
+                if (this.gameMap[i].menuIndex == this.currentDiv)
+                    gameBridge = this.gameMap[i].gameBridge;
+            
+            gameBridge.closeSocket ();
+            
+            this.updateGameList();
+        }
     }
     
     onShow () {
@@ -420,14 +437,23 @@ class LoggedState extends ScreenState {
             cell.style.border = "none";
             row.id = "loggedScreenEntry" + gameId;
             
+            //find game
+            var gameInfo;
+            
+            for (var i in this.games.listGameInfo) {
+                if (this.games.listGameInfo[i].gameId == gameId) {
+                    gameInfo = this.games.listGameInfo[i];
+                }
+            }
+            
             this.divList.push(new DivInfo (div.id, row.id));
             this.listImplemented.push(
                 new Event (row.id, 'onmouseover', LoggedState.prototype.mouseOver.bind(this)));
             this.listImplemented.push(
                 new Event (row.id, 'onmouseout', LoggedState.prototype.mouseOut.bind(this)));
             
-            var isWhite = this.games.listGameInfo[gameId - 1].isWhite;
-            var otherUser = this.games.listGameInfo[gameId - 1].otherUser;
+            var isWhite = gameInfo.isWhite;
+            var otherUser = gameInfo.otherUser;
             
             var gameBridge = new GameBridge (gameId, isWhite, otherUser, div, this.width, 
                                              this.height, this.login, this.pass, this.onMyTurnHandlerBind);
