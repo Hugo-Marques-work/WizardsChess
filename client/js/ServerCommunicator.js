@@ -200,6 +200,24 @@ class ServerCommunicator {
             this.login (this.user, this.pass, this.onLoginCompleteHandler);
         }
     }
+    
+    drop (gameId, dropHandler) {
+        var request = requestDrop(gameId);
+        this.dropHandler = dropHandler;
+        this.socket.onmessage = this.dropOnMessage.bind(this);
+        this.socket.send(request);
+    }
+    
+    dropOnMessage(event) {
+        try {
+            this.answerParser.parseGameDrop(event.data);
+            this.gameId = 0;
+            this.dropHandler(true);
+        } catch (error) { 
+            this.dropHandler(false);
+            console.log(error);
+        }
+    }
 
     globalOnMessage(event) {
         console.log(event);
@@ -214,7 +232,7 @@ class ServerCommunicator {
         alert("Error sendind message to server");
     }
     
-    drop() {
+    closeSocket () {
         this.socket.close();
     }
 

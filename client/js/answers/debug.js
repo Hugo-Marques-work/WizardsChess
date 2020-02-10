@@ -299,7 +299,7 @@ class AnswerParser {
         this.checkType(lexer, "GAME_DROP_A");
         this.checkError(lexer); 
         
-        return new GameDropAnswer();
+        return new DropAnswer();
     }
     
     parseGameLastMove(string) {
