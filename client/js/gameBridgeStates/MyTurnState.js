@@ -22,12 +22,33 @@ class MyTurnState extends GameBridgeState {
                     this.bridge.move.from = piece;
                     this.bridge.move.from.setHighlight(true);
                     this.bridge.game.getCellVisual(this.bridge.move.from.getBoardPos()).setHighlight(true);
+
+                    this.enPassantHighlight = null;
+                    for(let i in this.bridge.game.getEnPassantOrigin() ) {
+                        var pos = this.bridge.game.getEnPassantOrigin()[i];
+                        if( pos.equal(piece.getBoardPos())) {
+                            this.enPassantHighlight = {dest: this.bridge.game.getEnPassantDest(), piece: this.bridge.game.getEnPassantPiece()};
+                            this.bridge.game.getCellVisual(this.enPassantHighlight.dest).setKillable();
+                            this.enPassantHighlight.piece.visual.setKillable();
+                        }
+                    }
+
+                    this.validCastling = null;
+                    let pieceKing = this.bridge.game.getKing(piece.logic.white);
+                    if(piece.logic.pos.equal(pieceKing.pos)) {
+                        this.validCastling = piece.logic.getValidCastling();
+                    }
+
+                    for(let pos in this.validCastling) {
+                        this.bridge.game.getCellVisual(this.validCastling[pos]).setMovable(this.bridge.move.from.logic.white);
+                    }
+
                     this.movableHighlighted = this.bridge.move.from.logic.getValidMoves();
                     for(let pos in this.movableHighlighted) {
                         this.bridge.game.getCellVisual(this.movableHighlighted[pos]).setMovable(piece.logic.white);
                     }
                 }
-            }
+            } 
             else {
                 this.bridge.move.toPos = piece.getBoardPos();
                 this.bridge.move.from.setHighlight(false);
@@ -36,6 +57,16 @@ class MyTurnState extends GameBridgeState {
                     this.bridge.game.getCellVisual(this.movableHighlighted[pos]).setHighlight(false);
                 }
 
+                if(this.enPassantHighlight!=null) {
+                    this.bridge.game.getCellVisual(this.enPassantHighlight.dest).setHighlight(false);
+                    this.enPassantHighlight.piece.visual.setHighlight(false);
+                }
+
+                if(this.validCastling!=null) {
+                    for(let pos in this.validCastling) {
+                        this.bridge.game.getCellVisual(this.validCastling[pos]).setHighlight(false);
+                    }
+                }
                 //Should handle a plethora of stuff! for example same color
                 //Need a connection between visual and logic
                 //if click on NON-POSSIBLE-MOVE then should be new from) TO THINK LATER ( IF I CLICK ON ANOTHER PIECE I MIGHT WANT TO CHOOSE IT)
@@ -64,6 +95,26 @@ class MyTurnState extends GameBridgeState {
                         this.bridge.move.from.setHighlight(true);
                         tile.setHighlight(true); 
                         
+
+                        this.enPassantHighlight = null;
+                        for(let i in this.bridge.game.getEnPassantOrigin() ) {
+                            var pos = this.bridge.game.getEnPassantOrigin()[i];
+                            if( pos.equal(this.bridge.move.from.getBoardPos())) {
+                                this.enPassantHighlight = {dest: this.bridge.game.getEnPassantDest(), piece: this.bridge.game.getEnPassantPiece()};
+                                this.bridge.game.getCellVisual(this.enPassantHighlight.dest).setKillable();
+                                this.enPassantHighlight.piece.visual.setKillable();
+                            }
+                        }
+
+                        this.validCastling = null;
+                        let pieceKing = this.bridge.game.getKing(this.bridge.from.logic.white);
+                        if(this.bridge.from.logic.pos.equal(pieceKing.pos)) {
+                            this.validCastling = this.bridge.from.logic.getValidCastling();
+                        }
+                        for(let pos in this.validCastling) {
+                            this.bridge.game.getCellVisual(this.validCastling[pos]).setMovable(this.bridge.move.from.logic.white);
+                        }
+
                         this.movableHighlighted = this.bridge.move.from.logic.getValidMoves();
                         for(let pos in this.movableHighlighted) {
                             this.bridge.game.getCellVisual(this.movableHighlighted[pos]).setMovable(this.bridge.move.from.logic.white);
@@ -86,6 +137,16 @@ class MyTurnState extends GameBridgeState {
                     this.bridge.game.getCellVisual(this.movableHighlighted[pos]).setHighlight(false);
                 }
 
+                if(this.enPassantHighlight!=null) {
+                    this.bridge.game.getCellVisual(this.enPassantHighlight.dest).setHighlight(false);
+                    this.enPassantHighlight.piece.visual.setHighlight(false);
+                }
+
+                if(this.validCastling!=null) {
+                    for(let pos in this.validCastling) {
+                        this.bridge.game.getCellVisual(this.validCastling[pos]).setHighlight(false);
+                    }
+                }
                 //this.bridge.move.from.children[0].material.setValues( { opacity: 1});
 
                 this.bridge.readyMove();
