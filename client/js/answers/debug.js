@@ -121,12 +121,6 @@ class GameMoveAnswer extends Answer {
     constructor (info) {
         super();
         this.info = info;
-
-        console.log(this.info);
-        if(this.info === "PLAYING_STATE"/*FIXME MESSAGE*/)
-            this.isNext = true;
-        else 
-            this.isNext = false;
     }
 
     isPromote() {

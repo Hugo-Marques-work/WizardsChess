@@ -1,5 +1,5 @@
 class GameBridge {
-    constructor(gameId, white, otherUser, parentDom, width, height, login, password, onMyTurnHandler) {
+    constructor(gameId, white, otherUser, parentDom, width, height, login, password, onMyTurnHandler, onDraw, onWin) {
         //Here to possibly use on the interface
         this.createRenderer(parentDom, width, height);
         this.onMyTurnHandler = onMyTurnHandler;
@@ -154,11 +154,20 @@ class GameBridge {
     }
 
     moveComplete(gameMoveAnswer) {
-        if( gameMoveAnswer.isNext ) {
+        if (gameMoveAnswer.info == 'PLAYING_STATE') {
             this.executeMove();
         }
-        else if( !gameMoveAnswer.isNext ) {
+        else if (gameMoveAnswer.info == 'WAITING_FOR_PROMOTION_STATE' ) {
             this.readyPromote();
+        }
+        else if (gameMoveAnswer.info == 'DRAW_STATE' ) {
+            this.onDraw (this.gameId)
+        }
+        else if (gameMoveAnswer.info == 'WIN_STATE' ) {
+            this.onWin (this.gameId);
+        }
+        else if (gameMoveAnswer.info == 'DROP_STATE' ) {
+            this.onDrop (this.gameId);
         }
     }
 
