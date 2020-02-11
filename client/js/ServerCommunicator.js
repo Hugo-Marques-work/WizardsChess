@@ -193,9 +193,7 @@ class ServerCommunicator {
     }
 
     globalOnOpen(event) {
-        console.log(event);
-        console.log("socket has opened");
-        
+        console.log("Connection has opened");
         if (this.bLogin) {
             this.login (this.user, this.pass, this.onLoginCompleteHandler);
         }
@@ -215,6 +213,7 @@ class ServerCommunicator {
             this.dropHandler(true);
         } catch (error) { 
             this.dropHandler(false);
+            debugger;
             console.log(error);
         }
     }
@@ -225,11 +224,11 @@ class ServerCommunicator {
     }
 
     globalOnClose(event) {
-        alert("Connection has closed");
+        console.log("Connection has closed");
     }
 
     globalOnError(event) {
-        alert("Error sendind message to server");
+        console.log("Error sendind message to server");
     }
     
     closeSocket () {
@@ -251,14 +250,10 @@ class ServerCommunicator {
     createGameOnMessage(event) {
         try {
             let newGame = this.answerParser.parseNewGame(event.data);
-            //game should return gameId FIXME
             this.gameId = 0;
             this.onCreateGameComplete(this.gameId, this.newGameInfo);
         } catch( error ) { 
-            //FIXME - wtf??? preGameHandler.cancelRequest();
-            //DEBUG FIXME 
-            alert(error.message);            
-            //Shouldn't happen
+            alert(error.message);
         }
     }
 
@@ -275,13 +270,11 @@ class ServerCommunicator {
     }
 
     importGameOnMessage(event) {
-        //try {
+        try {
             let importedGameInfo = this.answerParser.parseImportGame(event.data);
             this.importGameComplete(importedGameInfo);
-        /*} catch( error ) {
-            preGameHandler.cancelRequest();
-            console.log(error.message);
+        } catch (error) {
             alert(error.message);
-        }*/
+        }
     }
 }

@@ -209,6 +209,8 @@ class LoggedState extends ScreenState {
         this.gameBridge = null;
         this.gameMap = new Object();
         
+        this.menuBlocked = false;
+        
         this.games = null;
         
         this.listImplemented = [
@@ -236,10 +238,12 @@ class LoggedState extends ScreenState {
                 break;
         
         this.screen.communicator.drop(i, this.onDropComplete.bind(this));
+        
+        this.menuBlocked = true;
     }
     
     onDropComplete (sucess) {
-        
+        console.log('sucess = ' + sucess);
         if (!sucess) {
             alert('Error in game drop.');
         } else {
@@ -252,6 +256,21 @@ class LoggedState extends ScreenState {
             gameBridge.closeSocket ();
             
             this.updateGameList();
+            //FIXME n se pode seixar mudar de tab ate o drop estar concluido
+            
+            //remove menu entry and div
+            var old = this.currentDiv;
+            this.selectDiv(0);
+            
+            var table = document.getElementById('menu');
+            table.children[0].removeChild(document.getElementById(this.divList[old].entryId));
+            
+            var content = document.getElementById('loggedScreenContent');
+            content.removeChild(document.getElementById(this.divList[old].divId));
+            
+            this.divList[old] = null;
+            
+            this.menuBlocked = false;
         }
     }
     
@@ -270,6 +289,8 @@ class LoggedState extends ScreenState {
     }
     
     selectDiv (index) {
+        if (this.menuBlocked) return;
+        
         var entry = document.getElementById(this.divList[this.currentDiv].entryId);
         entry.style.backgroundColor = "rgb(150,150,150, 0.0)";
         
@@ -458,7 +479,7 @@ class LoggedState extends ScreenState {
             var gameBridge = new GameBridge (gameId, isWhite, otherUser, div, this.width, 
                                              this.height, this.login, this.pass, this.onMyTurnHandlerBind);
             
-            this.gameMap[gameId] = new PlayingGameInfo(gameBridge, table.rows.length - 1);
+            this.gameMap[gameId] = new PlayingGameInfo(gameBridge, this.divList.length - 1);
         }
         
         this.selectDiv(this.gameMap[gameId].menuIndex);
