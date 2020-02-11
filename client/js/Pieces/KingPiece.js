@@ -26,7 +26,7 @@ class KingPiece extends Piece {
             }
         }
 
-        console.log("Kin");
+        console.log("Kin"); 
         return valid;
     }
 
@@ -78,7 +78,9 @@ class KingPiece extends Piece {
         //FIXME (Same FIXME In c++)
         const MAX_X = 7;
         const MIN_X = 0;
-        if(dest.x == this.pos + 2) {
+        console.log(dest);
+        console.log(this.pos);
+        if(dest.x == this.pos.x + 2) {
             return this.game.getCell( new Position(MAX_X ,this.pos.y));
         }
         else {

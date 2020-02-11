@@ -35,7 +35,9 @@ class Game {
         if(newGame) {
             this.createBoardFromNothing();
         }
-
+        
+        this.enPassantLastMove = null;
+        this.castlingLastMove = null;
         this.meWhite= true//FIXME
     }
 
@@ -123,7 +125,7 @@ class Game {
         return this.state.checkMove(origin, dest);
     }
     move(origin, dest) {
-        this.state.move(origin,dest);
+        return this.state.move(origin,dest);
     }
 
     getGameId() { return this.gameId; }

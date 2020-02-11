@@ -10,12 +10,34 @@ class AnimationState extends GameBridgeState {
     }
 
     doAnimations() {
+        if(this.bridge.game.enPassantLastMove!=null) {
+            console.log("DifferentCheck");
+            this.move.from.changePos(true);
+            this.deadPiece = this.bridge.game.enPassantLastMove.piece;
+            this.bridge.game.getCellVisual(this.deadPiece.pos).killPiece();
+            console.log(this.deadPiece);
+            this.deadPiece.dieVisual();
+        }
+        else if(this.bridge.game.castlingLastMove!=null) {
+            this.bridge.game.castlingLastMove.rook.visual.changePos(true);
+            this.bridge.game.castlingLastMove.king.visual.changePos(true);
+        }
+        else {
+            console.log("CHECK");
+            this.normalAnimation();
+        }
+    }
+
+    normalAnimation() {
         this.move.from.changePos(true);
 
         if(this.deadPiece!=null) {
+            
+            console.log(this.deadPiece);
+            console.log(this.move.toPos);
             this.bridge.game.getCellVisual(this.move.toPos).killPiece();
             this.deadPiece.dieVisual();
-        }
+        } 
     }
 
     finishAnimation() {

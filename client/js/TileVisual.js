@@ -29,6 +29,10 @@ class TileVisual extends THREE.Object3D {
         this.state = new TileNormal(this, this.axisPoint);
     }
 
+    setKillable() {
+        this.mesh.material = this.killableMaterial;
+    }
+
     setMovable(white) {
         var piece = this.board.get(this.boardPos);
         if(piece != null && piece.white != white) {

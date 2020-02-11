@@ -44,6 +44,8 @@ class PlayingState extends GameState {
 
         let pieceKing = this.game.getKing(p.white);
 
+        this.game.enPassantLastMove = null;
+        this.game.castlingLastMove = null;
         if(enPassant) {
             let pAlt = this.game.getEnPassantPiece();
             m.set(pAlt.pos, null);
@@ -54,7 +56,11 @@ class PlayingState extends GameState {
             m.set(dest, p);
             m.set(origin, null);
             p.setPos(dest);
+            console.log(pAlt);
+            this.game.enPassantLastMove = {dest: dest, piece: pAlt};
+            console.log(this.game.enPassantLastMove.piece);
         }
+        
         else if(p.validateMove(dest) == true) {
             let destP = m.get(dest);
             if(destP != null) {
@@ -83,12 +89,15 @@ class PlayingState extends GameState {
 
         else if(p.pos.equal(pieceKing.pos) && pieceKing.validateCastling(dest)) {
             let rook = pieceKing.getCastlingRook(dest);
+            console.log(rook);
             if(rook == null) throw "ErrorWithCastling";
 
             m.set(dest,p);
             let rookOrigin = rook.pos;
             let rookDest = new Position(dest.x+1,dest.y);
 
+            console.log(rookOrigin);
+            console.log(rookDest);
             if(p.pos.x < rookOrigin.x) {
                 rookDest.x = dest.x-1;
             }
@@ -103,6 +112,7 @@ class PlayingState extends GameState {
             console.log(p);
             console.log("Rook");
             console.log(rook);
+            this.game.castlingLastMove = {rook: rook, king: pieceKing};
         }
         else {
             throw new InvalidMoveException();
