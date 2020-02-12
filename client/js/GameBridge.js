@@ -1,5 +1,5 @@
 class GameBridge {
-    constructor(gameId, white, otherUser, parentDom, width, height, login, password, onMyTurnHandler, onDraw, onWin) {
+    constructor(gameId, white, otherUser, parentDom, width, height, login, password, onMyTurnHandler, onDraw, onWin, onDrop) {
         //Here to possibly use on the interface
         this.createRenderer(parentDom, width, height);
         this.onMyTurnHandler = onMyTurnHandler;
@@ -7,7 +7,7 @@ class GameBridge {
         this.serverCommunicator = new ServerCommunicator("ws://0.0.0.0:8000", true, login, password);
         this.gameId = gameId;
         this.otherUser = otherUser;
-
+        this.mouseBlocked = false;
         this.blackDead = [];
         this.whiteDead = [];
         this.createBinds();
@@ -164,7 +164,7 @@ class GameBridge {
             this.onDraw (this.gameId)
         }
         else if (gameMoveAnswer.info == 'WIN_STATE' ) {
-            this.onWin (this.gameId);
+            this.onWin (this.gameId, gameMoveAnswer.winner);
         }
         else if (gameMoveAnswer.info == 'DROP_STATE' ) {
             this.onDrop (this.gameId);
@@ -345,10 +345,18 @@ class GameBridge {
 
     onKeyUp(e) {}
     onKeyDown(e) {}
-    onResize(e) {}
+    
+    blockMouse () {
+        this.mouseBlocked = true;
+    }
 
     handleEvent(e) {
+        
+        if (this.mouseBlocked)
+            return;
+        
         switch(e.type) {
+            
             case "mousedown":
                 this.onMouseDown(e);
                 break;
@@ -359,10 +367,6 @@ class GameBridge {
 
             case "mouseup":
                 this.onMouseUp(e);
-                break;
-
-            case "resize":
-                this.onResize(e);
                 break;
 
             case "keyup":

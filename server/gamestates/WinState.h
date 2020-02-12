@@ -18,7 +18,9 @@ public:
         
     bool drop (const std::string& userId);
     
-    void promote(PawnPromotionStrategy* strategy) ;
+    bool playerWhite() {return _playerWhite;}
+    
+    void promote(PawnPromotionStrategy* strategy);
 };
 
 #endif

@@ -24,6 +24,8 @@ protected:
     Game* _game;
 public:
     GameState(Game* game): _game(game) {}
+    
+    Game* game () {return _game;}
 
     virtual std::string accept (GameStateVisitor* visitor) noexcept(false) = 0 ;
     

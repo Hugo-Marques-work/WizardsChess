@@ -1,4 +1,7 @@
 #include "CheckGameVisitor.h"
+#include "Game.h"
+#include "Player.h"
+#include "gamestates/WinState.h"
 
 std::string CheckGameVisitor::visitPlaying (PlayingState* state)
 {
@@ -12,7 +15,9 @@ std::string CheckGameVisitor::visitDraw (DrawState* state)
 
 std::string CheckGameVisitor::visitWin (WinState* state)
 {
-    return "WIN_STATE";
+    Game* game = state->game();
+    return "WIN_STATE " + (state->playerWhite() ? 
+        game->playerW()->user() : game->playerB()->user());
 }
 
 std::string CheckGameVisitor::visitDrop (DropState* state)

@@ -202,6 +202,9 @@ class LoggedState extends ScreenState {
         this.mouseOutBind = LoggedState.prototype.mouseOut.bind(this);
         this.updateGameListBind = LoggedState.prototype.updateGameList.bind(this);
         this.onMyTurnHandlerBind = LoggedState.prototype.onMyTurnHandler.bind(this);
+        this.onDrawBind = this.onDraw.bind(this);
+        this.onDropBind = this.onDrop.bind(this);
+        this.onWinBind = this.onWin.bind(this);
         
         this.currentDiv = 0;
         this.selectDiv (0);
@@ -243,7 +246,6 @@ class LoggedState extends ScreenState {
     }
     
     onDropComplete (sucess) {
-        console.log('sucess = ' + sucess);
         if (!sucess) {
             alert('Error in game drop.');
         } else {
@@ -260,7 +262,9 @@ class LoggedState extends ScreenState {
             
             //remove menu entry and div
             var old = this.currentDiv;
+            this.menuBlocked = false;
             this.selectDiv(0);
+            this.menuBlocked = true;
             
             var table = document.getElementById('menu');
             table.children[0].removeChild(document.getElementById(this.divList[old].entryId));
@@ -286,6 +290,43 @@ class LoggedState extends ScreenState {
         if (this.currentDiv == 0) {
             setTimeout(this.updateGameListBind, 3000);
         }
+    }
+    
+    onDraw (gameId) {
+        var i, gameBridge;
+            
+        for (i in this.gameMap)
+            if (this.gameMap[i].menuIndex == index)
+                gameBridge = this.gameMap[i].gameBridge;
+            
+        gameBridge.blockMouse();
+        
+        document.getElementById('rightMenuMessage').innerHTML = "Draw!";
+    } 
+    
+    onWin (gameId, winner) {
+        var i, gameBridge;
+            
+        for (i in this.gameMap)
+            if (this.gameMap[i].menuIndex == index)
+                gameBridge = this.gameMap[i].gameBridge;
+            
+        gameBridge.blockMouse();
+        
+        document.getElementById('rightMenuMessage').innerHTML = 
+            (this.login == winner ? "You won!" : "You lost!");
+    }
+    
+    onDrop (gameId) {
+        var i, gameBridge;
+            
+        for (i in this.gameMap)
+            if (this.gameMap[i].menuIndex == index)
+                gameBridge = this.gameMap[i].gameBridge;
+            
+        gameBridge.blockMouse();
+        
+        document.getElementById('rightMenuMessage').innerHTML = "Dropped!";
     }
     
     selectDiv (index) {
@@ -479,7 +520,7 @@ class LoggedState extends ScreenState {
             var gameBridge = new GameBridge (gameId, isWhite, otherUser, div, this.width, 
                                              this.height, this.login, this.pass, this.onMyTurnHandlerBind);
             
-            this.gameMap[gameId] = new PlayingGameInfo(gameBridge, this.divList.length - 1);
+            this.gameMap[gameId] = new PlayingGameInfo(gameBridge, this.divList.length - 1, this.onDrawBind, this.onWinBin, this.onDropBind);
         }
         
         this.selectDiv(this.gameMap[gameId].menuIndex);

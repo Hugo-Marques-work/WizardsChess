@@ -118,17 +118,10 @@ class GameTurnAnswer extends Answer {
 }
 
 class GameMoveAnswer extends Answer {
-    constructor (info) {
+    constructor (info, winner) {
         super();
         this.info = info;
-    }
-
-    isPromote() {
-        return !this.isNext;
-    }
-
-    isNext() {
-        return this.isNext;
+        this.winner = winner;
     }
 }
 
@@ -269,7 +262,17 @@ class AnswerParser {
             throw new WrongInputException("Reading ok answer: " + e.message);
         }
         
-        return new GameMoveAnswer(ans);
+        if (ans == 'WIN_STATE') {
+            var winner;
+            try {
+                winner = lexer.readString();
+            } catch (e) {
+                throw new WrongInputException("Reading WIN_STATE winner: " + e.message);
+            }
+            
+            return new GameMoveAnswer(ans, winner);
+        } else 
+            return new GameMoveAnswer(ans);
     }
     
     parseGameStatus (string) {
