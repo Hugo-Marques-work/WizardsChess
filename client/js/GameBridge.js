@@ -83,7 +83,6 @@ class GameBridge {
     createScene() {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xe0d6b4);
-        this.scene.add(new THREE.AxisHelper(10));
 
         //game stuff
         this.scene.add(this.game.chessMatrix.visual);

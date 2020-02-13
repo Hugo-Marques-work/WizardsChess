@@ -288,7 +288,7 @@ class LoggedState extends ScreenState {
         this.screen.communicator.listGames(this.listGamesFunc);
         
         if (this.currentDiv == 0) {
-            setTimeout(this.updateGameListBind, 3000);
+            setTimeout(this.updateGameListBind, 300000);
         }
     }
     
@@ -397,6 +397,11 @@ class LoggedState extends ScreenState {
     createGameComplete (newGameId, gameInfo) {
         this.screen.communicator.listGames(this.listGamesFunc);
         document.getElementById("CreateGameMessage").innerHTML = "Game created.";
+
+        document.getElementById("CreateGameMessage").style.animationName = "createGameMessageAnim";
+
+        setTimeout(function() {document.getElementById("CreateGameMessage").style.animationName = "";},
+            200);
     }
     
     listGamesComplete (games) {
@@ -405,21 +410,28 @@ class LoggedState extends ScreenState {
         this.games = games;
         
         if (games.listGameInfo.length > 0) {
-            table.innerHTML = "<tr><th> Ready to play</th><th> Opponent </th><th> Your color</th><th> Game ID</th><th> Turn Number</th></tr>";
-        
+            table.innerHTML = "<tr id='gameListHead'><th> Ready to play</th><th> Opponent </th><th> Your color</th><th> Game ID</th><th> Turn Number</th></tr>";
+            console.log(table.innerHTML);
             for(let i in games.listGameInfo) {
                 let gameInfo = games.listGameInfo[i];
                 let row = table.insertRow(1);
                 let string = "gameId-" + gameInfo.gameId ;
                 row.classList.add( string );
                 row.classList.add( "gameListRow" );
+                row.setAttribute("onmouseout","gameListOnMouseOut(this);");
+                row.setAttribute("onmouseover","gameListOnMouseOver(this);");                row.setAttribute("onmouseout","gameListOnMouseOut(this);");
+                row.setAttribute("onmousedown","gameListOnMouseDown(this);");
+                row.setAttribute("onclick"," screen.event(this, 'onclick')"); //useless
                 row.setAttribute("onclick", "screen.state.joinGame(" + gameInfo.gameId + ")");
                 let k = 0;
                 let cellReadyToPlay = row.insertCell(k++);
                 let cellOpponent = row.insertCell(k++);
                 let cellColor = row.insertCell(k++);
                 let cellGameId = row.insertCell(k++);
+                cellGameId.setAttribute("style","text-align: right;");
                 let cellTurnNumber = row.insertCell(k++);
+                cellTurnNumber.setAttribute("style","text-align: right;")
+
 
                 cellReadyToPlay.innerHTML = (gameInfo.isWhite == gameInfo.isWhiteTurn ? "Ready To Play" : "Not Ready");
                 cellOpponent.innerHTML = gameInfo.otherUser;
@@ -431,6 +443,7 @@ class LoggedState extends ScreenState {
             
             if (games.listGameInfo.length == 1)
                 document.getElementById("loggedScreenGameCount").innerHTML = "Total: " + games.listGameInfo.length + " game." ;
+
             
             else
                 document.getElementById("loggedScreenGameCount").innerHTML = "Total: " + games.listGameInfo.length + " games." ;
@@ -484,7 +497,7 @@ class LoggedState extends ScreenState {
             var div = document.createElement ('div');
             div.id = "loggedScreenPlay" + gameId;
             div.style.display = "none";
-            div.style.padding = "0.1in";
+            //div.style.padding = "0.1in";
             div.style.overflow = "hidden";
             document.getElementById('loggedScreenContent').appendChild(div);
             
@@ -531,4 +544,38 @@ class LoggedState extends ScreenState {
         var dom = document.getElementById("loggedScreenEntry" + gameId);
         dom.style.backgroundColor = "rgb(255, 0, 150, 1.0)";
     }
+}
+
+
+function gameListOnMouseOver(dom) {
+    console.log("HI1");
+    for( var i in dom.classList) {
+        if( dom.classList[i] == "gameListOnMouseOver" ||
+            dom.classList[i] == "gameListOnMouseDown")  {
+            return;
+        }
+    }
+    dom.classList.add("gameListOnMouseOver");
+}
+
+function clearClasses(dom) {
+    for( var i in dom.classList) {
+        if( dom.classList[i] == "gameListOnMouseOver" ||
+            dom.classList[i] == "gameListOnMouseDown")  {
+            
+            dom.classList.remove(dom.classList[i]);
+        }
+    }
+}
+
+function gameListOnMouseOut(dom) {
+    console.log("HI2");
+    clearClasses(dom);
+}
+
+function gameListOnMouseDown(dom) {
+    console.log("HI3");
+    clearClasses(dom);
+
+    dom.classList.add("gameListOnMouseDown");
 }
