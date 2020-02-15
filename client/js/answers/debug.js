@@ -163,7 +163,7 @@ class ImportGameAnswer extends Answer {
 // AnswerParser.js
 class AnswerParser {
     checkError (lexer) {
-        var ans;
+        var ans, errId, errExtra;
         
         try {
             ans = lexer.readString();

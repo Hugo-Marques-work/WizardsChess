@@ -43,6 +43,16 @@ class ServerCommunicator {
         }
     }
     
+    gameStatus (gameId) {
+        this.onCreateAccountComplete = func;
+        this.socket.onmessage = this.createAccountOnMessage.bind(this);;
+
+        this.username = username;
+
+        let request = requestReg(username, password);
+        this.socket.send(request);
+    }
+    
     //when login on open
     onLoginCompleteHandler(sucess) {
         if (!sucess) {
@@ -129,7 +139,13 @@ class ServerCommunicator {
             
             this.onMoveComplete(gameMoveAnswer);
         } catch( error ) { 
-            //DEBUG FIXME 
+            
+            if (error instanceof ErrorAnswerException) {
+                if (error.errId == 'INVALID_ACTION') {
+                    this.ready
+                }
+            }
+            
             console.log(error);
             alert(error.message);  
                       

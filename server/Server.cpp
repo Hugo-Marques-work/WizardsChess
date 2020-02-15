@@ -175,6 +175,10 @@ std::string Server::visitGameMove (GameMoveMessage* message, Session* session)
         {
             return "GAME_MOVE_A ERR INVALID_MOVE";
         }
+        catch (InvalidActionException& e)
+        {
+            return "GAME_MOVE_A ERR INVALID_ACTION";
+        }
     }
     else 
         throw LogicErrorException ("User is logged but user is not found.");
