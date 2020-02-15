@@ -103,9 +103,10 @@ class ListGamesAnswer extends Answer {
 }
 
 class GameStatusAnswer extends Answer {
-    constructor (status) {
+    constructor (status, extras) {
         super();
         this.status = status;
+        this.extras = extras;
     }
 }
 
@@ -287,7 +288,16 @@ class AnswerParser {
             throw new WrongInputException("Reading status: " + e.message);
         }
         
-        return new GameStatusAnswer(ans);
+        if (ans == 'WIN_STATE') {
+            var winner;
+            try {
+                winner = lexer.readString();
+            } catch (e) {
+                throw new WrongInputException("Reading WIN_STATE winner: " + e.message);
+            }
+            return new GameStatusAnswer (ans, winner);
+        } else 
+            return new GameStatusAnswer (ans);
     }
     
     parseGameDrop (string) {

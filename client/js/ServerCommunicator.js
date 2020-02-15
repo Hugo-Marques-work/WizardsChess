@@ -1,29 +1,31 @@
 class ServerCommunicator {
-    constructor(addr, bLogin, user, pass) {
+    constructor(addr, bLogin, user, pass, gameId, onDraw, onWin, onDrop) {
         this.socket = new WebSocket(addr);
         this.canUse = false;
         this.bLogin = bLogin;
+        this.gameId = gameId;
+        
+        this.onDraw = onDraw;
+        this.onWin = onWin;
+        this.onDrop = onDrop;
         
         if (this.bLogin == true) {
             this.user = user;
             this.pass = pass;
         }
         
-        
-        
         this.socket.onopen = this.globalOnOpen.bind(this);
         this.socket.onclose = this.globalOnClose.bind(this);
         this.socket.onerror = this.globalOnError.bind(this);
         this.socket.onmessage= this.globalOnMessage.bind(this);
-
-        this.gameId = null;
-        this.username = null;
+        this.onGameStatusCompleteBind = this.onGameStatusComplete.bind(this);
+        
         this.answerParser = new AnswerParser(); 
     }
     
     createAccount(username, password, func) {
         this.onCreateAccountComplete = func;
-        this.socket.onmessage = this.createAccountOnMessage.bind(this);;
+        this.socket.onmessage = this.createAccountOnMessage.bind(this);
 
         this.username = username;
 
@@ -43,13 +45,28 @@ class ServerCommunicator {
         }
     }
     
-    gameStatus (gameId) {
-        this.onCreateAccountComplete = func;
-        this.socket.onmessage = this.createAccountOnMessage.bind(this);;
-
-        this.username = username;
-
-        let request = requestReg(username, password);
+    onGameStatusComplete(event) {
+        try { 
+            var answer = this.answerParser.parseGameStatus(event.data);
+            switch (answer.status) {
+                case 'WIN_STATE':
+                    this.onWin(this.gameId, answer.winner);
+                    break;
+                case 'DROP_STATE':
+                    this.onDrop(this.gameId);
+                    break;
+                case 'DRAW_STATE':
+                    this.onDraw(this.gameId);
+                    break;
+            }
+        } catch(error) {
+            console.log(error);
+        }
+    }
+    
+    readyGameStatus () {
+        this.socket.onmessage = this.onGameStatusCompleteBind;
+        let request = requestGameStatus(this.gameId);
         this.socket.send(request);
     }
     
@@ -104,27 +121,6 @@ class ServerCommunicator {
         }
     }
 
-    /*
-    importGame(gameId) {
-        //FIXME
-        this.socket.onmessage = this.importGameOnMessage.bind(this);
-
-        let request = requestImportGame(gameId);
-        this.socket.send(request);
-    }
-
-    importGameOnMessage(event) {
-        try{
-            let game = this.answerParser.parseImportGame(event.data);
-            
-                        //FIXME?
-
-        } catch ( error ) {
-            console.log(error.message);
-            alert(error.message);
-        }
-    }*/
-
     move(gameId,x1,y1,x2,y2, func) {   
         this.onMoveComplete = func;
         this.socket.onmessage= this.moveOnMessage.bind(this);
@@ -142,7 +138,7 @@ class ServerCommunicator {
             
             if (error instanceof ErrorAnswerException) {
                 if (error.errId == 'INVALID_ACTION') {
-                    this.ready
+                    this.readyGameStatus ()
                 }
             }
             
@@ -229,7 +225,6 @@ class ServerCommunicator {
             this.dropHandler(true);
         } catch (error) { 
             this.dropHandler(false);
-            debugger;
             console.log(error);
         }
     }
@@ -289,6 +284,8 @@ class ServerCommunicator {
         try {
             let importedGameInfo = this.answerParser.parseImportGame(event.data);
             this.importGameComplete(importedGameInfo);
+            
+            this.readyGameStatus();
         } catch (error) {
             alert(error.message);
         }

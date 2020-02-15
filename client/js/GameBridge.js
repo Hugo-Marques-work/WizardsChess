@@ -4,7 +4,7 @@ class GameBridge {
         this.createRenderer(parentDom, width, height);
         this.onMyTurnHandler = onMyTurnHandler;
         this.imWhite = white;
-        this.serverCommunicator = new ServerCommunicator("ws://0.0.0.0:8000", true, login, password);
+        this.serverCommunicator = new ServerCommunicator("ws://0.0.0.0:8000", true, login, password, gameId, onDraw, onWin, onDrop);
         this.gameId = gameId;
         this.otherUser = otherUser;
         this.mouseBlocked = false;
