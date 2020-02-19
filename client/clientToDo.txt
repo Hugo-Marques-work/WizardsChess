@@ -1,3 +1,11 @@
-Important -> Take all GETS off pieces game and board
-
-ADD Updates on all pieces ( pawn piece has one )
+01. New Game é feio - 3
+02. Testar win - 4
+03, Pawn Promotion Missing - 2
+04. Testar extensivmente... - 3
+05. FIXME - 3
+06. Console.log - 4
+07. Percentagens html- 5
+08. Alert - 1
+09. Otimização [ Inicializacao takes too long ] [ blender object ] - never
+10. CAN'T CLICK TILE AFTER CLICKING PIECE AND UNSELECTING - 1
+Distribuição atual: H 08

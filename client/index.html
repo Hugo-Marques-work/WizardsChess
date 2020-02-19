@@ -1,141 +1,126 @@
-<!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>04</title>
-        <link rel="stylesheet" href="gameList.css">
-        <style>
-            body {
-                margin: 0px;
-                background-color: #fff;
-                overflow: hidden;
-            }
-        </style>
-        <script src="js/three.js"></script>
-        <script src="js/ServerCommunicator.js"></script>
-        <script src="js/Position.js"></script>
-        <script src="js/GameBridge.js"></script>
-        <script src="js/Game.js"></script>
-        <script src="js/BoardVisual.js"></script>
-        <script src="js/Board.js"></script>       
-        <script src="js/TileVisual.js"></script>       
 
-        <script src="js/Pieces/Piece.js"></script>
-        <script src="js/Pieces/PieceVisual.js"></script>
-        <script src="js/Pieces/BishopPiece.js"></script>
-        <script src="js/Pieces/BishopPieceVisual.js"></script>
-        <script src="js/Pieces/KingPiece.js"></script>
-        <script src="js/Pieces/KingPieceVisual.js"></script>
-        <script src="js/Pieces/KnightPiece.js"></script>
-        <script src="js/Pieces/KnightPieceVisual.js"></script>
-        <script src="js/Pieces/RookPiece.js"></script>
-        <script src="js/Pieces/RookPieceVisual.js"></script>
-        <script src="js/Pieces/QueenPiece.js"></script>
-        <script src="js/Pieces/QueenPieceVisual.js"></script>
-        <script src="js/Pieces/PawnPiece.js"></script>
-        <script src="js/Pieces/PawnPieceVisual.js"></script>
+<head>
+    <title>WizardChess</title>
+     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="index.css">
 
-        <script src="js/gamestates/GameState.js"></script>
-        <script src="js/gamestates/PlayingState.js"></script>
-        <script src="js/gamestates/WaitingForPromotionState.js"></script>
+    <script src="js/Screen.js"></script>
+    <script src="js/three.js"></script>
+    <script src="js/ServerCommunicator.js"></script>
+    <script src="js/Position.js"></script>
+    <script src="js/GameBridge.js"></script>
+    <script src="js/Game.js"></script>
+    <script src="js/BoardVisual.js"></script>
+    <script src="js/Board.js"></script>       
+    <script src="js/TileVisual.js"></script>       
+    <script src="js/Pieces/PieceVisual.js"></script>
+    <script src="js/Pieces/Piece.js"></script>
+    <script src="js/Pieces/BishopPiece.js"></script>
+    <script src="js/Pieces/BishopPieceVisual.js"></script>
+    <script src="js/Pieces/KingPiece.js"></script>
+    <script src="js/Pieces/KingPieceVisual.js"></script>
+    <script src="js/Pieces/KnightPiece.js"></script>
+    <script src="js/Pieces/KnightPieceVisual.js"></script>
+    <script src="js/Pieces/RookPiece.js"></script>
+    <script src="js/Pieces/RookPieceVisual.js"></script>
+    <script src="js/Pieces/QueenPiece.js"></script>
+    <script src="js/Pieces/QueenPieceVisual.js"></script>
+    <script src="js/Pieces/PawnPiece.js"></script>
+    <script src="js/Pieces/PawnPieceVisual.js"></script>
 
-        <script src="js/gameBridgeStates/GameBridgeState.js"></script>
-        <script src="js/gameBridgeStates/MyTurnState.js"></script>
-        <script src="js/gameBridgeStates/OtherTurnState.js"></script>
-        <script src="js/gameBridgeStates/PromotionState.js"></script>
+    <script src="js/gamestates/GameState.js"></script>
+    <script src="js/gamestates/PlayingState.js"></script>
+    <script src="js/gamestates/WaitingForPromotionState.js"></script>
 
-        <script src="js/exceptions/InvalidActionException.js"></script>
-        <script src="js/exceptions/InvalidMoveException.js"></script>
-        <script src="js/exceptions/PawnPromotionException.js"></script>
-        <script src="js/exceptions/NoSuchPieceException.js"></script>
-        <script src="js/exceptions/NotYourTurnException.js"></script>
+    <script src="js/gameBridgeStates/GameBridgeState.js"></script>
+    <script src="js/gameBridgeStates/MyTurnState.js"></script>
+    <script src="js/gameBridgeStates/OtherTurnState.js"></script>
+    <script src="js/gameBridgeStates/PromotionState.js"></script>
+    <script src="js/gameBridgeStates/AnimationState.js"></script>
 
-        <script src="js/requests/Request.js"></script>
-        <script src="js/answers/debug.js"></script>
+    <script src="js/exceptions/InvalidActionException.js"></script>
+    <script src="js/exceptions/InvalidMoveException.js"></script>
+    <script src="js/exceptions/PawnPromotionException.js"></script>
+    <script src="js/exceptions/NoSuchPieceException.js"></script>
+    <script src="js/exceptions/NotYourTurnException.js"></script>
+
+    <script src="js/requests/Request.js"></script>
+    <script src="js/answers/debug.js"></script>
+    
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
+
+    <script>
+        var screen = null, gameBridge = null;
+        var communicator;
         
-        <script src="js/PreGameHandler.js"></script>
-        <!-- 
-        <script src=""></script> 
-        -->
+        function load () {
+            communicator = new ServerCommunicator("ws://0.0.0.0:8000", false);
+            screen = new Screen(communicator);
+        }
+        
+    </script>
+</head>
 
-        <script>
-            var preGameHandler = new PreGameHandler();
-            var sCom = new ServerCommunicator();
-            var gameBridge = null;
+<body onload="load()" onresize="screen.event(null, 'onresize')" style="overflow: hidden;">
+    <div id ="loginScreen" style="display:none;">
+        <div id="loginScreenBox" >
+            <p style="font-size:16pt;">WizardChess</p>
+            <p style="color:black;">Username:</p>
+            <input id="loginScreenUsername" style="width:98%" class="edit" type="text" name="username">
+            <p style="color:black;"> Password:</p>
+            <input id="loginScreenPassword" style="width:98%" class="edit" type="password" name="password">
+            <br>
+            <p><input id="loginScreenCreateAccount" style="width:98%" type="button" onmouseup="screen.event(this, 'onmouseup')" onmousedown="screen.event(this, 'onmousedown')" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')" class="button" value = "Create Account" style="width:98%" onclick = "screen.event(this, 'onclick');"></p>
+            <p><input id="loginScreenLogin"  type="button" style="width:98%" onmouseup="screen.event(this, 'onmouseup')" onmousedown="screen.event(this, 'onmousedown')" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')" class="button" value = "Login" onclick = "screen.event(this, 'onclick');"></p>
+            <p id = "loginScreenMessage"></p>
+        </div>
+    </div>
 
-        </script>
-    </head>
-    <body>   
-        <div id="LoginScreen">
-            <form>
-                Username: <br>
-                <input id="LoginScreenUsername" type="text" name="username">
-                <br> Password: <br>
-                <input id="LoginScreenPassword" type="text" name="password">
-                <br>
-                <input id="CreateAccount" type="button" value = "Create Account" onclick = "preGameHandler.createAccount();">
-                
-                <input id="LoginAccount" type="button" value = "Login" onclick = "preGameHandler.login();">
-            </form>
-            <div id="AccountCreated" hidden="true">
-                <p> Account "<span id="AccountName"></span>" successfully created </p>
+    <div id="loggedScreen" style="display:none;">
+        <div id="loggedScreenTop">
+            <p style="font-size:20pt; font-weight:bold; color:white;">WizardChess</p>
+        </div>
+        
+        <div id="loggedScreenMenu">
+            <table id="menu" style="width:100%;border:none">
+                <tr id="loggedScreenEntryA" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')" onclick="screen.event(this, 'onclick')"><td style="border:none">My Games</td></tr>
+                <tr id="loggedScreenEntryB" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')" onclick="screen.event(this, 'onclick')" ><td style="border:none">New Game</td></tr>
+            </table>
+        </div>
+        
+        <div id="loggedScreenContent">
+            <div id="loggedScreenListGames" style="display:none;">
+                <div id="loggedScreenGameListSpace">
+                    <table id="loggedScreenGameList"></table>
+                    <p id="loggedScreenGameCount"></p>
+                </div>
+            </div>
+            <div id="loggedScreenNewGame" style="display:none;">
+                <p style="text-align:center;">Opponent</p>
+                <input id="CreateGameDetailsOtherUser" type="text" class="edit" name="otherUser">
+                <p></p>
+                <p style="text-align:center; margin-top:10%;">Your Color</p>
+                <label id="CreateGameDetailsWhiteLabel">
+                    <input id = "CreateGameDetailsWhite" type="radio" style="width" name="white" value="1" checked>
+                    <img id="CreateGameDetailsWhiteImg" src="pieces/whitePiece.jpg">
+                </label>
+                <label id="CreateGameDetailsBlackLabel">
+                    <input id = "CreateGameDetailsBlack" type="radio" name="white" value="0">
+                    <img id= "CreateGameDetailsBlackImg" src="pieces/blackPiece.png">
+                </label>
+                    <input id="CreateGameButton" type="button" class="button" value = "Create" onclick = "screen.event(this, 'onclick')" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')">
+                <p id = "CreateGameMessage"></p>
+            </div>
+            <div id="loggedScreenRightMenu" style="display:none;">
+                <p id="rightMenuOpponent"></p>
+                <p id="rightMenuMessage"></p>
+                <input id="rightMenuDrop" type="button" class="button" value = "Drop" onclick = "screen.event(this, 'onclick')" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')">
             </div>
         </div>
-        <div id="GameListScreen" hidden="true">
-            <div id="GameListContainer">
-                <table id="GameListTable">
-                    <thead>
-                    <tr>
-                        <th> Ready to play</th>
-                        <th> Opponent </th>
-                        <th> Your color</th>
-                        <th> Game ID</th>
-                        <th> Turn Number</th>
-                    </tr>
-                    </thead>
-                    <tbody id="GameListScreenBody">
+        
+    </div>
 
-                    </tbody>
-                </table>
-            </div>
-            <div id="CreateGame">
-                <button id="createGameButton" onclick="preGameHandler.showCreateGame();">
-                    Create a new game
-                </button>
-            </div>
+</body>
 
-            <div id="CreateGameDetails" hidden="true">
-                <form>
-                    <input id = "CreateGameDetailsWhite" type="radio" name="white" value="1" checked> White<br>
-                    <input id = "CreateGameDetailsBlack" type="radio" name="white" value="0"> Black<br>
-
-                    Opponent: <br>
-                    <input id="CreateGameDetailsOtherUser" type="text" name="otherUser">
-
-                    <input id="CancelCreateGame" type="button" value = "Cancel" onclick = "preGameHandler.hideCreateGame();">
-                    
-                    <input id="CreateGameButton" type="button" value = "Create" onclick = "preGameHandler.createGame();">
-                </form>
-            </div>
-
-            <button onclick="preGameHandler.refreshList()"> Refresh </button>
-        </div>
-
-
-        <div id="container"></div> 
-          <script>
-            //FOR GAME TESTING
-            //preGameHandler.clearPreGame();
-            //startChessGame("1111",true,"eliteHaxxxor");
-            function startChessGame(gameId, white, otherUser) {
-                gameBridge = new GameBridge(sCom, gameId, white, otherUser);
-                loop();
-            }
-            
-            function joinChessGame(gameId, white, otherUser, game) {
-                gameBridge = new GameBridge(sCom, gameId, white, otherUser, game);
-                loop();
-            }
-        </script>
-    </body>
 </html>

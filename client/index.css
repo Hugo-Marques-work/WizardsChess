@@ -15,7 +15,7 @@ body {
     width:100%;
     top:0%;
     height:100%;
-    background-image: url('chess.jpeg');
+    background-image: url('textures/chess.jpeg');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -58,7 +58,7 @@ body {
     top:  0%;
     width: 100%;
     height: 100%;
-    background-image: url('chess.jpeg');
+    background-image: url('textures/chess.jpeg');
     position:absolute;
 }
 

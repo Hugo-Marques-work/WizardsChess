@@ -153,21 +153,29 @@ class GameBridge {
     }
 
     moveComplete(gameMoveAnswer) {
-        if (gameMoveAnswer.info == 'PLAYING_STATE') {
-            this.executeMove();
-        }
-        else if (gameMoveAnswer.info == 'WAITING_FOR_PROMOTION_STATE' ) {
-            this.readyPromote();
-        }
-        else if (gameMoveAnswer.info == 'DRAW_STATE' ) {
-            this.onDraw (this.gameId)
-        }
-        else if (gameMoveAnswer.info == 'WIN_STATE' ) {
-            this.onWin (this.gameId, gameMoveAnswer.winner);
-        }
-        else if (gameMoveAnswer.info == 'DROP_STATE' ) {
-            this.onDrop (this.gameId);
-        }
+        if (gameMoveAnswer instanceof ErrorAnswerException) {
+            if (gameMoveAnswer.errId == 'INVALID_ACTION') {
+                this.serverCommunicator.readyGameStatus
+            }
+        } else {
+
+            if (gameMoveAnswer.info == 'PLAYING_STATE') {
+                this.executeMove();
+            }
+            else if (gameMoveAnswer.info == 'WAITING_FOR_PROMOTION_STATE' ) {
+                this.readyPromote();
+            }
+            else if (gameMoveAnswer.info == 'DRAW_STATE' ) {
+                this.onDraw (this.gameId)
+            }
+            else if (gameMoveAnswer.info == 'WIN_STATE' ) {
+                this.onWin (this.gameId, gameMoveAnswer.winner);
+            }
+            else if (gameMoveAnswer.info == 'DROP_STATE' ) {
+                this.onDrop (this.gameId);
+            }
+
+         }
     }
 
     executeMove() {        
@@ -245,7 +253,6 @@ class GameBridge {
                 var deadPiece = this.game.getCell(this.move.toPos);
                 //FIXME
                 this.game.move(this.move.from.getBoardPos(), this.move.toPos);
-                //this.game.move(this.move.from.getBoardPos(), this.move.toPos);
                 this.animateMove(deadPiece,this.setMyTurnFunc);
             }
             else {
@@ -262,6 +269,7 @@ class GameBridge {
     }
 
     askOtherTurn() {
+        if(this.waitingForResponse) return;
 
         this.serverCommunicator.askOtherTurn(this.gameId);
         var that = this;
@@ -271,6 +279,7 @@ class GameBridge {
     }
 
     askOtherTurnComplete(otherTurnAnswer) {
+        this.waitingForResponse = false;
         if ( otherTurnAnswer.white == this.getWhite() ) {
             clearTimeout(this.askOtherTurnTimeout);
             this.serverCommunicator.askLastMove(this.gameId, this.readyMyTurnFunc);
@@ -308,6 +317,7 @@ class GameBridge {
     onMouseMovement(e) {
         e.preventDefault();
         let canvasBounds = this.renderer.context.canvas.getBoundingClientRect();
+        if(canvasBounds==undefined) return;
         this.mouse.x = ( ( event.clientX - canvasBounds.left ) / ( canvasBounds.right - canvasBounds.left ) ) * 2 - 1;
         this.mouse.y = - ( ( event.clientY - canvasBounds.top ) / ( canvasBounds.bottom - canvasBounds.top) ) * 2 + 1;
         //this.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;

@@ -379,13 +379,12 @@ class AnswerParser {
             var gameId = lexer.readInteger();
             var importedGame = new Game(gameId, false);
 
-            importedGame.whiteTurn = lexer.readInteger();
-
             //CURRENT STATE FIXME!!!!!
-            var state = new PlayingState(importedGame);
+            state = new PlayingState(importedGame);
             importedGame.state = state;
 
 
+            importedGame.whiteTurn = lexer.readInteger();
             //ENPASSANT
             var hasPassant = lexer.readString();
 

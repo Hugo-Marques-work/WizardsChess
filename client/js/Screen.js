@@ -407,9 +407,10 @@ class LoggedState extends ScreenState {
                 row.classList.add( string );
                 row.classList.add( "gameListRow" );
                 row.setAttribute("onmouseout","gameListOnMouseOut(this);");
-                row.setAttribute("onmouseover","gameListOnMouseOver(this);");                row.setAttribute("onmouseout","gameListOnMouseOut(this);");
+                row.setAttribute("onmouseover","gameListOnMouseOver(this);");                
+                row.setAttribute("onmouseout","gameListOnMouseOut(this);");
                 row.setAttribute("onmousedown","gameListOnMouseDown(this);");
-                row.setAttribute("onclick"," screen.event(this, 'onclick')"); //useless
+                
                 row.setAttribute("onclick", "screen.state.joinGame(" + gameInfo.gameId + ")");
                 let k = 0;
                 let cellReadyToPlay = row.insertCell(k++);

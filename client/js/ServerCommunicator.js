@@ -1,3 +1,7 @@
+const errorMessages = {
+    '':""
+}
+
 class ServerCommunicator {
     constructor(addr, bLogin, user, pass, gameId, onDraw, onWin, onDrop) {
         this.socket = new WebSocket(addr);
@@ -132,22 +136,11 @@ class ServerCommunicator {
     moveOnMessage(event) {
         try {
             let gameMoveAnswer = this.answerParser.parseGameMove(event.data);
-            
             this.onMoveComplete(gameMoveAnswer);
         } catch( error ) { 
-            
-            if (error instanceof ErrorAnswerException) {
-                if (error.errId == 'INVALID_ACTION') {
-                    this.readyGameStatus ()
-                }
-            }
-            
+            if (error instanceof ErrorAnswerException)
+                this.onMoveComplete(error);
             console.log(error);
-            alert(error.message);  
-                      
-            //MOVE IS NOT ACCEPTED BY SER 
-            //this.preGameHandler.cancelRequest();
-            //this.importFullGame();
         }
     }
 
@@ -284,8 +277,6 @@ class ServerCommunicator {
         try {
             let importedGameInfo = this.answerParser.parseImportGame(event.data);
             this.importGameComplete(importedGameInfo);
-            
-            this.readyGameStatus();
         } catch (error) {
             alert(error.message);
         }
