@@ -113,23 +113,34 @@ class LoginState extends ScreenState {
         var username = document.getElementById("loginScreenUsername").value;
         var password = document.getElementById("loginScreenPassword").value;
         
-        this.showMessage("Waiting for server.");
-        this.disableInput();
-        
-        this.screen.communicator.login(username, password, this.loginCompleteFunc);
+        if (username.length == 0) {
+            this.showMessage("You have to enter your username.");
+        } else if (password.length == 0) {
+            this.showMessage("You have to enter your password.");
+        } else {
+            this.showMessage("Waiting for server.");
+            this.disableInput();
+            
+            this.screen.communicator.login(username, password, this.loginCompleteFunc);
+        }
     }
     
     doCreateAccount (dom) {
         var username = document.getElementById("loginScreenUsername").value;
         var password = document.getElementById("loginScreenPassword").value;
         
-        this.showMessage("Waiting for server.");
-        this.disableInput();
-        
-        this.screen.communicator.createAccount(username, password, this.createAccountCompleteFunc);
+        if (username.length == 0) {
+            this.showMessage("You have to enter your username.");
+        } else if (password.length == 0) {
+            this.showMessage("You have to enter your password.");
+        } else {
+            this.showMessage("Waiting for server.");
+            this.disableInput();
+            this.screen.communicator.createAccount(username, password, this.createAccountCompleteFunc);
+        }
     }
     
-    loginComplete (sucess) {
+    loginComplete (sucess, message) {
         var username = document.getElementById("loginScreenUsername").value;
         var password = document.getElementById("loginScreenPassword").value;
         
@@ -137,16 +148,17 @@ class LoginState extends ScreenState {
             this.screen.setState(new LoggedState(this.screen, username, password));
         }
         else {
-            this.enableInput();
-            this.showMessage("Error in login.");
+            this.showMessage(message);
         }
+        
+        this.enableInput();
     }
     
-    createAccountComplete (sucess) {
+    createAccountComplete (sucess, message) {
         if (sucess)
             this.showMessage("Account created.");
         else
-            this.showMessage("Error creating account.");
+            this.showMessage(message);
             
         this.enableInput();
     }

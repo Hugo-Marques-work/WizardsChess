@@ -13,7 +13,7 @@ const errorMessages = {
     'ALREADY_LOGGED': 'User already logged.',
     'PASS': 'Incorrect password.',
     'USER': 'User does not exists.',
-}
+};
 
 class ServerCommunicator {
     constructor(addr, bLogin, user, pass, gameId, onDraw, onWin, onDrop) {
@@ -55,10 +55,10 @@ class ServerCommunicator {
             this.answerParser.parseReg(event.data);
             this.onCreateAccountComplete(true); 
         } catch(error) {
-            alert(error.message);
-            this.onCreateAccountComplete(false);
-            console.log(error.message);
-            //Couldn't reg
+            if (error instanceof ErrorAnswerException)
+                this.onCreateAccountComplete(false, errorMessages[error.errId]);
+            else
+                console.log(error);
         }
     }
     
@@ -112,10 +112,10 @@ class ServerCommunicator {
             this.onLoginComplete(true);
             this.canUse = true;
         } catch(error) {
-            alert(error.message);
-            console.log(error.message);
-            this.onLoginComplete(false);
-            //Couldn't login
+            if (error instanceof ErrorAnswerException)
+                this.onLoginComplete(false, errorMessages[error.errId]);
+            else
+                console.log(error);
         }
     }
 
@@ -291,7 +291,6 @@ class ServerCommunicator {
 
     importGameOnMessage(event) {
         try {
-            debugger;
             let importedGameInfo = this.answerParser.parseImportGame(event.data);
             this.importGameComplete(importedGameInfo);
         } catch (error) {
