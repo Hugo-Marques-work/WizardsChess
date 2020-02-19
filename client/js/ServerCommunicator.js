@@ -1,5 +1,18 @@
 const errorMessages = {
-    '':""
+    'LOGGED':'You are already logged',
+    'USER_USED':'The user you choosed is already used.',
+    'NOT_LOGGED':'You have to login first.',
+    'GAME_NOT_FOUND': 'The game was not found.',
+    'NO_SUCH_PIECE': 'This piece does not exist.',
+    'NOT_YOUR_TURN': 'It is not your turn.',
+    'PIECE_NOT_YOURS': 'The piece is not yours.',
+    'INVALID_MOVE': 'This move is not allowed',
+    'FIRST_TURN': 'This is the first turn.',
+    'PIECE_TYPE': 'This type of piece is not allowed to promote pawn.',
+    'USER_NOT_FOUND': 'The user was not found.',
+    'ALREADY_LOGGED': 'User already logged.',
+    'PASS': 'Incorrect password.',
+    'USER': 'User does not exists.',
 }
 
 class ServerCommunicator {
