@@ -76,12 +76,14 @@ class ServerCommunicator {
                     this.onDraw(this.gameId);
                     break;
             }
+            this.gameBridge.waitingForResponse = false;
         } catch(error) {
             console.log(error);
         }
     }
     
-    readyGameStatus () {
+    readyGameStatus (gameBridge) {
+        this.gameBridge = gameBridge;
         this.socket.onmessage = this.onGameStatusCompleteBind;
         let request = requestGameStatus(this.gameId);
         this.socket.send(request);
@@ -206,7 +208,7 @@ class ServerCommunicator {
             this.askLastMoveComplete(gameLastMove);
         } catch( error ) {
             alert(error.message);
-
+            console.log(error.message);
         }
     }
 
@@ -271,6 +273,7 @@ class ServerCommunicator {
             this.onCreateGameComplete(this.gameId, this.newGameInfo);
         } catch( error ) { 
             alert(error.message);
+            console.log(error.message);
         }
     }
 
@@ -288,10 +291,12 @@ class ServerCommunicator {
 
     importGameOnMessage(event) {
         try {
+            debugger;
             let importedGameInfo = this.answerParser.parseImportGame(event.data);
             this.importGameComplete(importedGameInfo);
         } catch (error) {
             alert(error.message);
+            console.log(error.message);
         }
     }
 }

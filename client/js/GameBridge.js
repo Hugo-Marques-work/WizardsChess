@@ -29,7 +29,7 @@ class GameBridge {
         this.mouse = new THREE.Vector2();
 
         this.move = { from : null, toPos : null };
-        this.waitingForResponse = false;
+        this.waitingForResponse = true;
 
         if(this.imWhite == this.game.whiteTurn) {
             this.setMyTurn();
@@ -42,6 +42,7 @@ class GameBridge {
 
         this.timer = new Date();
 
+        this.serverCommunicator.readyGameStatus();
         this.loop();
     }
     
@@ -155,7 +156,7 @@ class GameBridge {
     moveComplete(gameMoveAnswer) {
         if (gameMoveAnswer instanceof ErrorAnswerException) {
             if (gameMoveAnswer.errId == 'INVALID_ACTION') {
-                this.serverCommunicator.readyGameStatus
+                this.serverCommunicator.readyGameStatus();
             }
         } else {
 
