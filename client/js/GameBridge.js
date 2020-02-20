@@ -154,29 +154,37 @@ class GameBridge {
     }
 
     moveComplete(gameMoveAnswer) {
-        if (gameMoveAnswer instanceof ErrorAnswerException) {
+        if (gameMoveAnswer instanceof GameMoveAnswerError) {
             if (gameMoveAnswer.errId == 'INVALID_ACTION') {
-                this.serverCommunicator.readyGameStatus();
-            }
+                switch (gameMoveAnswer.status) {
+                    case 'WAITING_FOR_PROMOTION_STATE':
+                        this.readyPromote();
+                        break;
+                    case 'DRAW_STATE':
+                        this.onDraw (this.gameId)
+                        break;
+                    case 'WIN_STATE':
+                        this.onWin (this.gameId, gameMoveAnswer.winner);
+                        break;
+                    case 'DROP_STATE':
+                        this.onDrop (this.gameId);
+                        break;
+                }
+            } else if (gameMoveAnswer.errId == "NOT_YOUR_TURN") 
+                document.getElementById('rightMenuMessage').innerHTML = "It is not your turn.";
+            
+            } else if (gameMoveAnswer.errId == "NO_SUCH_PIECE") {
+                document.getElementById('rightMenuMessage').innerHTML = "The server could not find that piece.";
+                
+            } else if (gameMoveAnswer.errId == "PIECE_NOT_YOURS") {
+                document.getElementById('rightMenuMessage').innerHTML = "The piece is not yours.";
+                
+            } else if (gameMoveAnswer.errId == "INVALID_MOVE") {
+                document.getElementById('rightMenuMessage').innerHTML = "The move you requested is invalid.";
+            } 
         } else {
-
-            if (gameMoveAnswer.info == 'PLAYING_STATE') {
-                this.executeMove();
-            }
-            else if (gameMoveAnswer.info == 'WAITING_FOR_PROMOTION_STATE' ) {
-                this.readyPromote();
-            }
-            else if (gameMoveAnswer.info == 'DRAW_STATE' ) {
-                this.onDraw (this.gameId)
-            }
-            else if (gameMoveAnswer.info == 'WIN_STATE' ) {
-                this.onWin (this.gameId, gameMoveAnswer.winner);
-            }
-            else if (gameMoveAnswer.info == 'DROP_STATE' ) {
-                this.onDrop (this.gameId);
-            }
-
-         }
+            this.executeMove();
+        }
     }
 
     executeMove() {        

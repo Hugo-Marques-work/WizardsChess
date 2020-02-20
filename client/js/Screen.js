@@ -394,14 +394,18 @@ class LoggedState extends ScreenState {
         return "loggedScreen";
     }
     
-    createGameComplete (newGameId, gameInfo) {
-        this.screen.communicator.listGames(this.listGamesFunc);
-        document.getElementById("CreateGameMessage").innerHTML = "Game created.";
+    createGameComplete (newGameId, gameInfo, errMessage) {
+        if (errMessage != null) {
+            document.getElementById("CreateGameMessage").innerHTML = errMessage;
+        } else {
+            this.screen.communicator.listGames(this.listGamesFunc);
+            document.getElementById("CreateGameMessage").innerHTML = "Game created.";
 
-        document.getElementById("CreateGameMessage").style.animationName = "createGameMessageAnim";
+            document.getElementById("CreateGameMessage").style.animationName = "createGameMessageAnim";
 
-        setTimeout(function() {document.getElementById("CreateGameMessage").style.animationName = "";},
-            200);
+            setTimeout(function() {document.getElementById("CreateGameMessage").style.animationName = "";},
+                200);
+        }
     }
     
     listGamesComplete (games) {

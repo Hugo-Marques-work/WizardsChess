@@ -119,11 +119,21 @@ class GameTurnAnswer extends Answer {
 }
 
 class GameMoveAnswer extends Answer {
+    //info: status
     constructor (info, winner) {
         super();
         this.info = info;
         this.winner = winner;
     }
+}
+
+class GameMoveAnswerError extends Answer {
+    constructor (errId, status, winner) {
+        super();
+        this.errId = errId;
+        this.status = status;
+        this.winner = winner;
+    }   
 }
 
 class GameLastMoveAnswer extends Answer {
@@ -252,28 +262,67 @@ class AnswerParser {
     }
     
     parseGameMove (string) {
-        var ans, lexer = new Lexer (string);
+        var suc, ans, lexer = new Lexer (string);
         
         this.checkType(lexer, "GAME_MOVE_A");
-        this.checkError(lexer); 
-        
+                
         try {
-            ans = lexer.readString();
+            suc = lexer.readString();
         } catch (e) {
             throw new WrongInputException("Reading ok answer: " + e.message);
         }
         
-        if (ans == 'WIN_STATE') {
-            var winner;
+        if (suc == 'OK') {
+            if (ans == 'WIN_STATE') {
+                var winner;
+                try {
+                    winner = lexer.readString();
+                } catch (e) {
+                    throw new WrongInputException("Reading WIN_STATE winner: " + e.message);
+                }
+                
+                return new GameMoveAnswer(ans, winner);
+                
+                
+            } else 
+                return new GameMoveAnswer(ans);
+        }
+        
+        else if (suc == 'ERR') {
+            var err, status, winner;
+            
             try {
-                winner = lexer.readString();
+                err = lexer.readString();
             } catch (e) {
-                throw new WrongInputException("Reading WIN_STATE winner: " + e.message);
+                return new WrongInputException("Reading error id: " + e.message);
             }
             
-            return new GameMoveAnswer(ans, winner);
-        } else 
-            return new GameMoveAnswer(ans);
+            if (err == 'INVALID_ACTION') {
+                try {
+                    status = lexer.readString();
+                } catch (e) {
+                    return new WrongInputException("Reading status: " + e.message);
+                }
+                
+                if (status == 'WIN_STATE') {
+                    try {
+                        winner = lexer.readString();
+                    } catch (e) {
+                        return new WrongInputException("Reading error id: " + e.message);
+                    }
+                    
+                    return GameMoveAnswerError (err, status, winner);
+                } else {
+                    return GameMoveAnswerError (err, status, null);
+                }
+            } else {
+                return GameMoveAnswerError (err, null, null);
+            }
+        }
+        
+        else {
+            throw new WrongInputException("Reading sucess (OK/ERR): " + e.message);
+        }
     }
     
     parseGameStatus (string) {

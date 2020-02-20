@@ -151,6 +151,7 @@ std::string Server::visitGameMove (GameMoveMessage* message, Session* session)
             game->move (Position (message->x1(), message->y1()), 
                         Position (message->x2(), message->y2()), player->user());
             
+            //return the state because it can change after each move
             status = game->getState()->accept(&visitor);
             
             return "GAME_MOVE_A OK " + status;
@@ -169,7 +170,7 @@ std::string Server::visitGameMove (GameMoveMessage* message, Session* session)
         }
         catch (PawnPromotionException& e) 
         {
-            return "GAME_MOVE_A MORE PAWN_PROMOTION";
+            return "GAME_MOVE_A OK WAITING_FOR_PROMOTION_STATE";
         }
         catch (InvalidMoveException& e)
         {
@@ -177,7 +178,9 @@ std::string Server::visitGameMove (GameMoveMessage* message, Session* session)
         }
         catch (InvalidActionException& e)
         {
-            return "GAME_MOVE_A ERR INVALID_ACTION";
+            //return the state because the error ocurred because the state is not PlayingState
+            status = game->getState()->accept(&visitor);
+            return "GAME_MOVE_A ERR INVALID_ACTION " + status;
         }
     }
     else 

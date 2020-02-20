@@ -152,10 +152,11 @@ class ServerCommunicator {
         try {
             let gameMoveAnswer = this.answerParser.parseGameMove(event.data);
             this.onMoveComplete(gameMoveAnswer);
-        } catch( error ) { 
-            if (error instanceof ErrorAnswerException)
-                this.onMoveComplete(error);
-            console.log(error);
+        } catch (e) {
+            if (e instanceof WrongInputException) {
+                console.log (e);
+                alert(e);
+            }
         }
     }
 
@@ -270,10 +271,9 @@ class ServerCommunicator {
         try {
             let newGame = this.answerParser.parseNewGame(event.data);
             this.gameId = 0;
-            this.onCreateGameComplete(this.gameId, this.newGameInfo);
+            this.onCreateGameComplete(this.gameId, this.newGameInfo, null);
         } catch( error ) { 
-            alert(error.message);
-            console.log(error.message);
+            this.onCreateGameComplete(null, null, errorMessages[error.errId]);
         }
     }
 
