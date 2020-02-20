@@ -29,7 +29,7 @@ class GameBridge {
         this.mouse = new THREE.Vector2();
 
         this.move = { from : null, toPos : null };
-        this.waitingForResponse = true;
+        this.waitingForResponse = false;
 
         if(this.imWhite == this.game.whiteTurn) {
             this.setMyTurn();
@@ -154,9 +154,12 @@ class GameBridge {
     }
 
     moveComplete(gameMoveAnswer) {
-        if (gameMoveAnswer instanceof GameMoveAnswerError) {
-            if (gameMoveAnswer.errId == 'INVALID_ACTION') {
-                switch (gameMoveAnswer.status) {
+        if (gameMoveAnswer instanceof GameMoveAnswerError)
+        {
+            if (gameMoveAnswer.errId == 'INVALID_ACTION')
+            {
+                switch (gameMoveAnswer.status) 
+                {
                     case 'WAITING_FOR_PROMOTION_STATE':
                         this.readyPromote();
                         break;
@@ -170,21 +173,27 @@ class GameBridge {
                         this.onDrop (this.gameId);
                         break;
                 }
-            } else if (gameMoveAnswer.errId == "NOT_YOUR_TURN") 
+                
+            } 
+            else if (gameMoveAnswer.errId == "NOT_YOUR_TURN") 
                 document.getElementById('rightMenuMessage').innerHTML = "It is not your turn.";
             
-            } else if (gameMoveAnswer.errId == "NO_SUCH_PIECE") {
+            else if (gameMoveAnswer.errId == "NO_SUCH_PIECE") 
                 document.getElementById('rightMenuMessage').innerHTML = "The server could not find that piece.";
                 
-            } else if (gameMoveAnswer.errId == "PIECE_NOT_YOURS") {
+            else if (gameMoveAnswer.errId == "PIECE_NOT_YOURS")
                 document.getElementById('rightMenuMessage').innerHTML = "The piece is not yours.";
-                
-            } else if (gameMoveAnswer.errId == "INVALID_MOVE") {
-                document.getElementById('rightMenuMessage').innerHTML = "The move you requested is invalid.";
-            } 
-        } else {
+            
+            else if (gameMoveAnswer.errId == "INVALID_MOVE")S
+                document.getElementById('rightMenuMessage').innerHTML = "The move you requested is invalid."; 
+            
+        } 
+        
+        else 
             this.executeMove();
-        }
+        
+        
+        this.waitingForResponse = false;
     }
 
     executeMove() {        
