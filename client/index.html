@@ -97,19 +97,22 @@
                 </div>
             </div>
             <div id="loggedScreenNewGame" style="display:none;">
-                <p style="text-align:center;">Opponent</p>
-                <input id="CreateGameDetailsOtherUser" type="text" class="edit" name="otherUser">
+                <p>Opponent: </p><p>
+                <input id="CreateGameDetailsOtherUser" type="text" class="edit" name="otherUser"></p>
                 <p></p>
-                <p style="text-align:center; margin-top:10%;">Your Color</p>
-                <label id="CreateGameDetailsWhiteLabel">
-                    <input id = "CreateGameDetailsWhite" type="radio" style="width" name="white" value="1" checked>
-                    <img id="CreateGameDetailsWhiteImg" src="pieces/whitePiece.jpg">
-                </label>
-                <label id="CreateGameDetailsBlackLabel">
-                    <input id = "CreateGameDetailsBlack" type="radio" name="white" value="0">
-                    <img id= "CreateGameDetailsBlackImg" src="pieces/blackPiece.png">
-                </label>
-                    <input id="CreateGameButton" type="button" class="button" value = "Create" onclick = "screen.event(this, 'onclick')" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')">
+                <p style="margin-top:10%;">
+                    <span style="vertical-align: top;">Your Color:</span>
+                    <label id="CreateGameDetailsWhiteLabel">
+                        <input id = "CreateGameDetailsWhite" type="radio" style="width" name="white" value="1" checked>
+                        <img id="CreateGameDetailsWhiteImg" src="pieces/whitePiece.jpg">
+                    </label>
+                    <label id="CreateGameDetailsBlackLabel">
+                        <input id = "CreateGameDetailsBlack" type="radio" name="white" value="0">
+                        <img id= "CreateGameDetailsBlackImg" src="pieces/blackPiece.png">
+                    </label>
+                </p>
+                
+                <input id="CreateGameButton" type="button" class="button" value = "Create" onclick = "screen.event(this, 'onclick')" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')">
                 <p id = "CreateGameMessage"></p>
             </div>
             <div id="loggedScreenRightMenu" style="display:none;">

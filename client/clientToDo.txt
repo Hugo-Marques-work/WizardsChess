@@ -7,5 +7,4 @@
 07. Percentagens html- 5
 08. Alert - 1
 09. Otimização [ Inicializacao takes too long ] [ blender object ] - never
-10. CAN'T CLICK TILE AFTER CLICKING PIECE AND UNSELECTING - 1
 Distribuição atual: H 08

@@ -79,7 +79,6 @@ class MyTurnState extends GameBridgeState {
             //Only check board tiles if no piece clicked
 
             var tile = this.bridge.intersects.tiles[0].object.userData.visual;
-
             if(this.bridge.move.from == null ) {
                 var boardPos = tile.getBoardPos();
                 this.bridge.move.from = this.bridge.game.getCell(boardPos);
@@ -107,9 +106,9 @@ class MyTurnState extends GameBridgeState {
                         }
 
                         this.validCastling = null;
-                        let pieceKing = this.bridge.game.getKing(this.bridge.from.logic.white);
-                        if(this.bridge.from.logic.pos.equal(pieceKing.pos)) {
-                            this.validCastling = this.bridge.from.logic.getValidCastling();
+                        let pieceKing = this.bridge.game.getKing(this.bridge.move.from.logic.white);
+                        if(this.bridge.move.from.logic.pos.equal(pieceKing.pos)) {
+                            this.validCastling = this.bridge.move.from.logic.getValidCastling();
                         }
                         for(let pos in this.validCastling) {
                             this.bridge.game.getCellVisual(this.validCastling[pos]).setMovable(this.bridge.move.from.logic.white);
