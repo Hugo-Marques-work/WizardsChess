@@ -125,25 +125,21 @@ class ServerCommunicator {
 
         let request = requestListGames();
         this.socket.send(request);
-        //FIXME
     }
 
     listGamesOnMessage(event) {
         try {
             let games = this.answerParser.parseListGames(event.data);
-            console.log(games);
             this.onListGamesComplete(games);
         } catch( error ) { 
-            //DEBUG FIXME 
-            alert(error.message);            
-            //What?
+            alert('There was an error getting your games list from the server. Please reload.');
+            console.log (error);
         }
     }
 
     move(gameId,x1,y1,x2,y2, func) {   
         this.onMoveComplete = func;
         this.socket.onmessage= this.moveOnMessage.bind(this);
-
         let request = requestGameMove(gameId,x1,y1,x2,y2);
         this.socket.send(request);
     }
@@ -153,22 +149,15 @@ class ServerCommunicator {
             let gameMoveAnswer = this.answerParser.parseGameMove(event.data);
             this.onMoveComplete(gameMoveAnswer);
         } catch (e) {
-            if (e instanceof WrongInputException) {
-                console.log (e);
-                alert(e);
-            }
+            console.log(e);
         }
     }
 
     setOtherTurn(gameBridge,func) {
         console.log(gameBridge);
         this.setOtherTurnComplete = func;
-        
         this.socket.onmessage= this.setOtherTurnOnMessage.bind(this);
-
         this.readyToAskOtherTurn = true;
-
-        //this.socket.send(something?);
     }
 
     askOtherTurn(gameId) {
@@ -187,11 +176,13 @@ class ServerCommunicator {
             
             this.setOtherTurnComplete(otherTurnAnswer);
         } catch( error ) {
-            alert(error.message);
-
+            if (error instanceof ErrorAnswerException) {
+                alert(errorMessages[error.errId]);
+            } else if (error instanceof WrongInputException) {
+                alert('Bad response from server. Contact our team!');
+            }
         }
         this.readyToAskOtherTurn = true;
-        console.log("otherTurnNotYet");
     }
 
     askLastMove(gameId, func) {
@@ -208,8 +199,12 @@ class ServerCommunicator {
             
             this.askLastMoveComplete(gameLastMove);
         } catch( error ) {
-            alert(error.message);
-            console.log(error.message);
+            if (error instanceof ErrorAnswerException) {
+                alert (errorMessages[error.errId]);
+            } else if (error instanceof WrongInputException) {
+                alert('Bad response from server. Contact our team!');
+                console.log(error);
+            }
         }
     }
 
@@ -233,8 +228,13 @@ class ServerCommunicator {
             this.gameId = 0;
             this.dropHandler(true);
         } catch (error) { 
-            this.dropHandler(false);
-            console.log(error);
+            if (error instanceof ErrorAnswerException) {
+                alert(errorMessages[error.errId]);
+                this.dropHandler(false);
+            } else if (error instanceof WrongInputException) {
+                alert('Bad response from server. Contact our team!');
+                console.log(error);
+            }
         }
     }
 
@@ -273,7 +273,12 @@ class ServerCommunicator {
             this.gameId = 0;
             this.onCreateGameComplete(this.gameId, this.newGameInfo, null);
         } catch( error ) { 
-            this.onCreateGameComplete(null, null, errorMessages[error.errId]);
+            if (error instanceof ErrorAnswerException) {
+                this.onCreateGameComplete(null, null, errorMessages[error.errId]);
+            } else if (error instanceof WrongInputException) {
+                alert('Bad response from server. Contact our team!');
+                console.log(error);
+            }
         }
     }
 
@@ -284,7 +289,6 @@ class ServerCommunicator {
             this.importGameComplete = func;
             this.socket.onmessage = this.importGameOnMessage.bind(this);
             let request = requestImportGame(gameId);
-            console.log(request);
             this.socket.send(request);
         }
     }
@@ -294,8 +298,12 @@ class ServerCommunicator {
             let importedGameInfo = this.answerParser.parseImportGame(event.data);
             this.importGameComplete(importedGameInfo);
         } catch (error) {
-            alert(error.message);
-            console.log(error.message);
+            if (error instanceof ErrorAnswerException) {
+                alert(error.errId);
+            } else if (error instanceof WrongInputException) {
+                alert('Bad response from server. Contact our team!');
+                console.log(error);
+            }
         }
     }
 }
