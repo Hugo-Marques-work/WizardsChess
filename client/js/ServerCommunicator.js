@@ -76,7 +76,7 @@ class ServerCommunicator {
                     this.onDraw(this.gameId);
                     break;
             }
-            this.gameBridge.waitingForResponse = false;
+            if(this.gameBridge!=null) this.gameBridge.waitingForResponse = false;
         } catch(error) {
             console.log(error);
         }
@@ -273,6 +273,7 @@ class ServerCommunicator {
             this.gameId = 0;
             this.onCreateGameComplete(this.gameId, this.newGameInfo, null);
         } catch( error ) { 
+            console.log(error);
             if (error instanceof ErrorAnswerException) {
                 this.onCreateGameComplete(null, null, errorMessages[error.errId]);
             } else if (error instanceof WrongInputException) {
@@ -284,7 +285,7 @@ class ServerCommunicator {
 
     importGame(gameId, func) {
         if (this.canUse != true) {
-            setTimeout(this.importGame.bind(this, gameId, func), 2000);
+            setTimeout(this.importGame.bind(this, gameId, func), 10);
         } else {
             this.importGameComplete = func;
             this.socket.onmessage = this.importGameOnMessage.bind(this);

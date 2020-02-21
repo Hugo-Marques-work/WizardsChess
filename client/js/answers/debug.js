@@ -204,6 +204,7 @@ class AnswerParser {
             throw new WrongInputException ("Reading answer type: " + e.message);
         }
         
+        console.log(type);
         if (type != expected)
             throw new WrongInputException ("Expected " + expected);
     }
@@ -415,7 +416,8 @@ class AnswerParser {
 
     //FIXME
 
-    parseImportGame(string) {
+    parseImportGame(string) {  
+        console.log("importing");
         var lexer = new Lexer (string);
         
         this.checkType(lexer, "IMPORT_GAME_A");
@@ -426,8 +428,13 @@ class AnswerParser {
             var otherUser = lexer.readString();
 
             var gameId = lexer.readInteger();
-            var importedGame = new Game(gameId, false);
 
+            //Use prepared board and ready the next
+            while(!readiedBoard.ready);
+            var importedGame = new Game(gameId, false, readiedBoard.board);
+            
+            createNewBoard();
+            
             importedGame.whiteTurn = lexer.readInteger();
             //CURRENT STATE FIXME!!!!!
             var state = new PlayingState(importedGame);
@@ -472,6 +479,7 @@ class AnswerParser {
             if(hasPassant == "YES")
                 importedGame.chessMatrix.enPassantPiece = importedGame.getCell(enPassantPiecePos);
 
+            console.log("finished importing");
             return new ImportGameAnswer(imWhite == 1 ? true : false, otherUser, importedGame);
 
         /*} catch(e) {

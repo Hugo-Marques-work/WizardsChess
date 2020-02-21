@@ -1,7 +1,11 @@
 class GameBridge {
-    constructor(gameId, white, otherUser, parentDom, width, height, login, password, onMyTurnHandler, onDraw, onWin, onDrop) {
+    constructor(gameId, white, otherUser, parentDom, width, height, login, password,
+        onMyTurnHandler, onDraw, onWin, onDrop, currentTurn) {
         //Here to possibly use on the interface
+        //parentDom.hidden = false;        
+
         this.createRenderer(parentDom, width, height);
+        this.currentTurn = currentTurn;
         this.onMyTurnHandler = onMyTurnHandler;
         this.imWhite = white;
         this.serverCommunicator = new ServerCommunicator("ws://0.0.0.0:8000", true, login, password, gameId, onDraw, onWin, onDrop);
@@ -19,9 +23,11 @@ class GameBridge {
         return this.renderer.domElement;
     }
     
-    initialization() {
+    async initialization() {
 
-        this.createScene();
+        this.createScene();        
+        this.createCamera();
+        this.serverCommunicator.readyGameStatus(this);        
 
         this.changeTurn = {change: false, myTurn: true};
 
@@ -29,20 +35,24 @@ class GameBridge {
         this.mouse = new THREE.Vector2();
 
         this.move = { from : null, toPos : null };
-        this.waitingForResponse = false;
-
+        this.waitingForResponse = true;
+        
+        document.getElementById("rightMenuTurnCount").innerHTML = this.currentTurn;
         if(this.imWhite == this.game.whiteTurn) {
             this.setMyTurn();
         }
         else {
+            while(this.waitingForResponse==true)
+                await sleep(10);
             this.setOtherTurn();
-        }
-        
-        this.createCamera();
+        }           
+        document.getElementById("rightMenuTurnCount").innerHTML = this.currentTurn;
 
         this.timer = new Date();
 
-        this.serverCommunicator.readyGameStatus();
+        this.nFrames = 0;
+        this.fps();
+
         this.loop();
     }
     
@@ -91,14 +101,12 @@ class GameBridge {
 
         for(var piece in visualPieces) {
             this.scene.add(visualPieces[piece]);
-            console.log(visualPieces[piece]);
         }
     }
 
     importGameComplete(importedGameInfo) {
 
         this.game = importedGameInfo.importedGame;
-        
         this.initialization();
     }
 
@@ -314,7 +322,17 @@ class GameBridge {
         return this.imWhite;
     }
 
+    fps() {
+        var that = this;
+        console.log(this.nFrames);
+        this.nFrames = 0;
+        setTimeout(function () {
+            that.fps();
+        }, 1000);
+    }
     update() {
+        this.getDomElement().removeEventListener("mousemove",this,false);
+
         var deltaTime = new Date() - this.timer;
 
         this.checkChangeTurn();
@@ -327,12 +345,17 @@ class GameBridge {
         this.game.update(deltaTime);
         this.state.update(deltaTime);
         this.timer = new Date();
+        this.nFrames++;
+        
+        this.getDomElement().addEventListener("mousemove",this,false);
+
     }
 
     onMouseMovement(e) {
         e.preventDefault();
         let canvasBounds = this.renderer.context.canvas.getBoundingClientRect();
         if(canvasBounds==undefined) return;
+        if(this.mouse==undefined) return;
         this.mouse.x = ( ( event.clientX - canvasBounds.left ) / ( canvasBounds.right - canvasBounds.left ) ) * 2 - 1;
         this.mouse.y = - ( ( event.clientY - canvasBounds.top ) / ( canvasBounds.bottom - canvasBounds.top) ) * 2 + 1;
         //this.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
@@ -409,3 +432,7 @@ class GameBridge {
         requestAnimationFrame(this.loopBind);
     }
 }
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }

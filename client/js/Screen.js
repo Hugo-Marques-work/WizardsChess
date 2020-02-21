@@ -310,7 +310,10 @@ class LoggedState extends ScreenState {
             
         gameBridge.blockMouse();
         
-        document.getElementById('rightMenuMessage').innerHTML = "Draw!";
+        //document.getElementById('rightMenuMessage').innerHTML = "Draw!";
+
+        document.getElementById("rightMenuMessage").innerHTML = "DRAW!";
+        document.getElementById("rightMenuReady").hidden = true;
     } 
     
     onWin (gameId, winner) {
@@ -319,6 +322,12 @@ class LoggedState extends ScreenState {
         
         document.getElementById('rightMenuMessage').innerHTML = 
             (this.login == winner ? "You won!" : "You lost!");
+        
+        document.getElementById("rightMenuMessage").style.color = 
+        (this.login == winner ? "Green" : "Red");
+
+        document.getElementById("rightMenuReady").hidden = true;
+
     }
     
     onDrop (gameId) {
@@ -326,7 +335,13 @@ class LoggedState extends ScreenState {
         gameBridge.blockMouse();
         
         
-        document.getElementById('rightMenuMessage').innerHTML = "Dropped!";
+        //document.getElementById('rightMenuMessage').innerHTML = "Dropped!";
+
+        document.getElementById("rightMenuMessage").innerHTML = "DROPPED!";
+        document.getElementById("rightMenuMessage").style.color = "Red";
+
+        document.getElementById("rightMenuReady").hidden = true;
+
     }
     
     selectDiv (index) {
@@ -536,9 +551,12 @@ class LoggedState extends ScreenState {
             var otherUser = gameInfo.otherUser;
             
             var gameBridge = new GameBridge (gameId, isWhite, otherUser, div, this.width, 
-                                             this.height, this.login, this.pass, this.onMyTurnHandlerBind, this.onDrawBind, this.onWinBin, this.onDropBind);
+                this.height, this.login, this.pass, this.onMyTurnHandlerBind, this.onDrawBind, 
+                this.onWinBin, this.onDropBind, gameInfo.turnCount);
             
             this.gameMap[gameId] = new PlayingGameInfo(gameBridge, this.divList.length - 1);
+
+            document.getElementById("rightMenuGameId").innerHTML = gameId;
         }
         
         this.selectDiv(this.gameMap[gameId].menuIndex);

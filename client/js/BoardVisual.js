@@ -36,7 +36,7 @@ class BoardVisual extends THREE.Object3D {
 
     createBase() {
         
-        var textureLoader = new THREE.TextureLoader();
+        /*var textureLoader = new THREE.TextureLoader();
         var baseTexture = new textureLoader.load("textures/base.jpg");
         var baseBumpMap = new textureLoader.load("textures/base_bump.jpg");
 
@@ -44,10 +44,10 @@ class BoardVisual extends THREE.Object3D {
         
         var matPhong = new THREE.MeshPhongMaterial({color: 0xffffff, map: baseTexture, bumpMap:baseBumpMap});
         
-        var mesh = new THREE.Mesh(geometry, matPhong);
+        var mesh = new THREE.Mesh(geometry, matPhong);*/
         
         //this.add(mesh);
-        mesh.position.set(0,-0.6,0);
+        //mesh.position.set(0,-0.6,0);
 
         this.tiles = [];
         this.orderedTiles = [];
@@ -64,30 +64,26 @@ class BoardVisual extends THREE.Object3D {
         var textureLoader = new THREE.TextureLoader();
         var whiteTexture = new textureLoader.load("textures/white.jpg");
         var whiteBumpMap = new textureLoader.load("textures/white_bump.jpg");
+        var geometry = new THREE.BoxGeometry(this.posSize, this.posHeight, this.posSize);
+        var matNormal = new THREE.MeshPhongMaterial({color: 0xffffff, map: whiteTexture, bumpMap:whiteBumpMap, specular:0x305284, shininess: 1});
+        var matHighlight = new THREE.MeshPhongMaterial({color: 0xff00ff, map: whiteTexture, bumpMap:whiteBumpMap, specular:0x305284, shininess: 1});
+        var matMovable = new THREE.MeshPhongMaterial({color: 0xfff000, specular:0x305284, shininess: 1});
+        var matKillable = new THREE.MeshPhongMaterial({color: 0xff0000, specular:0x305284, shininess: 1}); 
+        var pos = new THREE.Mesh(geometry, matNormal);
 
         for(var x = 0; x<16; x+=4) {
             for(var y = 0; y<16; y+=4) {
-                
-                var geometry = new THREE.BoxGeometry(this.posSize, this.posHeight, this.posSize);
-                var matNormal = new THREE.MeshPhongMaterial({color: 0xffffff, map: whiteTexture, bumpMap:whiteBumpMap, specular:0x305284, shininess: 1});
-                var matHighlight = new THREE.MeshPhongMaterial({color: 0xff00ff, map: whiteTexture, bumpMap:whiteBumpMap, specular:0x305284, shininess: 1});
-                var matMovable = new THREE.MeshPhongMaterial({color: 0xfff000, specular:0x305284, shininess: 1});
-                var matKillable = new THREE.MeshPhongMaterial({color: 0xff0000, specular:0x305284, shininess: 1}); 
-
-                var pos1 = new THREE.Mesh(geometry, matNormal);
 
                 var tile1Pos = new Position(x/2, y/2);
-                var tile1 = new TileVisual(pos1, matNormal, matMovable, matKillable, matHighlight, tile1Pos, this.logic, this.posSize);
+                var tile1 = new TileVisual(pos.clone(), matNormal, matMovable, matKillable, matHighlight, tile1Pos, this.logic, this.posSize);
 
                 this.tiles.push(tile1);
                 this.orderedTiles[tile1Pos.x][tile1Pos.y] = tile1;
                 this.add(tile1);
                 tile1.position.set(-this.width/2 + x + 2, -0.5, -this.depth/2 + y + 2);
                 
-                var pos2 = new THREE.Mesh(geometry, matNormal);
-                
                 var tile2Pos = new Position(x/2 + 1, y/2 + 1);
-                var tile2 = new TileVisual(pos2, matNormal, matMovable, matKillable, matHighlight, tile2Pos, this.logic, this.posSize);
+                var tile2 = new TileVisual(pos.clone(), matNormal, matMovable, matKillable, matHighlight, tile2Pos, this.logic, this.posSize);
 
                 this.tiles.push(tile2);
                 this.orderedTiles[tile2Pos.x][tile2Pos.y] = tile2;
@@ -102,30 +98,26 @@ class BoardVisual extends THREE.Object3D {
         var textureLoader = new THREE.TextureLoader();
         var blackTexture = new textureLoader.load("textures/black.jpg");
         var blackBumpMap = new textureLoader.load("textures/black_bump.jpg");
+        var geometry = new THREE.BoxGeometry(this.posSize, this.posHeight, this.posSize);
+        var matNormal = new THREE.MeshPhongMaterial({color:  0xffffff, map: blackTexture, bumpMap:blackBumpMap, specular:0xffffff, shininess: 1});
+        var matHighlight = new THREE.MeshPhongMaterial({color:  0xff00ff, map: blackTexture, bumpMap:blackBumpMap, specular:0xffffff, shininess: 1});
+        var matMovable = new THREE.MeshPhongMaterial({color: 0xfff000, specular:0x305284, shininess: 1});
+        var matKillable = new THREE.MeshPhongMaterial({color: 0xff0000, specular:0x305284, shininess: 1}); 
+        var pos = new THREE.Mesh(geometry, matNormal);
 
         for(var x = 0; x<16; x+=4) {
             for(var y = 0; y<16; y+=4) {
-                var geometry = new THREE.BoxGeometry(this.posSize, this.posHeight, this.posSize);
-
-                var matNormal = new THREE.MeshPhongMaterial({color:  0xffffff, map: blackTexture, bumpMap:blackBumpMap, specular:0xffffff, shininess: 1});
-                var matHighlight = new THREE.MeshPhongMaterial({color:  0xff00ff, map: blackTexture, bumpMap:blackBumpMap, specular:0xffffff, shininess: 1});
-                var matMovable = new THREE.MeshPhongMaterial({color: 0xfff000, specular:0x305284, shininess: 1});
-                var matKillable = new THREE.MeshPhongMaterial({color: 0xff0000, specular:0x305284, shininess: 1}); 
-
-                var pos1 = new THREE.Mesh(geometry, matNormal);
 
                 var tile1Pos = new Position(x/2, y/2 + 1);
-                var tile1 = new TileVisual(pos1, matNormal, matMovable, matKillable, matHighlight, tile1Pos, this.logic, this.posSize);
+                var tile1 = new TileVisual(pos.clone(), matNormal, matMovable, matKillable, matHighlight, tile1Pos, this.logic, this.posSize);
 
                 this.tiles.push(tile1);
                 this.orderedTiles[tile1Pos.x][tile1Pos.y] = tile1;
                 this.add(tile1);
                 tile1.position.set(-this.width/2 + x + 2, -0.5, -this.depth/2 + y + 4);
 
-                var pos2 = new THREE.Mesh(geometry, matNormal);
-
                 var tile2Pos = new Position(x/2 + 1, y/2);
-                var tile2 = new TileVisual(pos2, matNormal, matMovable, matKillable, matHighlight, tile2Pos, this.logic, this.posSize);
+                var tile2 = new TileVisual(pos.clone(), matNormal, matMovable, matKillable, matHighlight, tile2Pos, this.logic, this.posSize);
 
                 this.tiles.push(tile2);
                 this.orderedTiles[tile2Pos.x][tile2Pos.y] = tile2;

@@ -1,5 +1,5 @@
 class Game {
-    constructor(gameId, newGame, whiteTurn, currentState) {
+    constructor(gameId, newGame, board, whiteTurn, currentState) {
         this.gameId = gameId;
         if(this.whiteTurn == undefined) {
 
@@ -8,7 +8,12 @@ class Game {
         else {
             this.whiteTurn = whiteTurn;
         }
-        this.chessMatrix = new Board();
+
+        if(board != undefined) {
+            this.chessMatrix = new Board();
+        } else { 
+            this.chessMatrix = board;
+        }
 
         this.kingW = null; this.kingB = null;
         this.queenW = []; this.queenB = [];
@@ -17,11 +22,13 @@ class Game {
         this.knightW = []; this.knightB = [];
         this.bishopW = []; this.bishopB = [];
 
-        for(var x = 0; x < BOARD_MAX_X; x++)
-        {
-            for(var y = 0; y < BOARD_MAX_Y; y++)
+        if(board != undefined) {
+            for(var x = 0; x < BOARD_MAX_X; x++)
             {
-                this.chessMatrix.set(new Position(x,y), null);
+                for(var y = 0; y < BOARD_MAX_Y; y++)
+                {
+                    this.chessMatrix.set(new Position(x,y), null);
+                }
             }
         }
 

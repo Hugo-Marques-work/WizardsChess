@@ -4,8 +4,6 @@ class KnightPieceVisual extends PieceVisual {
     }
 
     makeVisual() {
-
-        var loader = new THREE.GLTFLoader();
         var that = this;
         var white = this.logic.white;
         this.killableMaterial = new THREE.MeshPhongMaterial({color: this.killableColor, opacity: 1, transparent: true});
@@ -17,33 +15,22 @@ class KnightPieceVisual extends PieceVisual {
             this.normalMaterial = new THREE.MeshPhongMaterial({color: this.blackColor, opacity:1,  transparent: true});
         }
 
-        loader.load(            
-            "/../../pieces/knight3.glb",
-            function ( gltf ) {
-             
-                var scale = new THREE.Vector3(0.7,0.8,0.7);
-                var centerOffset = 2;
-                /*var child1 = gltf.scene.children[0];
-                var child2 = gltf.scene.children[1];
-                var child = new THREE.Object3D();
-                child.add(child1);
-                child.add(child2);*/
-                var child = gltf.scene;
-                that.addUserDataVisual(child);
-                child.position.set(0, centerOffset, 0);
-                if(white)
-                child.rotation.set(0,-Math.PI/2,0);
-                else 
-                child.rotation.set(0,Math.PI/2,0);
-                child.scale.set(scale.x, scale.y, scale.z);
-                child.castShadow = true;
-                child.userData.visual = that;
-                that.mesh = child;
-                that.add(child);
+        var child = knightPieceBlender.clone();
+        var scale = new THREE.Vector3(0.7,0.8,0.7);
+        var centerOffset = 2;
+         that.addUserDataVisual(child);
+         child.position.set(0, centerOffset, 0);
+         if(white)
+         child.rotation.set(0,-Math.PI/2,0);
+         else 
+         child.rotation.set(0,Math.PI/2,0);
+         child.scale.set(scale.x, scale.y, scale.z);
+         child.castShadow = true;
+         child.userData.visual = that;
+         that.mesh = child;
+         that.add(child);
 
-                that.setHighlight(false);
-            },
-         );
+         that.setHighlight(false);
 
         /*
         var geometry = new THREE.BoxGeometry(0.5,0.5,1);
