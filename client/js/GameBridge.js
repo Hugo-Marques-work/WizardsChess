@@ -17,6 +17,7 @@ class GameBridge {
         this.createBinds();
         this.serverCommunicator.importGame(gameId, this.importGameCompleteFunc);
         this.loopBind = this.loop.bind(this);
+        this.active = true;
     }
     
     getDomElement () {
@@ -55,7 +56,13 @@ class GameBridge {
         this.nFrames = 0;
         this.fps();
 
+        this.readyForLoop = true;
         this.loop();
+    }
+
+    setActive(active) {
+        this.active = active;
+        if(active) this.loop();
     }
     
     captureMouse () {
@@ -332,6 +339,7 @@ class GameBridge {
             that.fps();
         }, 1000);
     }
+
     update() {
         this.getDomElement().removeEventListener("mousemove",this,false);
 
@@ -428,10 +436,15 @@ class GameBridge {
         }
     }
     
-    loop () {
-        this.update();
-        this.render();
-        requestAnimationFrame(this.loopBind);
+    async loop () {
+        while(this.readyForLoop==false)
+            await sleep(100);
+        if(this.active)
+        {
+            this.update();
+            this.render();
+            requestAnimationFrame(this.loopBind);
+        }
     }
 }
 

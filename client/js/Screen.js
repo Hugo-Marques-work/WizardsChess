@@ -393,6 +393,10 @@ class LoggedState extends ScreenState {
             if(gameBridge.state!=undefined) {
                 gameBridge.state.refreshRightMenu();
             }
+            for (i in this.gameMap) {
+                this.gameMap[i].gameBridge.setActive(false);
+            }
+            gameBridge.setActive(true);
         }
         else {
             var dom = document.getElementById("loggedScreenRightMenu");
