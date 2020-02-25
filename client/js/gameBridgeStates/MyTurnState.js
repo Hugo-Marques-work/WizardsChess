@@ -3,10 +3,21 @@ class MyTurnState extends GameBridgeState {
     constructor(gameBridge) {
         super(gameBridge);
         this.lastChosenPieceMat = null;
+        this.setRightMenu();
+    }
+    
+    setRightMenu() {
         document.getElementById("rightMenuReady").innerHTML = "Your Turn";
         document.getElementById("rightMenuReady").style.color = "Green"
         document.getElementById("rightMenuTurnCount").innerHTML = 
         parseInt(document.getElementById("rightMenuTurnCount").innerHTML) + 1;
+        this.bridge.currentTurn++;
+    }
+
+    refreshRightMenu() {
+        document.getElementById("rightMenuReady").innerHTML = "Your Turn";
+        document.getElementById("rightMenuReady").style.color = "Green"
+        document.getElementById("rightMenuTurnCount").innerHTML = this.bridge.currentTurn;
     }
     
     handleMouseClick() {

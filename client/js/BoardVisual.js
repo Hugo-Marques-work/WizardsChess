@@ -140,7 +140,6 @@ class BoardVisual extends THREE.Object3D {
         for(var i in this.tiles) {
             this.tiles[i].update(deltaTime);
         }
-        //FIXME
     }
 
     pushDead(piece) {

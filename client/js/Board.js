@@ -74,7 +74,6 @@ class Board {
     }
 
     update(deltaTime) {
-        //FIXME
         this.visual.update(deltaTime);
         for(let i = 0; i < BOARD_MAX_Y; i++)
         {

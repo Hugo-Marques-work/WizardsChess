@@ -385,6 +385,14 @@ class LoggedState extends ScreenState {
             
             dom = document.getElementById("rightMenuOpponent");
             dom.innerHTML = "Opponent: " + gameBridge.otherUser;
+
+            dom = document.getElementById("rightMenuGameId");
+            dom.innerHTML =gameBridge.gameId;
+
+            //document.getElementById("rightMenuTurnCount").innerHTML = gameBridge.currentTurn;
+            if(gameBridge.state!=undefined) {
+                gameBridge.state.refreshRightMenu();
+            }
         }
         else {
             var dom = document.getElementById("loggedScreenRightMenu");

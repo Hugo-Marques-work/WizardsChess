@@ -40,14 +40,16 @@ class GameBridge {
         document.getElementById("rightMenuTurnCount").innerHTML = this.currentTurn;
         if(this.imWhite == this.game.whiteTurn) {
             this.setMyTurn();
+            this.currentTurn--;
         }
         else {
             while(this.waitingForResponse==true)
                 await sleep(10);
             this.setOtherTurn();
+            this.currentTurn--;
         }           
         document.getElementById("rightMenuTurnCount").innerHTML = this.currentTurn;
-
+        
         this.timer = new Date();
 
         this.nFrames = 0;
