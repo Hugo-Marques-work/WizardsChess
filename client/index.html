@@ -54,8 +54,9 @@
         var screen = null, gameBridge = null;
         var communicator;
         
+        const SERVER_IP = "ws://10.0.2.15:8000";
         function load () {
-            communicator = new ServerCommunicator("ws://0.0.0.0:8000", false);
+            communicator = new ServerCommunicator(SERVER_IP, false);
             screen = new Screen(communicator);
             createPieces();
             createNewBoard();
