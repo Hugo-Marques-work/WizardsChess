@@ -127,7 +127,7 @@ class GameBridge {
         //this.camera = new THREE.OrthographicCamera( - fov1 * window.innerWidth / window.innerHeight, 
         //    fov1 * window.innerWidth / window.innerHeight, fov1, -fov1, -100, 100);
 
-        this.camVec = new Vector3(25,25,25);
+        this.camVec = new THREE.Vector3(25,25,25);
         this.zoomIndex = 2;
         this.handleZoom();
 
@@ -409,20 +409,18 @@ class GameBridge {
     }
 
     zoomIn() {
-        if(this.zoomIndex>4) {
-            this.zoomIndex--;
+        if(this.zoomIndex==1) {
+            return;
         }
-        this.zoomIndex/=2;
+        this.zoomIndex--;
         this.handleZoom();
     }
 
     zoomOut() {
-        if(this.zoomIndex>=4) {
-            this.zoomIndex++;
+        if(this.zoomIndex==8) {
+	    return;
         }
-        else {
-            this.zoomIndex*=2;
-        }
+	this.zoomIndex++;
         this.handleZoom();
     }
 
