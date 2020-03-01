@@ -87,16 +87,19 @@
             readiedBoard.ready = true;
         }
         function createPieces() {
-        var loader = new THREE.GLTFLoader();
+        debugger;
+	var loader = new THREE.GLTFLoader();
 
         loader.load(
-            "/../../pieces/bishop.glb",
+            "pieces/bishop.glb",
             function ( gltf ) {
-                 bishopPieceBlender = gltf.scene.children[0];
+                debugger; 
+		bishopPieceBlender = gltf.scene.children[0];
             },
         );
+
         loader.load(
-            "/../../pieces/king.glb",
+            "pieces/king.glb",
             function ( gltf ) {
                  kingPieceBlender = gltf.scene.children[0];
                  
@@ -104,21 +107,21 @@
          );
 
         loader.load(            
-            "/../../pieces/knight6.glb",
+            "pieces/knight6.glb",
             function ( gltf ) {
                 knightPieceBlender = gltf.scene;
             },
         );
 
         loader.load(            
-            "/../../pieces/pawn2.glb",
+            "pieces/pawn2.glb",
             function ( gltf ) {
                  pawnPieceBlender = gltf.scene.children[1];
                  
             },
          );
         loader.load(            
-            "/../../pieces/queen.glb",
+            "pieces/queen.glb",
             function ( gltf ) {
              
                  queenPieceBlender = gltf.scene.children[0];
@@ -126,7 +129,7 @@
             },
          );
         loader.load(
-            "/../../pieces/rook.glb",
+            "pieces/rook.glb",
             function ( gltf ) {
             
                 rookPieceBlender = gltf.scene.children[0];

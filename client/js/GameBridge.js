@@ -436,9 +436,15 @@ class GameBridge {
         }
     }
     
-    async loop () {
-        while(this.readyForLoop==false)
-            await sleep(100);
+    tryLoopAgain() {
+        this.loop();
+        clearTimeout(this.tryLoop);
+    }
+    loop () {
+        if(!this.readyForLoop) {
+            this.tryLoop = setTimeout(this.tryLoopAgain.bind(this),10);
+            return;
+        }
         if(this.active)
         {
             this.update();
