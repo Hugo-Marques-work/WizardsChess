@@ -121,17 +121,15 @@ class GameBridge {
     }
 
     createCamera() {
-        this.zoomIndex = 1;
         var fov1 = 15;
         this.camera = new THREE.PerspectiveCamera( fov1, window.innerWidth / window.innerHeight, 1, 1000 );
         //var fov1 = 10;
         //this.camera = new THREE.OrthographicCamera( - fov1 * window.innerWidth / window.innerHeight, 
         //    fov1 * window.innerWidth / window.innerHeight, fov1, -fov1, -100, 100);
 
-        if(this.imWhite)
-            this.camera.position.set(50, 50, -50 );
-        else            
-            this.camera.position.set(50, 50, 50 );
+        this.camVec = new THREE.Vector3(25,25,25);
+        this.zoomIndex = 2;
+        this.handleZoom();
 
         this.camera.lookAt(this.scene.position);
     }
@@ -414,22 +412,29 @@ class GameBridge {
     }
 
     zoomIn() {
-        this.zoomIndex/=2;
+        if(this.zoomIndex==1) {
+            return;
+        }
+        this.zoomIndex--;
         this.handleZoom();
     }
 
     zoomOut() {
-        this.zoomIndex*=2;
+        if(this.zoomIndex==8) {
+	    return;
+        }
+	this.zoomIndex++;
         this.handleZoom();
     }
 
     handleZoom() {
         if(this.imWhite)
-            this.camera.position.set(50 * this.zoomIndex,
-                50 * this.zoomIndex, -50 * this.zoomIndex);
-        else            
-            this.camera.position.set(50 * this.zoomIndex,
-                50 * this.zoomIndex, 50 * this.zoomIndex);
+            this.camera.position.set(this.camVec.x * this.zoomIndex,
+                this.camVec.y * this.zoomIndex, -this.camVec.z * this.zoomIndex);
+        else   
+            this.camera.position.set(this.camVec.x * this.zoomIndex,
+                this.camVec.y * this.zoomIndex, this.camVec.z * this.zoomIndex);
+    
 
         this.camera.lookAt(this.scene.position);
     }
