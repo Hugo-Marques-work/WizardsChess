@@ -235,16 +235,43 @@ class LoggedState extends ScreenState {
             new Event ('loggedScreenEntryB', 'onmouseout', this.mouseOutBind),
             new Event ('rightMenuDrop', 'onmouseout', this.mouseOutBind),
             new Event ('rightMenuDrop', 'onmouseover', this.mouseOverBind),
+            new Event ('rightMenuZoomOut','onmouseover', this.mouseOverBind),
+            new Event ('rightMenuZoomOut', 'onmouseout', this.mouseOutBind),
+            new Event ('rightMenuZoomIn','onmouseover', this.mouseOverBind),
+            new Event ('rightMenuZoomIn', 'onmouseout', this.mouseOutBind),
             new Event ('CreateGameButton', 'onmouseout', this.mouseOutBind),
             new Event ('CreateGameButton', 'onmouseover', this.mouseOverBind),
             new Event ('loggedScreenEntryA', 'onclick', LoggedState.prototype.myGames.bind(this)),
             new Event ('loggedScreenEntryB', 'onclick', LoggedState.prototype.newGame.bind(this)),
             new Event ('CreateGameButton', 'onclick', LoggedState.prototype.createGame.bind(this)),
             new Event ('', 'onresize', LoggedState.prototype.resize.bind(this)),
-            new Event ('rightMenuDrop', 'onclick', LoggedState.prototype.drop.bind(this))
+            new Event ('rightMenuDrop', 'onclick', LoggedState.prototype.drop.bind(this)),
+            new Event ('rightMenuZoomOut', 'onclick', LoggedState.prototype.zoomOut.bind(this)),
+            new Event ('rightMenuZoomIn', 'onclick', LoggedState.prototype.zoomIn.bind(this))
         ];
     }
     
+    zoomOut () {
+        var i;
+
+        for (i in this.gameMap)
+            if (this.gameMap[i].menuIndex == this.currentDiv)
+                var gameBridge = this.gameMap[i].gameBridge;
+
+        gameBridge.zoomOut();
+    }
+
+
+    zoomIn () {
+        var i;
+
+        for (i in this.gameMap)
+            if (this.gameMap[i].menuIndex == this.currentDiv)
+                var gameBridge = this.gameMap[i].gameBridge;
+
+        gameBridge.zoomIn();
+    }
+
     drop () {
         var i, gameBridge;
         

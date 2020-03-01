@@ -5,6 +5,7 @@ class GameBridge {
         //parentDom.hidden = false;        
 
         this.createRenderer(parentDom, width, height);
+        this.mouseIsDown = false;
         this.currentTurn = currentTurn;
         this.onMyTurnHandler = onMyTurnHandler;
         this.imWhite = white;
@@ -120,6 +121,7 @@ class GameBridge {
     }
 
     createCamera() {
+        this.zoomIndex = 1;
         var fov1 = 15;
         this.camera = new THREE.PerspectiveCamera( fov1, window.innerWidth / window.innerHeight, 1, 1000 );
         //var fov1 = 10;
@@ -366,13 +368,31 @@ class GameBridge {
         let canvasBounds = this.renderer.context.canvas.getBoundingClientRect();
         if(canvasBounds==undefined) return;
         if(this.mouse==undefined) return;
+        var lastMouse = { x : this.mouse.x, y : this.mouse.y };
         this.mouse.x = ( ( event.clientX - canvasBounds.left ) / ( canvasBounds.right - canvasBounds.left ) ) * 2 - 1;
         this.mouse.y = - ( ( event.clientY - canvasBounds.top ) / ( canvasBounds.bottom - canvasBounds.top) ) * 2 + 1;
+        //console.log(this.mouse);
         //this.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
         //this.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
+        
+        /*if(this.mouseIsDown) {
+            var xFactor = new THREE.Vector3(this.mouse.x - lastMouse.x/2,0,
+                this.mouse.x - lastMouse.x/2);
+            //xFactor.rotateY(Math.PI/4);
+            
+            var yFactor = new THREE.Vector3(0,0,this.mouse.y-lastMouse.y);
+            //yFactor.rotateY(Math.PI/4);
+            
+            this.scene.position.set(this.scene.position.x + xFactor.x,
+                this.scene.position.x + xFactor.y, this.scene.position.z + xFactor.z);
+            
+            this.scene.position.set(this.scene.position.x + yFactor.x,
+                this.scene.position.x + yFactor.y, this.scene.position.z + yFactor.z);
+        }*/
     }
 
     onMouseDown(e) {
+        //this.mouseIsDown = true;
         document.getElementById('loggedScreenEntry' + this.gameId).style.backgroundColor = "rgb(150, 150, 150)";
         
         e.preventDefault();
@@ -389,9 +409,31 @@ class GameBridge {
     }
 
     onMouseUp(e) {
+        //this.mouseIsDown = false;
         //Not sure if we should use it
     }
-    
+
+    zoomIn() {
+        this.zoomIndex/=2;
+        this.handleZoom();
+    }
+
+    zoomOut() {
+        this.zoomIndex*=2;
+        this.handleZoom();
+    }
+
+    handleZoom() {
+        if(this.imWhite)
+            this.camera.position.set(50 * this.zoomIndex,
+                50 * this.zoomIndex, -50 * this.zoomIndex);
+        else            
+            this.camera.position.set(50 * this.zoomIndex,
+                50 * this.zoomIndex, 50 * this.zoomIndex);
+
+        this.camera.lookAt(this.scene.position);
+    }
+
     resize (w, h) {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         if (window.innerHeight > 0 && window.innerWidth > 0) {
@@ -436,15 +478,9 @@ class GameBridge {
         }
     }
     
-    tryLoopAgain() {
-        this.loop();
-        clearTimeout(this.tryLoop);
-    }
-    loop () {
-        if(!this.readyForLoop) {
-            this.tryLoop = setTimeout(this.tryLoopAgain.bind(this),10);
-            return;
-        }
+    async loop () {
+        while(this.readyForLoop==false)
+            await sleep(100);
         if(this.active)
         {
             this.update();
@@ -452,6 +488,7 @@ class GameBridge {
             requestAnimationFrame(this.loopBind);
         }
     }
+
 }
 
 function sleep(ms) {

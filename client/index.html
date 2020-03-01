@@ -86,56 +86,55 @@
             }
             readiedBoard.ready = true;
         }
+
         function createPieces() {
-        debugger;
-	var loader = new THREE.GLTFLoader();
+            var loader = new THREE.GLTFLoader();
 
-        loader.load(
-            "pieces/bishop.glb",
-            function ( gltf ) {
-                debugger; 
-		bishopPieceBlender = gltf.scene.children[0];
-            },
-        );
+            loader.load(
+                "pieces/bishop.glb",
+                function ( gltf ) {
+            bishopPieceBlender = gltf.scene.children[0];
+                },
+            );
 
-        loader.load(
-            "pieces/king.glb",
-            function ( gltf ) {
-                 kingPieceBlender = gltf.scene.children[0];
-                 
-            },
-         );
+            loader.load(
+                "pieces/king.glb",
+                function ( gltf ) {
+                    kingPieceBlender = gltf.scene.children[0];
+                    
+                },
+            );
 
-        loader.load(            
-            "pieces/knight6.glb",
-            function ( gltf ) {
-                knightPieceBlender = gltf.scene;
-            },
-        );
+            loader.load(            
+                "pieces/knight6.glb",
+                function ( gltf ) {
+                    knightPieceBlender = gltf.scene;
+                },
+            );
 
-        loader.load(            
-            "pieces/pawn2.glb",
-            function ( gltf ) {
-                 pawnPieceBlender = gltf.scene.children[1];
-                 
-            },
-         );
-        loader.load(            
-            "pieces/queen.glb",
-            function ( gltf ) {
-             
-                 queenPieceBlender = gltf.scene.children[0];
-                 
-            },
-         );
-        loader.load(
-            "pieces/rook.glb",
-            function ( gltf ) {
-            
-                rookPieceBlender = gltf.scene.children[0];
+            loader.load(            
+                "pieces/pawn2.glb",
+                function ( gltf ) {
+                    pawnPieceBlender = gltf.scene.children[1];
+                    
+                },
+            );
+            loader.load(            
+                "pieces/queen.glb",
+                function ( gltf ) {
                 
-            },
-        );
+                    queenPieceBlender = gltf.scene.children[0];
+                    
+                },
+            );
+            loader.load(
+                "pieces/rook.glb",
+                function ( gltf ) {
+                
+                    rookPieceBlender = gltf.scene.children[0];
+                    
+                },
+            );
         }
     </script>
 </head>
@@ -200,6 +199,8 @@
                 <p style="font-weight: bold;">GameID: <span id="rightMenuGameId"></span></p>
                 <p style="font-weight: bold;">TurnNumber: <span id="rightMenuTurnCount"></span></p>
                 <input id="rightMenuDrop" type="button" class="button" value = "Drop" onclick = "screen.event(this, 'onclick')" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')">
+                <input id="rightMenuZoomOut" type="button" class="button" value="ZoomOut" onclick = "screen.event(this, 'onclick')" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')">
+                <input id="rightMenuZoomIn" type="button" class="button" value="ZoomIn" onclick = "screen.event(this, 'onclick')" onmouseout="screen.event(this, 'onmouseout')" onmouseover="screen.event(this, 'onmouseover')">
             </div>
         </div>
         
