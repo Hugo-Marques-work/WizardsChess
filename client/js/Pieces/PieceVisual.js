@@ -2,7 +2,7 @@ class PieceVisual extends THREE.Object3D {
     constructor(logic) {
         super();
         this.myX = 0;
-        this.myY = 0;
+        this.myY = -0.3;
         this.myZ = 0;
         this.whiteColor = 0xf0eedd;
         this.blackColor = 0x383733;                

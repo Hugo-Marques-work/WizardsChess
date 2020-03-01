@@ -1,6 +1,7 @@
 class KnightPieceVisual extends PieceVisual {
     constructor(logic) {
         super(logic);
+	this.myY=0;
     }
 
     makeVisual() {
