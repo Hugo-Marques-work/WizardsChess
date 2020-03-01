@@ -118,7 +118,7 @@ class PlayingState extends GameState {
             throw new InvalidMoveException();
         }
 
-        //FIXME
+        //FIXME Victory is not checked in cliente
         /* 
         if( this.checkVictory() == true ) return;
         if( this.checkDraw() == true) return;
@@ -172,8 +172,4 @@ class PlayingState extends GameState {
             throw new InvalidMoveException();
         }
     }
-
-    //FIXME
-    //WHAT DO?
-    //checkVictory() { } //e etcs...
 }

@@ -74,17 +74,14 @@ class KingPiece extends Piece {
 
     getCastlingRook(dest) {
         if(this.validateCastling(dest)==false) return null;
-        
-        //FIXME (Same FIXME In c++)
-        const MAX_X = 7;
-        const MIN_X = 0;
+    
         console.log(dest);
         console.log(this.pos);
         if(dest.x == this.pos.x + 2) {
-            return this.game.getCell( new Position(MAX_X ,this.pos.y));
+            return this.game.getCell( new Position(BOARD_MAX_X-1, this.pos.y));
         }
         else {
-            return this.game.getCell( new Position(MIN_X, this.pos.y));
+            return this.game.getCell( new Position(0, this.pos.y));
         }
     }
 

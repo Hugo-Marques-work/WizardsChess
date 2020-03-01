@@ -414,8 +414,8 @@ class AnswerParser {
         return new NewGameAnswer();
     }
 
-    //FIXME
 
+    //Breaks convention for simplicity sake
     parseImportGame(string) {  
         console.log("importing");
         var lexer = new Lexer (string);
@@ -436,7 +436,9 @@ class AnswerParser {
             createNewBoard();
             
             importedGame.whiteTurn = lexer.readInteger();
-            //CURRENT STATE FIXME!!!!!
+            
+
+            //Does not import state
             var state = new PlayingState(importedGame);
             importedGame.state = state;
 

@@ -45,7 +45,7 @@ class Game {
         
         this.enPassantLastMove = null;
         this.castlingLastMove = null;
-        this.meWhite= true//FIXME
+        this.meWhite= true
     }
 
     //IDEA FOR IMPORTING AN EXISTING GAME FROM THE SERVER
@@ -137,8 +137,7 @@ class Game {
 
     getGameId() { return this.gameId; }
 
-    //FIXME PROMOTE DO I CREATE THE METHOD PROMOTE OR DO WE JUST SET THE POSITIONS
-    //FROM THE REQUEST
+    //FIXME PROMOTE Not implemented
     promote(piece) {
         
     }
@@ -287,7 +286,5 @@ class Game {
     update(deltaTime) {
         this.chessMatrix.update(deltaTime);
     }
-    //DROP FIXME
-    // drop(white) { }
     
 }

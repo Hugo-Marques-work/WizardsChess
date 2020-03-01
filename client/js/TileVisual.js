@@ -50,7 +50,6 @@ class TileVisual extends THREE.Object3D {
         } else {
             this.mesh.material = this.normalMaterial;
         
-            //FIXME
             var piece = this.board.get(this.boardPos);
             if(piece!=null)
                 piece.visual.setHighlight(activate);

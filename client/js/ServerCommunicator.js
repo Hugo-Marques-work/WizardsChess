@@ -13,6 +13,7 @@ const errorMessages = {
     'ALREADY_LOGGED': 'User already logged.',
     'PASS': 'Incorrect password.',
     'USER': 'User does not exists.',
+    'SAME_USER': 'Cannot create game with self',
 };
 
 class ServerCommunicator {
@@ -161,7 +162,6 @@ class ServerCommunicator {
     }
 
     askOtherTurn(gameId) {
-        //FIXME WHAT IF CHANGE!!!
         if(this.readyToAskOtherTurn == true) {
             this.readyToAskOtherTurn = false;
             

@@ -121,17 +121,15 @@ class GameBridge {
     }
 
     createCamera() {
-        this.zoomIndex = 1;
         var fov1 = 15;
         this.camera = new THREE.PerspectiveCamera( fov1, window.innerWidth / window.innerHeight, 1, 1000 );
         //var fov1 = 10;
         //this.camera = new THREE.OrthographicCamera( - fov1 * window.innerWidth / window.innerHeight, 
         //    fov1 * window.innerWidth / window.innerHeight, fov1, -fov1, -100, 100);
 
-        if(this.imWhite)
-            this.camera.position.set(50, 50, -50 );
-        else            
-            this.camera.position.set(50, 50, 50 );
+        this.camVec = new Vector3(25,25,25);
+        this.zoomIndex = 2;
+        this.handleZoom();
 
         this.camera.lookAt(this.scene.position);
     }
@@ -141,9 +139,7 @@ class GameBridge {
     }
 
     readyMove() {
-        //FIXME
-        //CHECK IF MOVE IS POSSIBLE THEN ASK SERVER AND THEN EXECUTE
-        try {
+       try {
 
             if(this.game.checkMove(this.move.from.getBoardPos(),
                 this.move.toPos)) {
@@ -285,7 +281,7 @@ class GameBridge {
             if(this.changeTurn.myTurn) {
 
                 var deadPiece = this.game.getCell(this.move.toPos);
-                //FIXME
+
                 this.game.move(this.move.from.getBoardPos(), this.move.toPos);
                 this.animateMove(deadPiece,this.setMyTurnFunc);
             }
@@ -322,7 +318,6 @@ class GameBridge {
     }
 
     setMyTurn() {
-        //FIXME Haven't changed everything with this cuz it doesn't need communication with server. Overview it
         this.state = new MyTurnState(this);
         this.move.from = null;
         this.move.to = null;
@@ -414,22 +409,31 @@ class GameBridge {
     }
 
     zoomIn() {
+        if(this.zoomIndex>4) {
+            this.zoomIndex--;
+        }
         this.zoomIndex/=2;
         this.handleZoom();
     }
 
     zoomOut() {
-        this.zoomIndex*=2;
+        if(this.zoomIndex>=4) {
+            this.zoomIndex++;
+        }
+        else {
+            this.zoomIndex*=2;
+        }
         this.handleZoom();
     }
 
     handleZoom() {
         if(this.imWhite)
-            this.camera.position.set(50 * this.zoomIndex,
-                50 * this.zoomIndex, -50 * this.zoomIndex);
-        else            
-            this.camera.position.set(50 * this.zoomIndex,
-                50 * this.zoomIndex, 50 * this.zoomIndex);
+            this.camera.position.set(this.camVec.x * this.zoomIndex,
+                this.camVec.y * this.zoomIndex, -this.camVec.z * this.zoomIndex);
+        else   
+            this.camera.position.set(this.camVec.x * this.zoomIndex,
+                this.camVec.y * this.zoomIndex, this.camVec.z * this.zoomIndex);
+    
 
         this.camera.lookAt(this.scene.position);
     }
