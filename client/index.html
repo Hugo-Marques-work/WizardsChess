@@ -5,6 +5,7 @@
      <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="index.css">
 
+    <script src="js/ServerAddress.js"></script>
     <script src="js/Screen.js"></script>
     <script src="js/three.js"></script>
     <script src="js/ServerCommunicator.js"></script>
@@ -54,7 +55,6 @@
         var screen = null, gameBridge = null;
         var communicator;
         
-        const SERVER_IP = "ws://193.136.128.103:8000";
         function load () {
             communicator = new ServerCommunicator(SERVER_IP, false);
             screen = new Screen(communicator);
