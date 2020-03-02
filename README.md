@@ -1,17 +1,26 @@
 # WizardsChess
 ## Description
-HackerSchool Project #1 1st semester third year 2019
-The project has not already ended.
+WizardsChess is a multiplayer browser game.
+The server for the game was made in c++17
+The client for the game was made in html, css and javascript
+
+We used the following external libraries
+Server: boost
+Client: three js
+
+Made in hackerschool.
+The project is not finished.
 ## Run
 ### Run the game server
 1. Build
-    To build, you need boost.
+    To build, you need boost in directory server/extras
+
     '''
     cd server/
     make
     '''
 
-2. Run
+2. Run the server locally
     '''
     ./main 0.0.0.0 port
     '''
